@@ -11,7 +11,6 @@ public class AppTest {
      */
     @Test
     public void shouldAnswerWithTrue() throws Exception {
-        Class<?> clazz = int.class;
-        System.out.println(clazz);
+        System.out.println(System.getProperty("user.home"));
     }
 }

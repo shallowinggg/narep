@@ -10,9 +10,7 @@ import java.util.Set;
  * @author shallowinggg
  */
 public class ProtocolConfig {
-    private static final String DEFAULT_BASE_PACKAGE = "com.example";
-
-    private String basePackage = DEFAULT_BASE_PACKAGE;
+    private boolean compress;
 
     private Set<ProtocolField> protocolFields = new HashSet<>();
 

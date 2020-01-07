@@ -1,7 +1,5 @@
 package com.shallowinggg.narep.core;
 
-import java.io.File;
-
 /**
  * 生成Java代码文件的基础接口。
  *
@@ -28,7 +26,7 @@ public interface CodeGenerator {
      *
      * @return 包含package语句的字符串
      */
-    StringBuilder buildPackage();
+    String buildPackage();
 
     /**
      * 生成import语句
@@ -36,7 +34,7 @@ public interface CodeGenerator {
      *
      * @return 包含import语句的字符串
      */
-    StringBuilder buildImports();
+    String buildImports();
 
     /**
      * 生成类声明语句
@@ -44,7 +42,7 @@ public interface CodeGenerator {
      *
      * @return 包含类声明语句的字符串
      */
-    StringBuilder buildName();
+    String buildName();
 
     /**
      * 生成字段
@@ -52,7 +50,7 @@ public interface CodeGenerator {
      *
      * @return 包含字段的字符串
      */
-    StringBuilder buildFields();
+    String buildFields();
 
     /**
      * 生成方法
@@ -60,12 +58,5 @@ public interface CodeGenerator {
      *
      * @return 包含方法的字符串
      */
-    StringBuilder buildMethods();
-
-    /**
-     * 组合各部分内容并写入到文件中
-     *
-     * @param file 写入文件
-     */
-    void write(File file);
+    String buildMethods();
 }

@@ -1,11 +1,13 @@
 package com.shallowinggg.narep.core.generators;
 
 import com.shallowinggg.narep.core.CodeGenerator;
+import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public class CodeGeneratorManager {
     private static final CodeGeneratorManager INSTANCE = new CodeGeneratorManager();
 
     private Map<String, CodeGenerator> generators = new HashMap<>();
+    private GeneratorConfig generatorConfig;
 
     /**
      * 获取CodeGeneratorManager单例
@@ -37,6 +40,14 @@ public class CodeGeneratorManager {
         if(LOG.isDebugEnabled()) {
             LOG.debug("register CodeGenerator: " + name);
         }
+    }
+
+    public void registerDefaultCodeGenerators() {
+        CodeGenerator remotingCommand = null;
+
+        CodeGenerator rpcHook = new RPCHookCodeGenerator(generatorConfig, Collections.singletonList(remotingCommand));
+        CodeGenerator remotingService = new RemotingServiceCodeGenerator(generatorConfig);
+
     }
 
 
