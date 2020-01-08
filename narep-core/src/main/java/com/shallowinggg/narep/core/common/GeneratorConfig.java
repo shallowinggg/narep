@@ -15,10 +15,13 @@ public class GeneratorConfig {
     public static final String PACKAGE_NETTY = "netty";
     public static final String PACKAGE_PROTOCOL = "protocol";
     public static final String EOS_DELIMITER = ";";
+    public static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String DOUBLE_LINE_SEPARATOR = System.lineSeparator() + System.lineSeparator();
+    public static final char FILE_SEPARATOR = File.separatorChar;
     public static final String IMPORT = "import";
 
     private static final String DEFAULT_BASE_PACKAGE = "com.example.remoting";
-    private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + "/generator";
+    private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + FILE_SEPARATOR +  "generator";
 
     private static final GeneratorConfig INSTANCE = new GeneratorConfig();
 

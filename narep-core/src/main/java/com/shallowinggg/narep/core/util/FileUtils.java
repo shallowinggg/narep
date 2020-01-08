@@ -1,45 +1,27 @@
 package com.shallowinggg.narep.core.util;
 
-import com.shallowinggg.narep.core.CodeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
+/**
+ * @author shallowinggg
+ */
 public class FileUtils {
     private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
-    private static final String DEFAULT_ENCODING = "utf-8";
 
-    public static String compositeFile(CodeGenerator generator) {
-        if(generator == null) {
-            return "";
-        }
-        String content = String.valueOf(generator.buildPackage()) +
-                generator.buildImports() +
-                generator.buildName() +
-                generator.buildFields() +
-                generator.buildMethods() +
-                CodeGenerator.END_OF_CLASS;
-        return content;
-    }
-
-    public static void writeFile(String path, CodeGenerator generator) throws IOException {
-        if(generator == null) {
+    public static void writeFile(String path, String content, String charset) throws IOException {
+        if(StringTinyUtils.isEmpty(content)) {
             return;
         }
         File file = new File(path);
         ensureDirOk(file);
         try(OutputStream out = new FileOutputStream(file)) {
-            String content = String.valueOf(generator.buildPackage()) +
-                    generator.buildImports() +
-                    generator.buildName() +
-                    generator.buildFields() +
-                    generator.buildMethods() +
-                    CodeGenerator.END_OF_CLASS;
-            out.write(content.getBytes(DEFAULT_ENCODING));
-            if(LOG.isDebugEnabled()) {
-                LOG.debug("Build file " + generator.fileName() + "success");
-            }
+            out.write(content.getBytes(charset));
         }
     }
 

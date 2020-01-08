@@ -1,30 +1,18 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
-import com.shallowinggg.narep.core.CodeGenerator;
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
+import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
  * @author shallowinggg
  */
-public class RemotingCommandCodeGenerator implements CodeGenerator {
+public class RemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
 
     private GeneratorConfig generatorConfig;
 
     public RemotingCommandCodeGenerator(GeneratorConfig generatorConfig) {
-        this.generatorConfig = generatorConfig;
-    }
-
-    @Override
-    public String fileName() {
-        return CodeGeneratorHelper.buildFileName(generatorConfig.getBasePackage(),
-                GeneratorConfig.PACKAGE_PROTOCOL, CLASS_NAME);
-    }
-
-    @Override
-    public String buildPackage() {
-        return CodeGeneratorHelper.buildProtocolPackage(generatorConfig.getBasePackage());
+        super(CLASS_NAME, generatorConfig);
     }
 
     @Override
@@ -32,10 +20,6 @@ public class RemotingCommandCodeGenerator implements CodeGenerator {
         return null;
     }
 
-    @Override
-    public String buildName() {
-        return null;
-    }
 
     @Override
     public String buildFields() {

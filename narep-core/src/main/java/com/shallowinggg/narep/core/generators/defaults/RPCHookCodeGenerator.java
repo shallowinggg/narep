@@ -1,51 +1,31 @@
-package com.shallowinggg.narep.core.generators;
+package com.shallowinggg.narep.core.generators.defaults;
 
 import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
+import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 import java.util.List;
 
 /**
  * @author shallowinggg
  */
-public class RPCHookCodeGenerator implements CodeGenerator {
-    private static final String CLASS_NAME = "RPCHook";
+public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
+    private static final String INTERFACE_NAME = "RPCHook";
 
-    private GeneratorConfig generatorConfig;
     private List<CodeGenerator> dependencies;
 
     public RPCHookCodeGenerator(GeneratorConfig generatorConfig, List<CodeGenerator> dependencies) {
-        this.generatorConfig = generatorConfig;
+        super(INTERFACE_NAME, generatorConfig);
         this.dependencies = dependencies;
-    }
-
-    @Override
-    public String fileName() {
-        return CodeGeneratorHelper.buildFileName(generatorConfig.getBasePackage(), CLASS_NAME);
-    }
-
-    @Override
-    public String buildPackage() {
-        return CodeGeneratorHelper.buildDefaultPackage(generatorConfig.getBasePackage());
     }
 
     @Override
     public String buildImports() {
         StringBuilder imports = new StringBuilder(50);
         CodeGeneratorHelper.buildDependencyImports(imports, dependencies);
-        imports.append(System.lineSeparator()).append(System.lineSeparator());
+        imports.append(GeneratorConfig.DOUBLE_LINE_SEPARATOR);
         return imports.toString();
-    }
-
-    @Override
-    public String buildName() {
-        return CodeGeneratorHelper.buildInterfaceDeclaration(CLASS_NAME);
-    }
-
-    @Override
-    public String buildFields() {
-        return System.lineSeparator();
     }
 
     @Override

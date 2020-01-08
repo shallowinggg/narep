@@ -3,6 +3,9 @@ package com.shallowinggg.narep.core.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author shallowinggg
+ */
 public class Utils {
     private static Map<String, Class<?>> classMap = new HashMap<>(8);
     private static Map<String, Integer> primitiveTypeLens = new HashMap<>(8);
