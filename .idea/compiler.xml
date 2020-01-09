@@ -9,5 +9,9 @@
         <module name="narep-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="narep" target="1.8" />
+      <module name="narep-core" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
