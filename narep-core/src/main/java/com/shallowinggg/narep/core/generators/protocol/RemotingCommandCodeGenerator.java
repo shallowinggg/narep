@@ -1,6 +1,5 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
@@ -9,10 +8,8 @@ import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 public class RemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
 
-    private GeneratorConfig generatorConfig;
-
-    public RemotingCommandCodeGenerator(GeneratorConfig generatorConfig) {
-        super(CLASS_NAME, generatorConfig);
+    public RemotingCommandCodeGenerator() {
+        super(CLASS_NAME);
     }
 
     @Override

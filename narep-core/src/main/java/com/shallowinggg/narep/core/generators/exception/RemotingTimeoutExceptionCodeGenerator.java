@@ -1,6 +1,5 @@
 package com.shallowinggg.narep.core.generators.exception;
 
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
@@ -10,8 +9,8 @@ public class RemotingTimeoutExceptionCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingTimeoutException";
     private static final String PARENT_CLASS = "RemotingException";
 
-    public RemotingTimeoutExceptionCodeGenerator(GeneratorConfig generatorConfig) {
-        super(CLASS_NAME, generatorConfig, PARENT_CLASS);
+    public RemotingTimeoutExceptionCodeGenerator() {
+        super(CLASS_NAME, PARENT_CLASS);
     }
 
     @Override

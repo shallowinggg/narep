@@ -1,6 +1,5 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 /**
@@ -10,8 +9,8 @@ public class RemotingClientCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "RemotingClient";
     private static final String PARENT_INTERFACE = "RemotingService";
 
-    public RemotingClientCodeGenerator(GeneratorConfig generatorConfig) {
-        super(INTERFACE_NAME, generatorConfig, PARENT_INTERFACE);
+    public RemotingClientCodeGenerator() {
+        super(INTERFACE_NAME, PARENT_INTERFACE);
     }
 
     @Override

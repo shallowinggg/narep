@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.generators;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
 /**
@@ -11,16 +10,16 @@ import com.shallowinggg.narep.core.util.StringTinyUtils;
  */
 public class InterfaceCodeGenerator extends AbstractJavaCodeGenerator {
 
-    public InterfaceCodeGenerator(String name, GeneratorConfig config) {
-        super(name, config);
+    public InterfaceCodeGenerator(String name) {
+        super(name);
     }
 
-    public InterfaceCodeGenerator(String name, GeneratorConfig config, String parentName) {
-        super(name, config, parentName);
+    public InterfaceCodeGenerator(String name, String parentName) {
+        super(name, parentName);
     }
 
-    public InterfaceCodeGenerator(String name, GeneratorConfig config, String parentName, String subPackageName) {
-        super(name, config, parentName, subPackageName);
+    public InterfaceCodeGenerator(String name, String parentName, String subPackageName) {
+        super(name, parentName, subPackageName);
     }
 
     @Override

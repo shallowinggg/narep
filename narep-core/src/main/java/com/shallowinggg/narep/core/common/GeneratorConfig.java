@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.common;
 
+import com.shallowinggg.narep.core.Config;
 import com.shallowinggg.narep.core.util.FileUtils;
 
 import java.io.File;
@@ -7,7 +8,9 @@ import java.io.File;
 /**
  * @author shallowinggg
  */
-public class GeneratorConfig {
+public class GeneratorConfig implements Config {
+    public static final String CONFIG_NAME = "generator";
+
     public static final String PACKAGE = "package";
     public static final String PACKAGE_DELIMITER = ".";
     public static final String PACKAGE_COMMON = "common";
@@ -28,9 +31,6 @@ public class GeneratorConfig {
     private String basePackage = DEFAULT_BASE_PACKAGE;
     private String storeLocation = DEFAULT_STORE_LOCATION;
 
-    private GeneratorConfig() {
-        FileUtils.ensureDirOk(new File(DEFAULT_BASE_PACKAGE));
-    }
 
     public static GeneratorConfig getInstance() {
         return INSTANCE;

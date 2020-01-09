@@ -2,8 +2,6 @@ package com.shallowinggg.narep.core.generators;
 
 import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.defaults.RPCHookCodeGenerator;
 import com.shallowinggg.narep.core.generators.defaults.RemotingServiceCodeGenerator;
 import com.shallowinggg.narep.core.generators.exception.*;
@@ -27,14 +25,13 @@ public class CodeGeneratorManager {
     private static final CodeGeneratorManager INSTANCE = new CodeGeneratorManager();
 
     private Map<String, CodeGenerator> generators = new HashMap<>();
-    private GeneratorConfig generatorConfig;
 
     /**
      * 获取CodeGeneratorManager单例
      *
      * @return 单例
      */
-    public CodeGeneratorManager getInstance() {
+    public static CodeGeneratorManager getInstance() {
         return INSTANCE;
     }
 
@@ -51,30 +48,24 @@ public class CodeGeneratorManager {
     public void registerDefaultCodeGenerators() {
         CodeGenerator remotingCommand = null;
 
-        JavaCodeGenerator rpcHook = new RPCHookCodeGenerator(generatorConfig, Collections.singletonList(remotingCommand));
-        JavaCodeGenerator remotingService = new RemotingServiceCodeGenerator(generatorConfig);
+        JavaCodeGenerator rpcHook = new RPCHookCodeGenerator(Collections.singletonList(remotingCommand));
+        JavaCodeGenerator remotingService = new RemotingServiceCodeGenerator();
 
     }
 
     public void registerExceptionCodeGenerators() {
-        JavaCodeGenerator remotingException = new RemotingExceptionCodeGenerator(generatorConfig);
-        JavaCodeGenerator remotingCommandException = new RemotingCommandExceptionCodeGenerator(generatorConfig);
-        JavaCodeGenerator remotingConnectException = new RemotingConnectExceptionCodeGenerator(generatorConfig);
-        JavaCodeGenerator remotingSendRequestException = new RemotingSendRequestExceptionCodeGenerator(generatorConfig);
-        JavaCodeGenerator remotingTimeoutException = new RemotingTimeoutExceptionCodeGenerator(generatorConfig);
-        JavaCodeGenerator remotingTooMuchException = new RemotingTooMuchRequestExceptionCodeGenerator(generatorConfig);
+        JavaCodeGenerator remotingException = new RemotingExceptionCodeGenerator();
+        JavaCodeGenerator remotingCommandException = new RemotingCommandExceptionCodeGenerator();
+        JavaCodeGenerator remotingConnectException = new RemotingConnectExceptionCodeGenerator();
+        JavaCodeGenerator remotingSendRequestException = new RemotingSendRequestExceptionCodeGenerator();
+        JavaCodeGenerator remotingTimeoutException = new RemotingTimeoutExceptionCodeGenerator();
+        JavaCodeGenerator remotingTooMuchException = new RemotingTooMuchRequestExceptionCodeGenerator();
         register(remotingException.fullQualifiedName(), remotingException);
         register(remotingCommandException.fullQualifiedName(), remotingCommandException);
         register(remotingConnectException.fullQualifiedName(), remotingConnectException);
         register(remotingSendRequestException.fullQualifiedName(), remotingSendRequestException);
         register(remotingTimeoutException.fullQualifiedName(), remotingTimeoutException);
         register(remotingTooMuchException.fullQualifiedName(), remotingTooMuchException);
-    }
-
-    public void setGeneratorConfig(GeneratorConfig config) {
-        String sourceStoreLocation = CodeGeneratorHelper.buildNecessaryFolders(config.getStoreLocation());
-        config.setStoreLocation(sourceStoreLocation);
-        this.generatorConfig = config;
     }
 
 

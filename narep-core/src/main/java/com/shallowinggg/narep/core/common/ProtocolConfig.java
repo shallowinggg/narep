@@ -1,5 +1,7 @@
 package com.shallowinggg.narep.core.common;
 
+import com.shallowinggg.narep.core.Config;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -9,7 +11,9 @@ import java.util.Set;
  *
  * @author shallowinggg
  */
-public class ProtocolConfig {
+public class ProtocolConfig implements Config {
+    public static final String CONFIG_NAME = "protocol";
+
     private boolean compress;
 
     private Set<ProtocolField> protocolFields = new HashSet<>();

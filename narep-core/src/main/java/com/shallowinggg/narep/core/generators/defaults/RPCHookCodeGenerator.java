@@ -15,8 +15,8 @@ public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
 
     private List<CodeGenerator> dependencies;
 
-    public RPCHookCodeGenerator(GeneratorConfig generatorConfig, List<CodeGenerator> dependencies) {
-        super(INTERFACE_NAME, generatorConfig);
+    public RPCHookCodeGenerator(List<CodeGenerator> dependencies) {
+        super(INTERFACE_NAME);
         this.dependencies = dependencies;
     }
 

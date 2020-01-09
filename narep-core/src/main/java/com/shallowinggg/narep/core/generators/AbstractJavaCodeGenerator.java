@@ -2,6 +2,7 @@ package com.shallowinggg.narep.core.generators;
 
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.ConfigManager;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.util.FileUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
@@ -19,19 +20,18 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     private String parentName;
     private String subPackageName;
 
-    private GeneratorConfig config;
+    private GeneratorConfig config = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
 
-    public AbstractJavaCodeGenerator(String name, GeneratorConfig config) {
-        this(name, config, null);
+    public AbstractJavaCodeGenerator(String name) {
+        this(name, null);
     }
 
-    public AbstractJavaCodeGenerator(String name, GeneratorConfig config, String parentName) {
-        this(name, config, parentName, null);
+    public AbstractJavaCodeGenerator(String name, String parentName) {
+        this(name, parentName, null);
     }
 
-    public AbstractJavaCodeGenerator(String name, GeneratorConfig config, String parentName, String subPackageName) {
+    public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName) {
         this.name = name;
-        this.config = config;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
     }
