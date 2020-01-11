@@ -1,44 +1,64 @@
 package com.shallowinggg.narep.core.generators;
 
+import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigManager;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
+import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.FileUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
-import static com.shallowinggg.narep.core.common.GeneratorConfig.FILE_SEPARATOR;
-import static com.shallowinggg.narep.core.common.GeneratorConfig.LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.common.GeneratorConfig.*;
 
 /**
  * @author shallowinggg
  */
 public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
+    private static final String NON_PARENT = "";
+    private static final String NON_SUB_PACKAGE = "";
+    private static final List<String> NON_DEPENDENCIES = Collections.emptyList();
+
     private String name;
     private String parentName;
     private String subPackageName;
+    private List<String> dependenciesName;
+    private List<JavaCodeGenerator> dependencies;
 
     private GeneratorConfig config = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
 
     public AbstractJavaCodeGenerator(String name) {
-        this(name, null);
+        this(name, NON_PARENT);
+    }
+
+    public AbstractJavaCodeGenerator(String name, List<String> dependenciesName) {
+        this.name = name;
+        this.dependenciesName = dependenciesName;
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName) {
-        this(name, parentName, null);
+        this(name, parentName, NON_SUB_PACKAGE);
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName) {
+        this(name, parentName, subPackageName, NON_DEPENDENCIES);
+    }
+
+    public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
+                                     List<String> dependenciesName) {
         this.name = name;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
+        this.dependenciesName = dependenciesName;
     }
 
     @Override
     public String fileName() {
-        return fullQualifiedName().replace('.', FILE_SEPARATOR) + JavaCodeGenerator.EXTENSION;
+        return name + JavaCodeGenerator.EXTENSION;
     }
 
     @Override
@@ -103,7 +123,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public void write() throws IOException {
-        String storePath = config.getStoreLocation() + FILE_SEPARATOR + fileName();
+        String storePath = config.getStoreLocation() + FILE_SEPARATOR + relativeFilePath();
         String content = openSourceLicense() +
                 buildPackage() +
                 buildImports() +
@@ -115,11 +135,29 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
         FileUtils.writeFile(storePath, content, JavaCodeGenerator.DEFAULT_CHARSET);
     }
 
+    @Override
+    public boolean resolveDependencies(DependencyResolver resolver) {
+        List<JavaCodeGenerator> result = resolver.resolve(dependenciesName);
+        if(CollectionUtils.isNotEmpty(result)) {
+            this.dependencies = result;
+            return true;
+        }
+        return false;
+    }
+
+    private String relativeFilePath() {
+        return fullQualifiedName().replace('.', FILE_SEPARATOR) + JavaCodeGenerator.EXTENSION;
+    }
+
     public String getName() {
         return name;
     }
 
     public String getParentName() {
         return parentName;
+    }
+
+    public List<JavaCodeGenerator> getDependencies() {
+        return dependencies;
     }
 }

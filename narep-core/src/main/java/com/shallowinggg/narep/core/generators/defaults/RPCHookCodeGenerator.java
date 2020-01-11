@@ -1,11 +1,10 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
-import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * @author shallowinggg
@@ -13,17 +12,14 @@ import java.util.List;
 public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "RPCHook";
 
-    private List<CodeGenerator> dependencies;
-
-    public RPCHookCodeGenerator(List<CodeGenerator> dependencies) {
-        super(INTERFACE_NAME);
-        this.dependencies = dependencies;
+    public RPCHookCodeGenerator() {
+        super(INTERFACE_NAME, Collections.singletonList("RemotingCommandCodeGenerator.java"));
     }
 
     @Override
     public String buildImports() {
         StringBuilder imports = new StringBuilder(50);
-        CodeGeneratorHelper.buildDependencyImports(imports, dependencies);
+        CodeGeneratorHelper.buildDependencyImports(imports, getDependencies());
         imports.append(GeneratorConfig.DOUBLE_LINE_SEPARATOR);
         return imports.toString();
     }

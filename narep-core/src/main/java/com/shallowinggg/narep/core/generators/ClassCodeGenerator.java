@@ -3,6 +3,8 @@ package com.shallowinggg.narep.core.generators;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
+import java.util.List;
+
 /**
  * 类文件代码生成器
  *
@@ -16,6 +18,10 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
 
     public ClassCodeGenerator(String name, String parentName) {
         super(name, parentName);
+    }
+
+    public ClassCodeGenerator(String name, List<String> dependenciesName) {
+        super(name, dependenciesName);
     }
 
     public ClassCodeGenerator(String name, String parentName, String subPackageName) {

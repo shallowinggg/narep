@@ -5,8 +5,10 @@ package com.shallowinggg.narep.core;
  *
  * 文件结构分为如下：
  *
+ * - 开源许可证
  * - package声明
  * - import语句
+ * - 类注释
  * - 类/接口声明
  * - 字段
  * - 方法
@@ -103,4 +105,12 @@ public interface JavaCodeGenerator extends CodeGenerator {
      * @return 包含方法的字符串
      */
     String buildMethods();
+
+    /**
+     * 检查自身依赖类的生成器是否存在
+     *
+     * @param resolver 解析器
+     * @return true 如果全部存在；否则返回false
+     */
+    boolean resolveDependencies(DependencyResolver resolver);
 }

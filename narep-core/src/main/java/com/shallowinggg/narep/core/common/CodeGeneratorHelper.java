@@ -1,6 +1,8 @@
 package com.shallowinggg.narep.core.common;
 
-import com.shallowinggg.narep.core.CodeGenerator;
+import com.shallowinggg.narep.core.JavaCodeGenerator;
+import com.shallowinggg.narep.core.util.CollectionUtils;
+import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.FileUtils;
 
 import java.io.File;
@@ -24,9 +26,10 @@ public class CodeGeneratorHelper {
                 PACKAGE_DELIMITER + className;
     }
 
-    public static void buildDependencyImports(StringBuilder builder, List<CodeGenerator> dependencies) {
-        for (CodeGenerator codeGenerator : dependencies) {
-            builder.append(GeneratorConfig.IMPORT).append(" ").append(codeGenerator.fileName())
+    public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
+        for (JavaCodeGenerator codeGenerator : dependencies) {
+            builder.append(GeneratorConfig.IMPORT).append(" ").append(codeGenerator.fullQualifiedName())
                     .append(LINE_SEPARATOR);
         }
     }
@@ -40,44 +43,32 @@ public class CodeGeneratorHelper {
                 subPackageName + EOS_DELIMITER + DOUBLE_LINE_SEPARATOR;
     }
 
-    public static String buildProtocolPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                GeneratorConfig.PACKAGE_PROTOCOL + EOS_DELIMITER +
-                System.lineSeparator() + System.lineSeparator();
-    }
-
-    public static String buildCommonPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                GeneratorConfig.PACKAGE_COMMON + EOS_DELIMITER +
-                System.lineSeparator() + System.lineSeparator();
-    }
-
-    public static String buildNettyPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                GeneratorConfig.PACKAGE_NETTY + EOS_DELIMITER +
-                System.lineSeparator() + System.lineSeparator();
-    }
-
-    public static String buildExceptionPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                GeneratorConfig.PACKAGE_EXCEPTION + EOS_DELIMITER +
-                System.lineSeparator() + System.lineSeparator();
-    }
-
     public static String buildInterfaceDeclaration(String interfaceName) {
-        return "public interface " + interfaceName + " {" + System.lineSeparator();
+        return "public interface " + interfaceName + " {" + LINE_SEPARATOR;
     }
 
     public static String buildInterfaceDeclaration(String interfaceName, String parent) {
-        return "public interface " + interfaceName + " extend " + parent + " {" + System.lineSeparator();
+        return "public interface " + interfaceName + " extend " + parent + " {" + LINE_SEPARATOR;
     }
 
     public static String buildClassDeclaration(String className) {
-        return "public class " + className + " {" + System.lineSeparator();
+        return "public class " + className + " {" + LINE_SEPARATOR;
     }
 
     public static String buildClassDeclaration(String className, String parent) {
-        return "public class " + className + " extend " + parent + " {" + System.lineSeparator();
+        return "public class " + className + " extend " + parent + " {" + LINE_SEPARATOR;
+    }
+
+    public static String buildGenericClassDeclaration(String className, List<String> generics) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(generics), "generics must not be null");
+        StringBuilder declaration = new StringBuilder(30);
+        declaration.append("public class ").append(className).append("<");
+        for(String generic : generics) {
+            declaration.append(generic).append(", ");
+        }
+        declaration.setLength(declaration.length() - 2);
+        declaration.append("> {").append(LINE_SEPARATOR);
+        return declaration.toString();
     }
 
     public static String buildNecessaryFolders(String basePath) {
