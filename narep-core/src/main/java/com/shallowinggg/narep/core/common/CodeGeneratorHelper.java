@@ -59,6 +59,10 @@ public class CodeGeneratorHelper {
         return "public class " + className + " extend " + parent + " {" + LINE_SEPARATOR;
     }
 
+    public static String buildEnumDeclaration(String enumName) {
+        return "public enum " + enumName + " {" + LINE_SEPARATOR;
+    }
+
     public static String buildGenericClassDeclaration(String className, List<String> generics) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(generics), "generics must not be null");
         StringBuilder declaration = new StringBuilder(30);

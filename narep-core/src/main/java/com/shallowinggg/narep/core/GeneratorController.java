@@ -18,14 +18,16 @@ public class GeneratorController {
 
     public void init() {
         if(configManager.getConfig(GeneratorConfig.CONFIG_NAME) == null) {
-            configManager.register(GeneratorConfig.CONFIG_NAME, new GeneratorConfig());
+            GeneratorConfig config = new GeneratorConfig();
+            config.init();
+            registerConfig(GeneratorConfig.CONFIG_NAME, config);
             if(LOG.isInfoEnabled()) {
                 LOG.info("No user specified <{}> config found, use default config", GeneratorConfig.CONFIG_NAME);
             }
         }
 
         if(configManager.getConfig(ProtocolConfig.CONFIG_NAME) == null) {
-            configManager.register(ProtocolConfig.CONFIG_NAME, new ProtocolConfig());
+            registerConfig(ProtocolConfig.CONFIG_NAME, new ProtocolConfig());
             if(LOG.isInfoEnabled()) {
                 LOG.info("No user specified <{}> config found, use default config", ProtocolConfig.CONFIG_NAME);
             }

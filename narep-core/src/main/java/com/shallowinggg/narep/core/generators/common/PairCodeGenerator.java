@@ -11,10 +11,11 @@ import java.util.List;
  */
 public class PairCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "Pair";
+    private static final String SUB_PACKAGE = "common";
     private static final List<String> GENERICS = Arrays.asList("T1", "T2");
 
     public PairCodeGenerator() {
-        super(CLASS_NAME);
+        super(CLASS_NAME, SUB_PACKAGE);
     }
 
     @Override

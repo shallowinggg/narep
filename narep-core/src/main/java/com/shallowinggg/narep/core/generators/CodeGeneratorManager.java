@@ -66,7 +66,7 @@ public class CodeGeneratorManager implements DependencyResolver {
 
         generators.put(name, generator);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("register CodeGenerator: " + name);
+            LOG.debug("register CodeGenerator: {}", name);
         }
     }
 

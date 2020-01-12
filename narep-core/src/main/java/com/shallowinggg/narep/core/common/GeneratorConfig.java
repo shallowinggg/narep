@@ -12,28 +12,22 @@ public class GeneratorConfig implements Config {
     public static final String CONFIG_NAME = "generator";
 
     public static final String PACKAGE = "package";
+    public static final String IMPORT = "import";
     public static final String PACKAGE_DELIMITER = ".";
-    public static final String PACKAGE_COMMON = "common";
-    public static final String PACKAGE_EXCEPTION = "exception";
-    public static final String PACKAGE_NETTY = "netty";
-    public static final String PACKAGE_PROTOCOL = "protocol";
     public static final String EOS_DELIMITER = ";";
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String DOUBLE_LINE_SEPARATOR = System.lineSeparator() + System.lineSeparator();
     public static final char FILE_SEPARATOR = File.separatorChar;
-    public static final String IMPORT = "import";
 
     private static final String DEFAULT_BASE_PACKAGE = "com.example.remoting";
-    private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + FILE_SEPARATOR +  "generator";
-
-    private static final GeneratorConfig INSTANCE = new GeneratorConfig();
+    private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + FILE_SEPARATOR + "generator";
 
     private String basePackage = DEFAULT_BASE_PACKAGE;
     private String storeLocation = DEFAULT_STORE_LOCATION;
 
 
-    public static GeneratorConfig getInstance() {
-        return INSTANCE;
+    public void init() {
+        this.storeLocation = CodeGeneratorHelper.buildNecessaryFolders(this.storeLocation);
     }
 
     public String getBasePackage() {
