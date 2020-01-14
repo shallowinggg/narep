@@ -1,10 +1,11 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 import java.util.Collections;
+
+import static com.shallowinggg.narep.core.common.JLSConstants.DOUBLE_LINE_SEPARATOR;
 
 /**
  * @author shallowinggg
@@ -20,7 +21,7 @@ public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
     public String buildImports() {
         StringBuilder imports = new StringBuilder(50);
         CodeGeneratorHelper.buildDependencyImports(imports, getDependencies());
-        imports.append(GeneratorConfig.DOUBLE_LINE_SEPARATOR);
+        imports.append(DOUBLE_LINE_SEPARATOR);
         return imports.toString();
     }
 

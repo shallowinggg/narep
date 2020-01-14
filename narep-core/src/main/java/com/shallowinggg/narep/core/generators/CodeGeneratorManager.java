@@ -53,7 +53,7 @@ public class CodeGeneratorManager implements DependencyResolver {
             }
         }
 
-        if(success) {
+        if (success) {
             return dependencies;
         } else {
             return Collections.emptyList();
@@ -61,7 +61,7 @@ public class CodeGeneratorManager implements DependencyResolver {
     }
 
     public void register(String name, CodeGenerator generator) {
-        Conditions.checkArgument(StringTinyUtils.isNotBlank(name), "file name must no be blank");
+        Conditions.checkArgument(StringTinyUtils.isNotBlank(name), "generator name must no be blank");
         Conditions.checkArgument(generator != null, "generator must not be null");
 
         generators.put(name, generator);

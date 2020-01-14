@@ -5,8 +5,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.shallowinggg.narep.core.common.GeneratorConfig.DOUBLE_LINE_SEPARATOR;
-import static com.shallowinggg.narep.core.common.GeneratorConfig.LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.common.JLSConstants.DOUBLE_LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.common.JLSConstants.LINE_SEPARATOR;
 
 public class CodeGeneratorHelperTest {
 
@@ -35,7 +35,7 @@ public class CodeGeneratorHelperTest {
         Assert.assertEquals(val, "public interface CodeGenerator {" + LINE_SEPARATOR);
 
         val = CodeGeneratorHelper.buildInterfaceDeclaration("JavaCodeGenerator", "CodeGenerator");
-        Assert.assertEquals(val, "public interface JavaCodeGenerator extend CodeGenerator {" + LINE_SEPARATOR);
+        Assert.assertEquals(val, "public interface JavaCodeGenerator extends CodeGenerator {" + LINE_SEPARATOR);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class CodeGeneratorHelperTest {
         Assert.assertEquals(val, "public class ClassCodeGenerator {" + LINE_SEPARATOR);
 
         val = CodeGeneratorHelper.buildClassDeclaration("PairCodeGenerator", "ClassCodeGenerator");
-        Assert.assertEquals(val, "public class PairCodeGenerator extend ClassCodeGenerator {" + LINE_SEPARATOR);
+        Assert.assertEquals(val, "public class PairCodeGenerator extends ClassCodeGenerator {" + LINE_SEPARATOR);
     }
 
     @Test

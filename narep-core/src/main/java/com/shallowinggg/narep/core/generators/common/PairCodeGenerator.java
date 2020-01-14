@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.generators.common;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.generators.GenericClassCodeGenerator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,18 +8,13 @@ import java.util.List;
 /**
  * @author shallowinggg
  */
-public class PairCodeGenerator extends ClassCodeGenerator {
+public class PairCodeGenerator extends GenericClassCodeGenerator {
     private static final String CLASS_NAME = "Pair";
     private static final String SUB_PACKAGE = "common";
     private static final List<String> GENERICS = Arrays.asList("T1", "T2");
 
     public PairCodeGenerator() {
-        super(CLASS_NAME, SUB_PACKAGE);
-    }
-
-    @Override
-    public String buildName() {
-        return CodeGeneratorHelper.buildGenericClassDeclaration(CLASS_NAME, GENERICS);
+        super(CLASS_NAME, SUB_PACKAGE, GENERICS);
     }
 
     @Override

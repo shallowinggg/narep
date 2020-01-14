@@ -8,7 +8,7 @@ import com.shallowinggg.narep.core.util.FileUtils;
 import java.io.File;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.GeneratorConfig.*;
+import static com.shallowinggg.narep.core.common.JLSConstants.*;
 
 /**
  * @author shallowinggg
@@ -21,7 +21,7 @@ public class CodeGeneratorHelper {
         return basePackageName + PACKAGE_DELIMITER + className;
     }
 
-    public static String buildFullQualifiedName(String basePackageName, String subPackageName,  String className) {
+    public static String buildFullQualifiedName(String basePackageName, String subPackageName, String className) {
         return basePackageName + PACKAGE_DELIMITER + subPackageName +
                 PACKAGE_DELIMITER + className;
     }
@@ -29,49 +29,76 @@ public class CodeGeneratorHelper {
     public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
-            builder.append(GeneratorConfig.IMPORT).append(" ").append(codeGenerator.fullQualifiedName())
+            builder.append(IMPORT).append(" ").append(codeGenerator.fullQualifiedName())
                     .append(LINE_SEPARATOR);
         }
     }
 
     public static String buildDefaultPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + EOS_DELIMITER + DOUBLE_LINE_SEPARATOR;
+        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
     public static String buildSubPackage(String basePackageName, String subPackageName) {
         return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                subPackageName + EOS_DELIMITER + DOUBLE_LINE_SEPARATOR;
+                subPackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
     public static String buildInterfaceDeclaration(String interfaceName) {
-        return "public interface " + interfaceName + " {" + LINE_SEPARATOR;
+        return INTERFACE_DECL + interfaceName + DECL_END;
     }
 
     public static String buildInterfaceDeclaration(String interfaceName, String parent) {
-        return "public interface " + interfaceName + " extend " + parent + " {" + LINE_SEPARATOR;
+        return INTERFACE_DECL + interfaceName + EXTENDS_DECL + parent + DECL_END;
     }
 
     public static String buildClassDeclaration(String className) {
-        return "public class " + className + " {" + LINE_SEPARATOR;
+        return CLASS_DECL + className + DECL_END;
     }
 
     public static String buildClassDeclaration(String className, String parent) {
-        return "public class " + className + " extend " + parent + " {" + LINE_SEPARATOR;
+        return CLASS_DECL + className + EXTENDS_DECL + parent + DECL_END;
+    }
+
+    public static String buildClassDeclaration(String className, String... interfaceNames) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
+                "At least one interface should be specified");
+        StringBuilder builder = new StringBuilder();
+        builder.append(CLASS_DECL).append(className).append(IMPLEMENTS_DECL);
+        for (String interfaceName : interfaceNames) {
+            builder.append(interfaceName).append(", ");
+        }
+        builder.setLength(builder.length() - 2);
+        builder.append(DECL_END);
+        return builder.toString();
+    }
+
+    public static String buildClassDeclaration(String className, String parent, String... interfaceNames) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
+                "At least one interface should be specified");
+        StringBuilder builder = new StringBuilder();
+        builder.append(CLASS_DECL).append(className).append(EXTENDS_DECL).append(parent)
+                .append(IMPLEMENTS_DECL);
+        for (String interfaceName : interfaceNames) {
+            builder.append(interfaceName).append(", ");
+        }
+        builder.setLength(builder.length() - 2);
+        builder.append(DECL_END);
+        return builder.toString();
     }
 
     public static String buildEnumDeclaration(String enumName) {
-        return "public enum " + enumName + " {" + LINE_SEPARATOR;
+        return ENUM_DECL + enumName + DECL_END;
     }
 
     public static String buildGenericClassDeclaration(String className, List<String> generics) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(generics), "generics must not be null");
         StringBuilder declaration = new StringBuilder(30);
-        declaration.append("public class ").append(className).append("<");
-        for(String generic : generics) {
+        declaration.append(CLASS_DECL).append(className).append("<");
+        for (String generic : generics) {
             declaration.append(generic).append(", ");
         }
         declaration.setLength(declaration.length() - 2);
-        declaration.append("> {").append(LINE_SEPARATOR);
+        declaration.append(">").append(DECL_END);
         return declaration.toString();
     }
 
@@ -82,5 +109,6 @@ public class CodeGeneratorHelper {
         return source;
     }
 
-    private CodeGeneratorHelper() {}
+    private CodeGeneratorHelper() {
+    }
 }

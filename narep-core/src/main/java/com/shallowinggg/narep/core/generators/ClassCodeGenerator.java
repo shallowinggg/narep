@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.generators;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.util.StringTinyUtils;
+import com.shallowinggg.narep.core.common.ClassDeclarations;
 
 import java.util.List;
 
@@ -11,6 +10,7 @@ import java.util.List;
  * @author shallowinggg
  */
 public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
+    private String[] interfaceNames;
 
     public ClassCodeGenerator(String name) {
         super(name);
@@ -18,6 +18,11 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
 
     public ClassCodeGenerator(String name, String parentName) {
         super(name, parentName);
+    }
+
+    public ClassCodeGenerator(String name, String parentName, String[] interfaceNames) {
+        super(name, parentName);
+        this.interfaceNames = interfaceNames;
     }
 
     public ClassCodeGenerator(String name, List<String> dependenciesName) {
@@ -28,13 +33,22 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
         super(name, parentName, subPackageName);
     }
 
+    public ClassCodeGenerator(String name, String parentName, String subPackageName, String[] interfaceNames) {
+        super(name, parentName, subPackageName);
+        this.interfaceNames = interfaceNames;
+    }
+
     @Override
     public String buildName() {
-        final String parentName = getParentName();
-        if(StringTinyUtils.isEmpty(parentName)) {
-            return CodeGeneratorHelper.buildClassDeclaration(getName());
-        } else {
-            return CodeGeneratorHelper.buildClassDeclaration(getName(), parentName);
-        }
+        return ClassDeclarations.buildStrategy(getName(), getParentName(), interfaceNames, null,
+                false, false).buildDeclaration();
+    }
+
+    public void setInterfaceNames(String[] interfaceNames) {
+        this.interfaceNames = interfaceNames;
+    }
+
+    public String[] getInterfaceNames() {
+        return interfaceNames;
     }
 }

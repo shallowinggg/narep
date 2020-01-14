@@ -91,6 +91,8 @@ public interface JavaCodeGenerator extends CodeGenerator {
      *     private int name;
      * </pre></blockquote>
      *
+     * 注意： 此处字段包括普通字段，静态字段以及常量
+     *
      * @return 包含字段的字符串
      */
     String buildFields();

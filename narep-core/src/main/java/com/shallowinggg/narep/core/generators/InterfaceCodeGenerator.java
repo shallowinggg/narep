@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.generators;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.util.StringTinyUtils;
+import com.shallowinggg.narep.core.common.ClassDeclarations;
 
 import java.util.List;
 
@@ -30,11 +29,7 @@ public class InterfaceCodeGenerator extends AbstractJavaCodeGenerator {
 
     @Override
     public String buildName() {
-        final String parentName = getParentName();
-        if(StringTinyUtils.isEmpty(parentName)) {
-            return CodeGeneratorHelper.buildInterfaceDeclaration(getName());
-        } else {
-            return CodeGeneratorHelper.buildInterfaceDeclaration(getName(), parentName);
-        }
+        return ClassDeclarations.buildStrategy(getName(), getParentName(), null, null,
+                true, false).buildDeclaration();
     }
 }

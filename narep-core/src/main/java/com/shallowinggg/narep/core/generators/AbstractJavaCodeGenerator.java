@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.GeneratorConfig.*;
+import static com.shallowinggg.narep.core.common.JLSConstants.FILE_SEPARATOR;
+import static com.shallowinggg.narep.core.common.JLSConstants.LINE_SEPARATOR;
 
 /**
  * @author shallowinggg
@@ -29,7 +30,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     private List<String> dependenciesName;
     private List<JavaCodeGenerator> dependencies;
 
-    private GeneratorConfig config = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
+    private static GeneratorConfig config = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
 
     public AbstractJavaCodeGenerator(String name) {
         this(name, NON_PARENT);
@@ -149,6 +150,10 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
         return fullQualifiedName().replace('.', FILE_SEPARATOR) + JavaCodeGenerator.EXTENSION;
     }
 
+    public void setDependenciesName(List<String> dependenciesName) {
+        this.dependenciesName = dependenciesName;
+    }
+
     public String getName() {
         return name;
     }
@@ -159,5 +164,9 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     public List<JavaCodeGenerator> getDependencies() {
         return dependencies;
+    }
+
+    protected String getBasePackage() {
+        return config.getBasePackage();
     }
 }
