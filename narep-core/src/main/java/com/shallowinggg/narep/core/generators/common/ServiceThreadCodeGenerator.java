@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.common;
 
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
@@ -22,7 +23,7 @@ public class ServiceThreadCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        return "    private static final Logger log = LogManager.getLogger(RemotingHelper.REMOTING);\n" +
+        return CodeGeneratorHelper.buildLoggerField(CLASS_NAME) +
                 "\n" +
                 "    private static final long JOIN_TIME = 90 * 1000;\n" +
                 "    protected final Thread thread;\n" +

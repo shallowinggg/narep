@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.common;
 
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
@@ -35,7 +36,7 @@ public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
     public String buildFields() {
         return "    public static final String OS_NAME = System.getProperty(\"os.name\");\n" +
                 "\n" +
-                "    private static final Logger log = LogManager.getLogger(RemotingHelper.REMOTING);\n" +
+                CodeGeneratorHelper.buildLoggerField(CLASS_NAME) +
                 "    private static boolean isLinuxPlatform = false;\n" +
                 "    private static boolean isWindowsPlatform = false;\n\n";
     }

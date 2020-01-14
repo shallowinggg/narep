@@ -62,7 +62,7 @@ public class CodeGeneratorHelper {
     public static String buildClassDeclaration(String className, String... interfaceNames) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
                 "At least one interface should be specified");
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(50);
         builder.append(CLASS_DECL).append(className).append(IMPLEMENTS_DECL);
         for (String interfaceName : interfaceNames) {
             builder.append(interfaceName).append(", ");
@@ -75,7 +75,7 @@ public class CodeGeneratorHelper {
     public static String buildClassDeclaration(String className, String parent, String... interfaceNames) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
                 "At least one interface should be specified");
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(50);
         builder.append(CLASS_DECL).append(className).append(EXTENDS_DECL).append(parent)
                 .append(IMPLEMENTS_DECL);
         for (String interfaceName : interfaceNames) {
@@ -107,6 +107,13 @@ public class CodeGeneratorHelper {
         String source = basePath + FILE_SEPARATOR + MODULE_NAME + FILE_SEPARATOR + JAVA_FOLDER;
         FileUtils.ensureDirOk(new File(source));
         return source;
+    }
+
+    public static String buildLoggerField(String className) {
+        boolean useCustomLoggerName = ConfigInfos.getInstance().useCustomLoggerName();
+        return "    private static final Logger log = LogManager.getLogger(" +
+                (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class")
+                + ");\n";
     }
 
     private CodeGeneratorHelper() {

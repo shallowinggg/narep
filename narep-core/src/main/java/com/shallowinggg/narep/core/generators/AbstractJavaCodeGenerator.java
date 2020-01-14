@@ -3,8 +3,7 @@ package com.shallowinggg.narep.core.generators;
 import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.ConfigManager;
-import com.shallowinggg.narep.core.common.GeneratorConfig;
+import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.FileUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
@@ -29,8 +28,6 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     private String subPackageName;
     private List<String> dependenciesName;
     private List<JavaCodeGenerator> dependencies;
-
-    private static GeneratorConfig config = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
 
     public AbstractJavaCodeGenerator(String name) {
         this(name, NON_PARENT);
@@ -64,10 +61,11 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public String fullQualifiedName() {
+        String basePackage = ConfigInfos.getInstance().basePackage();
         if(StringTinyUtils.isEmpty(subPackageName)) {
-            return CodeGeneratorHelper.buildFullQualifiedName(config.getBasePackage(), name);
+            return CodeGeneratorHelper.buildFullQualifiedName(basePackage, name);
         } else {
-            return CodeGeneratorHelper.buildFullQualifiedName(config.getBasePackage(), subPackageName, name);
+            return CodeGeneratorHelper.buildFullQualifiedName(basePackage, subPackageName, name);
         }
     }
 
@@ -93,10 +91,11 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public String buildPackage() {
+        String basePackage = ConfigInfos.getInstance().basePackage();
         if(StringTinyUtils.isEmpty(subPackageName)) {
-            return CodeGeneratorHelper.buildDefaultPackage(config.getBasePackage());
+            return CodeGeneratorHelper.buildDefaultPackage(basePackage);
         } else {
-            return CodeGeneratorHelper.buildSubPackage(config.getBasePackage(), subPackageName);
+            return CodeGeneratorHelper.buildSubPackage(basePackage, subPackageName);
         }
     }
 
@@ -124,7 +123,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public void write() throws IOException {
-        String storePath = config.getStoreLocation() + FILE_SEPARATOR + relativeFilePath();
+        String storePath = ConfigInfos.getInstance().storeLocation() + FILE_SEPARATOR + relativeFilePath();
         String content = openSourceLicense() +
                 buildPackage() +
                 buildImports() +
@@ -164,9 +163,5 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     public List<JavaCodeGenerator> getDependencies() {
         return dependencies;
-    }
-
-    protected String getBasePackage() {
-        return config.getBasePackage();
     }
 }

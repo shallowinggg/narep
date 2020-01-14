@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 import java.util.Arrays;
@@ -40,10 +41,10 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        return "public static final String REMOTING = \"Remoting\";\n" +
+        String loggerName = ConfigInfos.getInstance().loggerName();
+        return "    public static final String REMOTING_LOGGER_NAME = " + loggerName + ";\n" +
                 "    public static final String DEFAULT_CHARSET = \"UTF-8\";\n" +
-                "\n" +
-                "    private static final Logger log = LogManager.getLogger(REMOTING);\n\n";
+                CodeGeneratorHelper.buildLoggerField(CLASS_NAME) + "\n";
     }
 
     @Override
