@@ -19,7 +19,7 @@ public class Conditions {
      * @param expr 参数检验表达式
      */
     public static void checkArgument(boolean expr) {
-        if(!expr) {
+        if (!expr) {
             throw new IllegalArgumentException();
         }
     }
@@ -35,15 +35,16 @@ public class Conditions {
      *     }
      * </pre></blockquote>
      *
-     * @param expr 参数检验表达式
+     * @param expr      参数检验表达式
      * @param formatMsg 错误信息
-     * @param objects 错误信息相关参数值
+     * @param objects   错误信息相关参数值
      */
     public static void checkArgument(boolean expr, String formatMsg, Object... objects) {
-        if(!expr) {
+        if (!expr) {
             throw new IllegalArgumentException(String.format(formatMsg, objects));
         }
     }
 
-    private Conditions() {}
+    private Conditions() {
+    }
 }

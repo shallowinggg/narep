@@ -18,6 +18,7 @@ public class CollectionUtils {
     /**
      * 判断给定的数组是否为空：
      * 例如： {@code null} 或者长度为0。
+     *
      * @param array 被检查的数组
      */
     public static boolean isEmpty(Object[] array) {
@@ -26,6 +27,7 @@ public class CollectionUtils {
 
     /**
      * 判断给定的是否不为空
+     *
      * @param array 被检查的数组
      * @see CollectionUtils#isEmpty(Object[])
      */
@@ -33,5 +35,6 @@ public class CollectionUtils {
         return !isEmpty(array);
     }
 
-    private CollectionUtils() {}
+    private CollectionUtils() {
+    }
 }

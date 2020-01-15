@@ -4,6 +4,7 @@ import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.FileUtils;
+import com.shallowinggg.narep.core.util.StringTinyUtils;
 
 import java.io.File;
 import java.util.List;
@@ -16,6 +17,8 @@ import static com.shallowinggg.narep.core.common.JLSConstants.*;
 public class CodeGeneratorHelper {
     private static final String MODULE_NAME = "remoting";
     private static final String JAVA_FOLDER = "src" + FILE_SEPARATOR + "main" + FILE_SEPARATOR + "java";
+    private static final int ASSUMED_FIELD_LEN = 50;
+    private static final int ASSUMED_METHOD_LEN = 300;
 
     public static String buildFullQualifiedName(String basePackageName, String className) {
         return basePackageName + PACKAGE_DELIMITER + className;
@@ -115,6 +118,44 @@ public class CodeGeneratorHelper {
                 (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class")
                 + ");\n";
     }
+
+    public static String buildFieldsByMetaData(List<FieldMetaData> fields) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
+        StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
+        for (FieldMetaData field : fields) {
+            if (field.getComment() != null) {
+                builder.append(field.getComment()).append("\n");
+            }
+            builder.append("    ").append(field.getModifier()).append(field.getClazz()).append(" ")
+                    .append(field.getName());
+            if (field.getDefaultValue() != null) {
+                builder.append(" = ").append(field.getDefaultValue());
+            }
+            builder.append(";\n");
+        }
+        return builder.toString();
+    }
+
+    public static String buildGetterAndSetterMethods(List<FieldMetaData> fields) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
+        StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_METHOD_LEN);
+        for (FieldMetaData field : fields) {
+            String name = field.getName();
+            String type = field.getClazz();
+            String methodName = StringTinyUtils.firstCharToUpperCase(field.getName());
+            String getterName = "boolean".equals(type) ? " is" : " get";
+            builder.append("    public void set").append(methodName).append("(").append(type)
+                    .append(" ").append(name).append(") {\n")
+                    .append("        this.").append(name).append(" = ").append(name).append(";\n")
+                    .append("    }\n")
+                    .append("\n")
+                    .append("    public ").append(type).append(getterName).append(methodName).append("() {\n")
+                    .append("        return ").append(name).append(";\n")
+                    .append("    }\n\n");
+        }
+        return builder.toString();
+    }
+
 
     private CodeGeneratorHelper() {
     }

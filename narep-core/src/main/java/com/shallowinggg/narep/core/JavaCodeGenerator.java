@@ -2,9 +2,9 @@ package com.shallowinggg.narep.core;
 
 /**
  * java文件代码生成器。
- *
+ * <p>
  * 文件结构分为如下：
- *
+ * <p>
  * - 开源许可证
  * - package声明
  * - import语句
@@ -12,7 +12,7 @@ package com.shallowinggg.narep.core;
  * - 类/接口声明
  * - 字段
  * - 方法
- *
+ * <p>
  * 最后拼接类/接口定义结束符{@link JavaCodeGenerator#END_OF_CLASS }生成一个完整文件。
  *
  * @author shallowinggg
@@ -90,7 +90,7 @@ public interface JavaCodeGenerator extends CodeGenerator {
      * <blockquote><pre>
      *     private int name;
      * </pre></blockquote>
-     *
+     * <p>
      * 注意： 此处字段包括普通字段，静态字段以及常量
      *
      * @return 包含字段的字符串

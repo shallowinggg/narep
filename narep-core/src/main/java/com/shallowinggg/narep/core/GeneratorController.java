@@ -16,24 +16,25 @@ public class GeneratorController {
     private ConfigInfos configInfos = ConfigInfos.getInstance();
 
     public void init() {
-        if(configManager.getConfig(GeneratorConfig.CONFIG_NAME) == null) {
+        if (configManager.getConfig(GeneratorConfig.CONFIG_NAME) == null) {
             GeneratorConfig config = new GeneratorConfig();
             config.init();
             registerConfig(GeneratorConfig.CONFIG_NAME, config);
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("No user specified <{}> config found, use default config", GeneratorConfig.CONFIG_NAME);
             }
         }
 
-        if(configManager.getConfig(ProtocolConfig.CONFIG_NAME) == null) {
+        if (configManager.getConfig(ProtocolConfig.CONFIG_NAME) == null) {
             registerConfig(ProtocolConfig.CONFIG_NAME, new ProtocolConfig());
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info("No user specified <{}> config found, use default config", ProtocolConfig.CONFIG_NAME);
             }
         }
 
-        if(configManager.getConfig(LogConfig.CONFIG_NAME) == null) {
-            registerConfig(LogConfig.CONFIG_NAME, new LogConfig());if(LOG.isInfoEnabled()) {
+        if (configManager.getConfig(LogConfig.CONFIG_NAME) == null) {
+            registerConfig(LogConfig.CONFIG_NAME, new LogConfig());
+            if (LOG.isInfoEnabled()) {
                 LOG.info("No user specified <{}> config found, use default config", LogConfig.CONFIG_NAME);
             }
         }

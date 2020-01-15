@@ -11,14 +11,15 @@ public class ConfigInfos {
 
     private volatile boolean init;
 
-    private ConfigInfos() {}
+    private ConfigInfos() {
+    }
 
     public static ConfigInfos getInstance() {
         return INSTANCE;
     }
 
     public void init() {
-        if(!init) {
+        if (!init) {
             generatorConfig = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
             protocolConfig = (ProtocolConfig) ConfigManager.getInstance().getConfig(ProtocolConfig.CONFIG_NAME);
             logConfig = (LogConfig) ConfigManager.getInstance().getConfig(LogConfig.CONFIG_NAME);

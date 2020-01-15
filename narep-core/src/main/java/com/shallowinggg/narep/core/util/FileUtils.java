@@ -15,12 +15,12 @@ public class FileUtils {
     private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 
     public static void writeFile(String path, String content, String charset) throws IOException {
-        if(StringTinyUtils.isEmpty(content)) {
+        if (StringTinyUtils.isEmpty(content)) {
             return;
         }
         File file = new File(path);
         ensureDirOk(file);
-        try(OutputStream out = new FileOutputStream(file)) {
+        try (OutputStream out = new FileOutputStream(file)) {
             out.write(content.getBytes(charset));
         }
     }
@@ -35,5 +35,6 @@ public class FileUtils {
     }
 
 
-    private FileUtils() {}
+    private FileUtils() {
+    }
 }

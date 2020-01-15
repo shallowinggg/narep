@@ -25,7 +25,7 @@ public class ClassDeclarations {
      *       - 实现接口的类 public class ProtocolConfig implements Config {
      *       - 完整声明的类 public class Bus extends Car implements Big {
      * </pre>
-     *
+     * <p>
      * 注意：范型类暂不实现完整声明的策略，并且枚举类暂不提供实现。
      *
      * @param className      类名称
@@ -177,5 +177,6 @@ public class ClassDeclarations {
     }
 
 
-    private ClassDeclarations() {}
+    private ClassDeclarations() {
+    }
 }

@@ -13,7 +13,8 @@ public class LogConfig implements Config {
     private boolean useCustomLoggerName;
     // TODO: 加入日志类控制
 
-    public LogConfig() {}
+    public LogConfig() {
+    }
 
     public LogConfig(String loggerName, boolean useCustomLoggerName) {
         this.loggerName = loggerName;

@@ -41,10 +41,10 @@ public class StringTinyUtils {
      * @return true 如果s为null或者长度为0或者全是空白字符；否则返回false
      */
     public static boolean isBlank(CharSequence s) {
-        if(isNotEmpty(s)) {
+        if (isNotEmpty(s)) {
             int len = s.length();
-            for(int i = 0; i < len; ++i) {
-                if(!Character.isWhitespace(s.charAt(i))) {
+            for (int i = 0; i < len; ++i) {
+                if (!Character.isWhitespace(s.charAt(i))) {
                     return false;
                 }
             }
@@ -57,6 +57,16 @@ public class StringTinyUtils {
         return !isBlank(s);
     }
 
+    public static String firstCharToUpperCase(String origin) {
+        assert origin.length() > 0;
+        char[] ch = origin.toCharArray();
+        if (ch[0] >= 'a' && ch[0] <= 'z') {
+            ch[0] = (char) (ch[0] - 32);
+        }
+        return new String(ch);
+    }
 
-    private StringTinyUtils() {}
+
+    private StringTinyUtils() {
+    }
 }

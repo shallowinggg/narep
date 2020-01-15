@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static com.shallowinggg.narep.core.common.JLSConstants.DOUBLE_LINE_SEPARATOR;
 import static com.shallowinggg.narep.core.common.JLSConstants.LINE_SEPARATOR;
@@ -58,4 +59,33 @@ public class CodeGeneratorHelperTest {
         String val = CodeGeneratorHelper.buildGenericClassDeclaration("Pair", Arrays.asList("T1", "T2"));
         Assert.assertEquals(val, "public class Pair<T1, T2> {" + LINE_SEPARATOR);
     }
+
+    @Test
+    public void testBuildFieldsByMetaData() {
+        FieldMetaData data = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        String val = CodeGeneratorHelper.buildFieldsByMetaData(Collections.singletonList(data));
+        Assert.assertEquals("    private int name;\n", val);
+    }
+
+    @Test
+    public void testBuildGetterAndSetterMethods() {
+        FieldMetaData data = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        String val = CodeGeneratorHelper.buildGetterAndSetterMethods(Collections.singletonList(data));
+        Assert.assertEquals("    public void setName(int name) {\n"
+        + "        this.name = name;\n"
+        + "    }\n\n"
+        + "    public int getName() {\n"
+        + "        return name;\n"
+        + "    }\n\n", val);
+
+        FieldMetaData booleanData = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
+        val = CodeGeneratorHelper.buildGetterAndSetterMethods(Collections.singletonList(booleanData));
+        Assert.assertEquals("    public void setCompress(boolean compress) {\n"
+                + "        this.compress = compress;\n"
+                + "    }\n\n"
+                + "    public boolean isCompress() {\n"
+                + "        return compress;\n"
+                + "    }\n\n", val);
+    }
+
 }

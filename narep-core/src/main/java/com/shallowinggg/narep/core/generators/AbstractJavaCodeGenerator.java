@@ -62,7 +62,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     @Override
     public String fullQualifiedName() {
         String basePackage = ConfigInfos.getInstance().basePackage();
-        if(StringTinyUtils.isEmpty(subPackageName)) {
+        if (StringTinyUtils.isEmpty(subPackageName)) {
             return CodeGeneratorHelper.buildFullQualifiedName(basePackage, name);
         } else {
             return CodeGeneratorHelper.buildFullQualifiedName(basePackage, subPackageName, name);
@@ -92,7 +92,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     @Override
     public String buildPackage() {
         String basePackage = ConfigInfos.getInstance().basePackage();
-        if(StringTinyUtils.isEmpty(subPackageName)) {
+        if (StringTinyUtils.isEmpty(subPackageName)) {
             return CodeGeneratorHelper.buildDefaultPackage(basePackage);
         } else {
             return CodeGeneratorHelper.buildSubPackage(basePackage, subPackageName);
@@ -138,7 +138,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     @Override
     public boolean resolveDependencies(DependencyResolver resolver) {
         List<JavaCodeGenerator> result = resolver.resolve(dependenciesName);
-        if(CollectionUtils.isNotEmpty(result)) {
+        if (CollectionUtils.isNotEmpty(result)) {
             this.dependencies = result;
             return true;
         }

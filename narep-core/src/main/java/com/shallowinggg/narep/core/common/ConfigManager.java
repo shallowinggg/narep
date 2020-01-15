@@ -29,7 +29,7 @@ public class ConfigManager {
         Conditions.checkArgument(StringTinyUtils.isNotBlank(name), "config name must not be blank");
         Conditions.checkArgument(config != null, "config must not be null");
         configMap.put(name, config);
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("register config: <{}>", name);
         }
     }

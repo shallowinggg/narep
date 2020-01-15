@@ -11,6 +11,7 @@ public class Utils {
     private static Map<String, Integer> primitiveTypeLens = new HashMap<>(8);
 
     static {
+        classMap.put("boolean", boolean.class);
         classMap.put("byte", byte.class);
         classMap.put("short", short.class);
         classMap.put("int", int.class);
@@ -32,5 +33,6 @@ public class Utils {
         return primitiveTypeLens.getOrDefault(primitiveType, -1);
     }
 
-    private Utils() {}
+    private Utils() {
+    }
 }
