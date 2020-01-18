@@ -1,9 +1,15 @@
 package com.shallowinggg.narep.core.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * @author shallowinggg
  */
 public class ConfigInfos {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigInfos.class);
+
     private static final ConfigInfos INSTANCE = new ConfigInfos();
     private static GeneratorConfig generatorConfig;
     private static ProtocolConfig protocolConfig;
@@ -24,6 +30,9 @@ public class ConfigInfos {
             protocolConfig = (ProtocolConfig) ConfigManager.getInstance().getConfig(ProtocolConfig.CONFIG_NAME);
             logConfig = (LogConfig) ConfigManager.getInstance().getConfig(LogConfig.CONFIG_NAME);
             init = true;
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("ConfigInfos init success");
+            }
         }
     }
 

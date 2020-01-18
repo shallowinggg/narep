@@ -16,10 +16,11 @@ public class RemotingConnectExceptionCodeGenerator extends ClassCodeGenerator {
 
     private static final String CLASS_NAME = "RemotingConnectException";
     private static final String PARENT_CLASS = "RemotingException";
+    private static final String SUB_PACKAGE = "exception";
     private List<FieldMetaData> fields = new ArrayList<>(1);
 
     public RemotingConnectExceptionCodeGenerator() {
-        super(CLASS_NAME, PARENT_CLASS);
+        super(CLASS_NAME, PARENT_CLASS, SUB_PACKAGE);
         fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "long", "serialVersionUID", "-5565366231695911316L"));
     }
 

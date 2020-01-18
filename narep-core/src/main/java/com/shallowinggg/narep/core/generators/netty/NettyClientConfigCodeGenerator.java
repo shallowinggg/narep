@@ -20,7 +20,7 @@ public class NettyClientConfigCodeGenerator extends ClassCodeGenerator {
     private List<FieldMetaData> fields = new ArrayList<>(12);
 
     public NettyClientConfigCodeGenerator() {
-        super(CLASS_NAME, SUB_PACKAGE);
+        super(CLASS_NAME, null, SUB_PACKAGE);
         fields.add(GenericBuilder.of(FieldMetaData::new)
                 .with(FieldMetaData::setModifier, PRIVATE)
                 .with(FieldMetaData::setClazz, "int")

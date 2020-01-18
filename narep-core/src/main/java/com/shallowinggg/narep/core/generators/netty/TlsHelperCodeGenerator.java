@@ -5,6 +5,7 @@ import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC;
@@ -17,10 +18,11 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "TlsHelper";
     private static final String SUB_PACKAGE = "netty";
     private List<FieldMetaData> fields = new ArrayList<>(1);
-    private static final String[] INTERFACE_NAMES = new String[] { "RemotingHelper.java", "TlsSystemConfig.java"};
+    private static final List<String> DEPENDENCIES = Arrays.asList("RemotingHelper.java", "TlsSystemConfig.java");
 
     public TlsHelperCodeGenerator() {
-        super(CLASS_NAME, null, SUB_PACKAGE, INTERFACE_NAMES);
+        super(CLASS_NAME, null, SUB_PACKAGE);
+        setDependenciesName(DEPENDENCIES);
 
         fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
         fields.add(new FieldMetaData(PRIVATE_STATIC, "DecryptionStrategy", "decryptionStrategy", "new DecryptionStrategy() {\n" +
@@ -34,7 +36,7 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildImports() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(600);
         CodeGeneratorHelper.buildDependencyImports(builder, getDependencies().subList(0, 1));
         builder.append("import io.netty.handler.ssl.*;\n" +
                 "import io.netty.handler.ssl.util.InsecureTrustManagerFactory;\n" +

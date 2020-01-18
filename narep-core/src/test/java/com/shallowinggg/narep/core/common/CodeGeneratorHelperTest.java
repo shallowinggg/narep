@@ -1,5 +1,8 @@
 package com.shallowinggg.narep.core.common;
 
+import com.shallowinggg.narep.core.GeneratorController;
+import com.shallowinggg.narep.core.JavaCodeGenerator;
+import com.shallowinggg.narep.core.generators.exception.RemotingExceptionCodeGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +30,7 @@ public class CodeGeneratorHelperTest {
         Assert.assertEquals(val, "package com.example;" + DOUBLE_LINE_SEPARATOR);
 
         val = CodeGeneratorHelper.buildSubPackage("com.example", "common");
-        Assert.assertEquals(val, "package com.example.common;"  + DOUBLE_LINE_SEPARATOR);
+        Assert.assertEquals(val, "package com.example.common;" + DOUBLE_LINE_SEPARATOR);
     }
 
     @Test
@@ -61,6 +64,31 @@ public class CodeGeneratorHelperTest {
     }
 
     @Test
+    public void testBuildLoggerField() {
+        ConfigManager manager = ConfigManager.getInstance();
+        LogConfig config = new LogConfig();
+        manager.register(LogConfig.CONFIG_NAME, config);
+        ConfigInfos configInfos = ConfigInfos.getInstance();
+        configInfos.init();
+
+        String val = CodeGeneratorHelper.buildLoggerField("App");
+        Assert.assertEquals("LogManager.getLogger(App.class)", val);
+    }
+
+    @Test
+    public void testBuildCustomLoggerField() {
+        ConfigManager manager = ConfigManager.getInstance();
+        LogConfig config = new LogConfig();
+        config.setUseCustomLoggerName(true);
+        manager.register(LogConfig.CONFIG_NAME, config);
+        ConfigInfos configInfos = ConfigInfos.getInstance();
+        configInfos.init();
+
+        String val = CodeGeneratorHelper.buildLoggerField("App");
+        Assert.assertEquals("LogManager.getLogger(RemotingHelper.REMOTING_LOGGER_NAME)", val);
+    }
+
+    @Test
     public void testBuildFieldsByMetaData() {
         FieldMetaData data = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
         String val = CodeGeneratorHelper.buildFieldsByMetaData(Collections.singletonList(data));
@@ -72,11 +100,11 @@ public class CodeGeneratorHelperTest {
         FieldMetaData data = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
         String val = CodeGeneratorHelper.buildGetterAndSetterMethods(Collections.singletonList(data));
         Assert.assertEquals("    public void setName(int name) {\n"
-        + "        this.name = name;\n"
-        + "    }\n\n"
-        + "    public int getName() {\n"
-        + "        return name;\n"
-        + "    }\n\n", val);
+                + "        this.name = name;\n"
+                + "    }\n\n"
+                + "    public int getName() {\n"
+                + "        return name;\n"
+                + "    }\n\n", val);
 
         FieldMetaData booleanData = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
         val = CodeGeneratorHelper.buildGetterAndSetterMethods(Collections.singletonList(booleanData));
@@ -86,6 +114,85 @@ public class CodeGeneratorHelperTest {
                 + "    public boolean isCompress() {\n"
                 + "        return compress;\n"
                 + "    }\n\n", val);
+    }
+
+    @Test
+    public void testBuildSetterMethods() {
+        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        FieldMetaData compress = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
+        StringBuilder builder = new StringBuilder();
+        CodeGeneratorHelper.buildSetterMethods(builder, Arrays.asList(name, compress));
+        Assert.assertEquals("    public void setName(int name) {\n" +
+                "        this.name = name;\n" +
+                "    }\n\n" +
+                "    public void setCompress(boolean compress) {\n" +
+                "        this.compress = compress;\n" +
+                "    }\n\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildGetterMethods() {
+        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        FieldMetaData compress = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
+        StringBuilder builder = new StringBuilder();
+        CodeGeneratorHelper.buildGetterMethods(builder, Arrays.asList(name, compress));
+        Assert.assertEquals("    public int getName() {\n" +
+                "        return name;\n" +
+                "    }\n\n" +
+                "    public boolean isCompress() {\n" +
+                "        return compress;\n" +
+                "    }\n\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildSetterMethod() {
+        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        String val = CodeGeneratorHelper.buildSetterMethod(name);
+        Assert.assertEquals("    public void setName(int name) {\n" +
+                "        this.name = name;\n" +
+                "    }\n\n", val);
+    }
+
+    @Test
+    public void testBuildGetterMethod() {
+        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        String val = CodeGeneratorHelper.buildGetterMethod(name);
+        Assert.assertEquals("    public int getName() {\n" +
+                "        return name;\n" +
+                "    }\n\n", val);
+    }
+
+    @Test
+    public void testBuildToStringMethod() {
+        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        FieldMetaData compress = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
+        String val = CodeGeneratorHelper.buildToStringMethod("App", Arrays.asList(name, compress));
+        Assert.assertEquals("    @Override\n" +
+                "    public String toString() {\n" +
+                "        return \"App [name=\" + name\n" +
+                "                + \", compress=\" + compress\n" +
+                "                + \"]\";\n" +
+                "    }\n\n", val);
+    }
+
+    @Test
+    public void testBuildDependencyImports() {
+        GeneratorController controller = new GeneratorController();
+        controller.init();
+        JavaCodeGenerator generator = new RemotingExceptionCodeGenerator();
+        StringBuilder builder = new StringBuilder();
+        CodeGeneratorHelper.buildDependencyImports(builder, Collections.singletonList(generator));
+        Assert.assertEquals("import com.example.remoting.exception.RemotingException;\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildStaticImports() {
+        GeneratorController controller = new GeneratorController();
+        controller.init();
+        JavaCodeGenerator generator = new RemotingExceptionCodeGenerator();
+        StringBuilder builder = new StringBuilder();
+        CodeGeneratorHelper.buildStaticImports(builder, Collections.singletonList(generator));
+        Assert.assertEquals("import static com.example.remoting.exception.RemotingException.*;\n", builder.toString());
     }
 
 }

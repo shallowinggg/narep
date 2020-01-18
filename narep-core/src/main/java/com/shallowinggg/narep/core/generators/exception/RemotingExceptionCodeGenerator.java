@@ -15,10 +15,11 @@ import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_
 public class RemotingExceptionCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingException";
     private static final String PARENT_CLASS = "Exception";
+    private static final String SUB_PACKAGE = "exception";
     private List<FieldMetaData> fields = new ArrayList<>(1);
 
     public RemotingExceptionCodeGenerator() {
-        super(CLASS_NAME, PARENT_CLASS);
+        super(CLASS_NAME, PARENT_CLASS, SUB_PACKAGE);
         fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "long", "serialVersionUID", "-5690687334570505110L"));
     }
 

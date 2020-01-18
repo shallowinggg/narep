@@ -8,6 +8,7 @@ import com.shallowinggg.narep.core.util.StringTinyUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import static com.shallowinggg.narep.core.common.JLSConstants.*;
 
@@ -32,7 +33,7 @@ public class CodeGeneratorHelper {
     public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
-            builder.append(IMPORT).append(" ").append(codeGenerator.fullQualifiedName())
+            builder.append(IMPORT).append(" ").append(codeGenerator.fullQualifiedName()).append(";")
                     .append(LINE_SEPARATOR);
         }
     }
@@ -40,7 +41,7 @@ public class CodeGeneratorHelper {
     public static void buildStaticImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
-            builder.append(IMPORT_STATIC).append(codeGenerator.fullQualifiedName()).append(".*")
+            builder.append(IMPORT_STATIC).append(codeGenerator.fullQualifiedName()).append(".*;")
                     .append(LINE_SEPARATOR);
         }
     }
@@ -123,8 +124,7 @@ public class CodeGeneratorHelper {
     public static String buildLoggerField(String className) {
         boolean useCustomLoggerName = ConfigInfos.getInstance().useCustomLoggerName();
         return "LogManager.getLogger(" +
-                (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class")
-                + ");\n";
+                (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class") + ")";
     }
 
     public static String buildFieldsByMetaData(List<FieldMetaData> fields) {
@@ -150,20 +150,118 @@ public class CodeGeneratorHelper {
         for (FieldMetaData field : fields) {
             String name = field.getName();
             String type = field.getClazz();
-            String methodName = StringTinyUtils.firstCharToUpperCase(field.getName());
-            String getterName = "boolean".equals(type) ? " is" : " get";
-            builder.append("    public void set").append(methodName).append("(").append(type)
-                    .append(" ").append(name).append(") {\n")
+            builder.append(setterMethodDeclaration(type, name)).append(" {\n")
                     .append("        this.").append(name).append(" = ").append(name).append(";\n")
                     .append("    }\n")
                     .append("\n")
-                    .append("    public ").append(type).append(getterName).append(methodName).append("() {\n")
+                    .append(getterMethodDeclaration(type, name)).append(" {\n")
                     .append("        return ").append(name).append(";\n")
                     .append("    }\n\n");
         }
         return builder.toString();
     }
 
+    public static void buildGetterAndSetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+        Conditions.checkArgument(builder != null, "builder must not be null");
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
+        for (FieldMetaData field : fields) {
+            String name = field.getName();
+            String type = field.getClazz();
+            builder.append(setterMethodDeclaration(type, name)).append(" {\n")
+                    .append("        this.").append(name).append(" = ").append(name).append(";\n")
+                    .append("    }\n")
+                    .append("\n")
+                    .append(getterMethodDeclaration(type, name)).append(" {\n")
+                    .append("        return ").append(name).append(";\n")
+                    .append("    }\n\n");
+        }
+    }
+
+    public static String buildGetterMethod(FieldMetaData field) {
+        Objects.requireNonNull(field, "field must not be null");
+        String name = field.getName();
+        String type = field.getClazz();
+
+        return getterMethodDeclaration(type, name) + " {\n" +
+                "        return " + name + ";\n" +
+                "    }\n\n";
+    }
+
+    public static String buildSetterMethod(FieldMetaData field) {
+        Objects.requireNonNull(field, "field must not be null");
+        String name = field.getName();
+        String type = field.getClazz();
+
+        return setterMethodDeclaration(type, name) + " {\n"
+                + "        this." + name + " = " + name + ";\n"
+                + "    }\n\n";
+    }
+
+    public static void buildGetterMethod(StringBuilder builder, FieldMetaData field) {
+        Objects.requireNonNull(builder, "builder must not be null");
+        Objects.requireNonNull(field, "field must not be null");
+
+        String name = field.getName();
+        String type = field.getClazz();
+        builder.append(getterMethodDeclaration(type, name)).append(" {\n")
+                .append("        return ").append(name).append(";\n")
+                .append("    }\n\n");
+    }
+
+    public static void buildSetterMethod(StringBuilder builder, FieldMetaData field) {
+        Objects.requireNonNull(builder, "builder must not be null");
+        Objects.requireNonNull(field, "field must not be null");
+
+        String name = field.getName();
+        String type = field.getClazz();
+        builder.append(setterMethodDeclaration(type, name)).append(" {\n")
+                .append("        this.").append(name).append(" = ").append(name).append(";\n")
+                .append("    }\n\n");
+    }
+
+    public static void buildGetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+        Objects.requireNonNull(builder, "builder must not be null");
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
+        for (FieldMetaData field : fields) {
+            buildGetterMethod(builder, field);
+        }
+    }
+
+    public static void buildSetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+        Objects.requireNonNull(builder, "builder must not be null");
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
+        for (FieldMetaData field : fields) {
+            buildSetterMethod(builder, field);
+        }
+    }
+
+    private static String setterMethodDeclaration(String type, String name) {
+        String setterName = "set" + StringTinyUtils.firstCharToUpperCase(name);
+        return "    public void " + setterName + "(" + type + " " + name + ")";
+    }
+
+    private static String getterMethodDeclaration(String type, String name) {
+        String getterName = ("boolean".equals(type) ? " is" : " get") + StringTinyUtils.firstCharToUpperCase(name);
+        return "    public " + type + getterName + "()";
+    }
+
+    public static String buildToStringMethod(String className, List<FieldMetaData> fields) {
+        Conditions.checkArgument(StringTinyUtils.isNotEmpty(className), "className must not be empty");
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
+        StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
+        builder.append("    @Override\n" +
+                "    public String toString() {\n" +
+                "        return \"").append(className).append(" [");
+        for (FieldMetaData field : fields) {
+            String name = field.getName();
+            builder.append(name).append("=\" + ").append(name)
+                    .append("\n                + \", ");
+        }
+        builder.setLength(builder.length() - 2);
+        builder.append("]\";\n")
+                .append("    }\n\n");
+        return builder.toString();
+    }
 
     private CodeGeneratorHelper() {
     }

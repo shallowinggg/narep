@@ -21,7 +21,7 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
     private List<FieldMetaData> fields = new ArrayList<>(3);
 
     public RemotingHelperCodeGenerator() {
-        super(CLASS_NAME, SUB_PACKAGE);
+        super(CLASS_NAME, null, SUB_PACKAGE);
         List<String> dependencies = Arrays.asList("RemotingConnectException.java",
                 "RemotingSendRequestException.java",
                 "RemotingTimeoutException.java",

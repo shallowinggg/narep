@@ -7,9 +7,10 @@ import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
  */
 public class RemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
+    private static final String SUB_PACKAGE = "protocol";
 
     public RemotingCommandCodeGenerator() {
-        super(CLASS_NAME);
+        super(CLASS_NAME, null, SUB_PACKAGE);
     }
 
     @Override

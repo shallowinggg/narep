@@ -56,6 +56,7 @@ public class FieldMetaData {
         PRIVATE_STATIC_FINAL("private static final "),
         PRIVATE_STATIC("private static "),
         PRIVATE_FINAL("private final "),
+        PRIVATE_VOLATILE("private volatile "),
         PROTECTED_FINAL("protected final "),
         PROTECTED_VOLATILE("protected volatile ");
 
