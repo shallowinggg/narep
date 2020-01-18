@@ -52,7 +52,12 @@ public class FieldMetaData {
          */
         PUBLIC("public "),
         PUBLIC_STATIC_FINAL("public static final "),
-        PUBLIC_STATIC("public static ");
+        PUBLIC_STATIC("public static "),
+        PRIVATE_STATIC_FINAL("private static final "),
+        PRIVATE_STATIC("private static "),
+        PRIVATE_FINAL("private final "),
+        PROTECTED_FINAL("protected final "),
+        PROTECTED_VOLATILE("protected volatile ");
 
         private String value;
 

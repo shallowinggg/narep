@@ -37,6 +37,14 @@ public class CodeGeneratorHelper {
         }
     }
 
+    public static void buildStaticImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
+        for (JavaCodeGenerator codeGenerator : dependencies) {
+            builder.append(IMPORT_STATIC).append(codeGenerator.fullQualifiedName()).append(".*")
+                    .append(LINE_SEPARATOR);
+        }
+    }
+
     public static String buildDefaultPackage(String basePackageName) {
         return PACKAGE + " " + basePackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
@@ -114,7 +122,7 @@ public class CodeGeneratorHelper {
 
     public static String buildLoggerField(String className) {
         boolean useCustomLoggerName = ConfigInfos.getInstance().useCustomLoggerName();
-        return "    private static final Logger log = LogManager.getLogger(" +
+        return "LogManager.getLogger(" +
                 (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class")
                 + ");\n";
     }

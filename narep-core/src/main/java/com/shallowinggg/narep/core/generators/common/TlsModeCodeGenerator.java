@@ -3,12 +3,15 @@ package com.shallowinggg.narep.core.generators.common;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
+/**
+ * @author shallowinggg
+ */
 public class TlsModeCodeGenerator extends ClassCodeGenerator {
     private static final String ENUM_NAME = "TlsMode";
     private static final String SUB_PACKAGE = "common";
 
     public TlsModeCodeGenerator() {
-        super(ENUM_NAME, SUB_PACKAGE);
+        super(ENUM_NAME, null, SUB_PACKAGE);
     }
 
     @Override

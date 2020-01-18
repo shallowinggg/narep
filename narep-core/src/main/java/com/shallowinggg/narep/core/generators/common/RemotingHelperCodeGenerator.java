@@ -2,10 +2,15 @@ package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
+import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC_FINAL;
+import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PUBLIC_STATIC_FINAL;
 
 /**
  * @author shallowinggg
@@ -13,6 +18,7 @@ import java.util.List;
 public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingHelper";
     private static final String SUB_PACKAGE = "common";
+    private List<FieldMetaData> fields = new ArrayList<>(3);
 
     public RemotingHelperCodeGenerator() {
         super(CLASS_NAME, SUB_PACKAGE);
@@ -21,6 +27,11 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
                 "RemotingTimeoutException.java",
                 "RemotingCommand.java");
         setDependenciesName(dependencies);
+
+        String loggerName = ConfigInfos.getInstance().loggerName();
+        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "REMOTING_LOGGER_NAME", loggerName));
+        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "DEFAULT_CHARSET", "UTF-8"));
+        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
     }
 
     @Override
@@ -41,10 +52,7 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        String loggerName = ConfigInfos.getInstance().loggerName();
-        return "    public static final String REMOTING_LOGGER_NAME = " + loggerName + ";\n" +
-                "    public static final String DEFAULT_CHARSET = \"UTF-8\";\n" +
-                CodeGeneratorHelper.buildLoggerField(CLASS_NAME) + "\n";
+        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

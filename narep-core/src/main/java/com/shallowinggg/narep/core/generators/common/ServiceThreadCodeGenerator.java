@@ -1,7 +1,13 @@
 package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.*;
 
 /**
  * @author shallowinggg
@@ -10,9 +16,16 @@ public class ServiceThreadCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "ServiceThread";
     private static final String[] INTERFACES = new String[]{"Runnable"};
     private static final String SUB_PACKAGE = "common";
+    private List<FieldMetaData> fields = new ArrayList<>(5);
 
     public ServiceThreadCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE, INTERFACES);
+
+        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "long", "JOIN_TIME", "90 * 1000"));
+        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        fields.add(new FieldMetaData(PROTECTED_FINAL, "Thread", "thread"));
+        fields.add(new FieldMetaData(PROTECTED_VOLATILE, "boolean", "hasNotified", "false"));
+        fields.add(new FieldMetaData(PROTECTED_VOLATILE, "boolean", "stopped", "false"));
     }
 
     @Override
@@ -23,12 +36,7 @@ public class ServiceThreadCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        return CodeGeneratorHelper.buildLoggerField(CLASS_NAME) +
-                "\n" +
-                "    private static final long JOIN_TIME = 90 * 1000;\n" +
-                "    protected final Thread thread;\n" +
-                "    protected volatile boolean hasNotified = false;\n" +
-                "    protected volatile boolean stopped = false;\n\n";
+        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

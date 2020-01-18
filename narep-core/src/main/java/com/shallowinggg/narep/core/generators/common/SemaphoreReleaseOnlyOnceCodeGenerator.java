@@ -1,6 +1,13 @@
 package com.shallowinggg.narep.core.generators.common;
 
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_FINAL;
 
 /**
  * @author shallowinggg
@@ -8,9 +15,13 @@ import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 public class SemaphoreReleaseOnlyOnceCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "SemaphoreReleaseOnlyOnce";
     private static final String SUB_PACKAGE = "common";
+    private List<FieldMetaData> fields = new ArrayList<>(2);
 
     public SemaphoreReleaseOnlyOnceCodeGenerator() {
-        super(CLASS_NAME, SUB_PACKAGE);
+        super(CLASS_NAME, null, SUB_PACKAGE);
+
+        fields.add(new FieldMetaData(PRIVATE_FINAL, "AtomicBoolean", "released", "new AtomicBoolean(false)"));
+        fields.add(new FieldMetaData(PRIVATE_FINAL, "Semaphore", "semaphore"));
     }
 
     @Override
@@ -21,8 +32,7 @@ public class SemaphoreReleaseOnlyOnceCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        return "    private final AtomicBoolean released = new AtomicBoolean(false);\n" +
-                "    private final Semaphore semaphore;\n\n";
+        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

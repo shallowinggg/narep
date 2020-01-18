@@ -16,6 +16,7 @@ public class JLSConstants {
     public static final String ENUM = "enum";
     public static final String EXTENDS = "extends";
     public static final String IMPLEMENTS = "implements";
+    public static final String STATIC = "static";
 
     public static final String PACKAGE_DELIMITER = ".";
     public static final String END_OF_STATEMENT = ";";
@@ -29,4 +30,5 @@ public class JLSConstants {
     public static final String EXTENDS_DECL = " " + EXTENDS + " ";
     public static final String IMPLEMENTS_DECL = " " + IMPLEMENTS + " ";
     public static final String DECL_END = " {" + LINE_SEPARATOR;
+    public static final String IMPORT_STATIC = IMPORT + " " + STATIC + " ";
 }

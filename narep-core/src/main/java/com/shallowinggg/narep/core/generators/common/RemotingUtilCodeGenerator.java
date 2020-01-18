@@ -1,7 +1,13 @@
 package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.*;
 
 /**
  * @author shallowinggg
@@ -9,9 +15,15 @@ import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingUtil";
     private static final String SUB_PACKAGE = "common";
+    private List<FieldMetaData> fields = new ArrayList<>(4);
 
     public RemotingUtilCodeGenerator() {
-        super(CLASS_NAME, SUB_PACKAGE);
+        super(CLASS_NAME, null, SUB_PACKAGE);
+
+        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "OS_NAME", "System.getProperty(\"os.name\")"));
+        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        fields.add(new FieldMetaData(PRIVATE_STATIC, "boolean", "isLinuxPlatform", "false"));
+        fields.add(new FieldMetaData(PRIVATE_STATIC, "boolean", "isWindowsPlatform", "false"));
     }
 
     @Override
@@ -34,11 +46,7 @@ public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildFields() {
-        return "    public static final String OS_NAME = System.getProperty(\"os.name\");\n" +
-                "\n" +
-                CodeGeneratorHelper.buildLoggerField(CLASS_NAME) +
-                "    private static boolean isLinuxPlatform = false;\n" +
-                "    private static boolean isWindowsPlatform = false;\n\n";
+        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override
