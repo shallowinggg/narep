@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 import java.util.Collections;
@@ -15,6 +16,13 @@ public class CommandCustomHeaderCodeGenerator extends InterfaceCodeGenerator {
 
     public CommandCustomHeaderCodeGenerator() {
         super(INTERFACE_NAME, DEPENDENCIES);
+    }
+
+    @Override
+    public String buildImports() {
+        StringBuilder builder = new StringBuilder(70);
+        CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
+        return builder.toString();
     }
 
     @Override
