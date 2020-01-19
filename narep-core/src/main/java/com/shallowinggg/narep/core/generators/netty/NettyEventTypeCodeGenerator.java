@@ -1,22 +1,16 @@
 package com.shallowinggg.narep.core.generators.netty;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.generators.EnumCodeGenerator;
 
 /**
  * @author shallowinggg
  */
-public class NettyEventTypeCodeGenerator extends ClassCodeGenerator {
+public class NettyEventTypeCodeGenerator extends EnumCodeGenerator {
     private static final String ENUM_NAME = "NettyEventType";
     private static final String SUB_PACKAGE = "netty";
 
     public NettyEventTypeCodeGenerator() {
         super(ENUM_NAME, null, SUB_PACKAGE);
-    }
-
-    @Override
-    public String buildName() {
-        return CodeGeneratorHelper.buildEnumDeclaration(ENUM_NAME);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC;
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC_FINAL;
+
 
 /**
  * @author shallowinggg
@@ -17,21 +18,22 @@ import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_
 public class TlsHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "TlsHelper";
     private static final String SUB_PACKAGE = "netty";
-    private List<FieldMetaData> fields = new ArrayList<>(1);
     private static final List<String> DEPENDENCIES = Arrays.asList("RemotingHelper.java", "TlsSystemConfig.java");
 
     public TlsHelperCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
         setDependenciesName(DEPENDENCIES);
 
-        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
-        fields.add(new FieldMetaData(PRIVATE_STATIC, "DecryptionStrategy", "decryptionStrategy", "new DecryptionStrategy() {\n" +
+        List<FieldInfo> fields = new ArrayList<>(2);
+        fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        fields.add(new FieldInfo(PRIVATE_STATIC, "DecryptionStrategy", "decryptionStrategy", "new DecryptionStrategy() {\n" +
                 "        @Override\n" +
                 "        public InputStream decryptPrivateKey(final String privateKeyEncryptPath,\n" +
                 "                                             final boolean forClient) throws IOException {\n" +
                 "            return new FileInputStream(privateKeyEncryptPath);\n" +
                 "        }\n" +
                 "    }"));
+        setFields(fields);
     }
 
     @Override
@@ -53,11 +55,6 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
         CodeGeneratorHelper.buildStaticImports(builder, getDependencies().subList(1, 2));
 
         return builder.toString();
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

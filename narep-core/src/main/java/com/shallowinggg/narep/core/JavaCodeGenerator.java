@@ -37,6 +37,7 @@ public interface JavaCodeGenerator extends CodeGenerator {
      */
     String fullQualifiedName();
 
+
     /**
      * 开源代码许可
      *
@@ -82,7 +83,7 @@ public interface JavaCodeGenerator extends CodeGenerator {
      *
      * @return 包含类声明语句的字符串
      */
-    String buildName();
+    String buildDeclaration();
 
     /**
      * 生成字段
@@ -107,6 +108,21 @@ public interface JavaCodeGenerator extends CodeGenerator {
      * @return 包含方法的字符串
      */
     String buildMethods();
+
+    /**
+     * 生成内部类
+     *
+     * <blockquote><pre>
+     *     public class Outer {
+     *         public class Inner {
+     *
+     *         }
+     *     }
+     * </pre></blockquote>
+     *
+     * @return 内部类
+     */
+    String buildInnerClass();
 
     /**
      * 检查自身依赖类的生成器是否存在

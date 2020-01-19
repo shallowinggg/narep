@@ -1,13 +1,13 @@
 package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.*;
+import static com.shallowinggg.narep.core.lang.Modifier.*;
 
 /**
  * @author shallowinggg
@@ -15,15 +15,16 @@ import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.*;
 public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingUtil";
     private static final String SUB_PACKAGE = "common";
-    private List<FieldMetaData> fields = new ArrayList<>(4);
 
     public RemotingUtilCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
 
-        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "OS_NAME", "System.getProperty(\"os.name\")"));
-        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
-        fields.add(new FieldMetaData(PRIVATE_STATIC, "boolean", "isLinuxPlatform", "false"));
-        fields.add(new FieldMetaData(PRIVATE_STATIC, "boolean", "isWindowsPlatform", "false"));
+        List<FieldInfo> fields = new ArrayList<>(4);
+        fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "OS_NAME", "System.getProperty(\"os.name\")"));
+        fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        fields.add(new FieldInfo(PRIVATE_STATIC, "boolean", "isLinuxPlatform", "false"));
+        fields.add(new FieldInfo(PRIVATE_STATIC, "boolean", "isWindowsPlatform", "false"));
+        setFields(fields);
     }
 
     @Override
@@ -42,11 +43,6 @@ public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
                 "import java.nio.channels.spi.SelectorProvider;\n" +
                 "import java.util.ArrayList;\n" +
                 "import java.util.Enumeration;\n\n";
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

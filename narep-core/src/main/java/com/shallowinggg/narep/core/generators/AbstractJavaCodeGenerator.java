@@ -4,6 +4,7 @@ import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
+import com.shallowinggg.narep.core.lang.Modifier;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.FileUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
@@ -12,8 +13,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.JLSConstants.FILE_SEPARATOR;
-import static com.shallowinggg.narep.core.common.JLSConstants.LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.FILE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.LINE_SEPARATOR;
 
 /**
  * @author shallowinggg
@@ -23,14 +24,22 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     private static final String NON_SUB_PACKAGE = "";
     private static final List<String> NON_DEPENDENCIES = Collections.emptyList();
 
+    private Modifier modifier = Modifier.PUBLIC;
     private String name;
     private String parentName;
+
     private String subPackageName;
     private List<String> dependenciesName;
     private List<JavaCodeGenerator> dependencies;
+    private List<JavaCodeGenerator> innerClass;
 
     public AbstractJavaCodeGenerator(String name) {
         this(name, NON_PARENT);
+    }
+
+    public AbstractJavaCodeGenerator(Modifier modifier, String name) {
+        this.modifier = modifier;
+        this.name = name;
     }
 
     public AbstractJavaCodeGenerator(String name, List<String> dependenciesName) {
@@ -48,10 +57,26 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
                                      List<String> dependenciesName) {
+        this(name, parentName, subPackageName, dependenciesName, null);
+    }
+
+    public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
+                                     List<String> dependenciesName, List<JavaCodeGenerator> innerClass) {
         this.name = name;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
         this.dependenciesName = dependenciesName;
+        this.innerClass = innerClass;
+    }
+
+    public AbstractJavaCodeGenerator(Modifier modifier, String name, String parentName, String subPackageName,
+                                     List<String> dependenciesName, List<JavaCodeGenerator> innerClass) {
+        this.modifier = modifier;
+        this.name = name;
+        this.parentName = parentName;
+        this.subPackageName = subPackageName;
+        this.dependenciesName = dependenciesName;
+        this.innerClass = innerClass;
     }
 
     @Override
@@ -122,13 +147,18 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     }
 
     @Override
+    public String buildInnerClass() {
+        return null;
+    }
+
+    @Override
     public void write() throws IOException {
         String storePath = ConfigInfos.getInstance().storeLocation() + FILE_SEPARATOR + relativeFilePath();
         String content = openSourceLicense() +
                 buildPackage() +
                 buildImports() +
                 buildClassComment() +
-                buildName() +
+                buildDeclaration() +
                 buildFields() +
                 buildMethods() +
                 JavaCodeGenerator.END_OF_CLASS;
@@ -151,6 +181,14 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     public void setDependenciesName(List<String> dependenciesName) {
         this.dependenciesName = dependenciesName;
+    }
+
+    public void setInnerClass(List<JavaCodeGenerator> innerClass) {
+        this.innerClass = innerClass;
+    }
+
+    public Modifier getModifier() {
+        return modifier;
     }
 
     public String getName() {

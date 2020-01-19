@@ -3,13 +3,15 @@ package com.shallowinggg.narep.core.generators.netty;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_FINAL;
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_VOLATILE;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_VOLATILE;
+
 
 /**
  * @author shallowinggg
@@ -25,17 +27,19 @@ public class ResponseFutureCodeGenerator extends ClassCodeGenerator {
         super(CLASS_NAME, null, SUB_PACKAGE);
         setDependenciesName(DEPENDENCIES);
 
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "int", "opaque"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "Channel", "processChannel"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "long", "timeoutMillis"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "InvokeCallback", "invokeCallback"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "long", "beginTimestamp", "System.currentTimeMillis()"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "CountDownLatch", "countDownLatch", "new CountDownLatch(1)"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "SemaphoreReleaseOnlyOnce", "once"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "AtomicBoolean", "executeCallbackOnlyOnce", "new AtomicBoolean(false)"));
-        fields.add(new FieldMetaData(PRIVATE_VOLATILE, "RemotingCommand", "responseCommand"));
-        fields.add(new FieldMetaData(PRIVATE_VOLATILE, "boolean", "sendRequestOK", "true"));
-        fields.add(new FieldMetaData(PRIVATE_VOLATILE, "Throwable", "cause"));
+        List<FieldInfo> fields = new ArrayList<>(11);
+        fields.add(new FieldInfo(PRIVATE_FINAL, "int", "opaque"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Channel", "processChannel"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "long", "timeoutMillis"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "InvokeCallback", "invokeCallback"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "long", "beginTimestamp", "System.currentTimeMillis()"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "CountDownLatch", "countDownLatch", "new CountDownLatch(1)"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "SemaphoreReleaseOnlyOnce", "once"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "AtomicBoolean", "executeCallbackOnlyOnce", "new AtomicBoolean(false)"));
+        fields.add(new FieldInfo(PRIVATE_VOLATILE, "RemotingCommand", "responseCommand"));
+        fields.add(new FieldInfo(PRIVATE_VOLATILE, "boolean", "sendRequestOK", "true"));
+        fields.add(new FieldInfo(PRIVATE_VOLATILE, "Throwable", "cause"));
+        setFields(fields);
     }
 
     @Override
@@ -48,11 +52,6 @@ public class ResponseFutureCodeGenerator extends ClassCodeGenerator {
                 "import java.util.concurrent.TimeUnit;\n" +
                 "import java.util.concurrent.atomic.AtomicBoolean;\n\n");
         return builder.toString();
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
 
@@ -97,9 +96,9 @@ public class ResponseFutureCodeGenerator extends ClassCodeGenerator {
                 "        this.responseCommand = responseCommand;\n" +
                 "        this.countDownLatch.countDown();\n" +
                 "    }\n\n");
-        CodeGeneratorHelper.buildGetterMethods(builder, fields.subList(0, 5));
-        CodeGeneratorHelper.buildGetterAndSetterMethods(builder, fields.subList(8, 11));
-        builder.append(CodeGeneratorHelper.buildToStringMethod(CLASS_NAME, fields));
+        CodeGeneratorHelper.buildGetterMethods(builder, getFields().subList(0, 5));
+        CodeGeneratorHelper.buildGetterAndSetterMethods(builder, getFields().subList(8, 11));
+        builder.append(CodeGeneratorHelper.buildToStringMethod(CLASS_NAME, getFields()));
         return builder.toString();
     }
 }

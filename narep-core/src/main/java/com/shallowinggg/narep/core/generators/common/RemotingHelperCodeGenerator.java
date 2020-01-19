@@ -2,15 +2,16 @@ package com.shallowinggg.narep.core.generators.common;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC_FINAL;
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PUBLIC_STATIC_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC_FINAL;
+
 
 /**
  * @author shallowinggg
@@ -18,7 +19,6 @@ import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PUBLIC_S
 public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingHelper";
     private static final String SUB_PACKAGE = "common";
-    private List<FieldMetaData> fields = new ArrayList<>(3);
 
     public RemotingHelperCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
@@ -29,9 +29,11 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
         setDependenciesName(dependencies);
 
         String loggerName = ConfigInfos.getInstance().loggerName();
-        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "REMOTING_LOGGER_NAME", loggerName));
-        fields.add(new FieldMetaData(PUBLIC_STATIC_FINAL, "String", "DEFAULT_CHARSET", "UTF-8"));
-        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        List<FieldInfo> fields = new ArrayList<>(3);
+        fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "REMOTING_LOGGER_NAME", loggerName));
+        fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "DEFAULT_CHARSET", "UTF-8"));
+        fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
+        setFields(fields);
     }
 
     @Override
@@ -48,11 +50,6 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
                 "import java.nio.ByteBuffer;\n" +
                 "import java.nio.channels.SocketChannel;\n\n");
         return imports.toString();
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

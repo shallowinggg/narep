@@ -1,15 +1,16 @@
 package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE;
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_FINAL;
+
 
 /**
  * @author shallowinggg
@@ -19,17 +20,18 @@ public class RequestTaskCodeGenerator extends ClassCodeGenerator {
     private static final String[] INTERFACES = new String[]{"Runnable"};
     private static final String SUB_PACKAGE = "netty";
     private static final List<String> DEPENDENCIES = Collections.singletonList("RemotingCommand.java");
-    private List<FieldMetaData> fields = new ArrayList<>(5);
 
     public RequestTaskCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE, INTERFACES);
         setDependenciesName(DEPENDENCIES);
 
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "Runnable", "runnable"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "long", "createTimestamp", "System.currentTimeMillis()"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "Channle", "channel"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "RemotingCommand", "request"));
-        fields.add(new FieldMetaData(PRIVATE, "boolean", "stopRun", "false"));
+        List<FieldInfo> fields = new ArrayList<>(5);
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Runnable", "runnable"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "long", "createTimestamp", "System.currentTimeMillis()"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Channle", "channel"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "RemotingCommand", "request"));
+        fields.add(new FieldInfo(PRIVATE, "boolean", "stopRun", "false"));
+        setFields(fields);
     }
 
     @Override
@@ -38,11 +40,6 @@ public class RequestTaskCodeGenerator extends ClassCodeGenerator {
         CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
         builder.append("import io.netty.channel.Channel;\n\n");
         return builder.toString();
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override
@@ -81,8 +78,8 @@ public class RequestTaskCodeGenerator extends ClassCodeGenerator {
                 "            return false;\n" +
                 "        return request != null ? request.getOpaque() == that.request.getOpaque() : that.request == null;\n" +
                 "    }\n\n");
-        CodeGeneratorHelper.buildGetterMethod(builder, fields.get(1));
-        CodeGeneratorHelper.buildGetterAndSetterMethods(builder, fields.subList(4, 5));
+        CodeGeneratorHelper.buildGetterMethod(builder, getFields().get(1));
+        CodeGeneratorHelper.buildGetterAndSetterMethods(builder, getFields().subList(4, 5));
         builder.append("    @Override\n" +
                 "    public void run() {\n" +
                 "        if (!this.stopRun) {\n" +

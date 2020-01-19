@@ -1,13 +1,12 @@
 package com.shallowinggg.narep.core.generators.common;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_FINAL;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_FINAL;
 
 /**
  * @author shallowinggg
@@ -15,24 +14,20 @@ import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_
 public class SemaphoreReleaseOnlyOnceCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "SemaphoreReleaseOnlyOnce";
     private static final String SUB_PACKAGE = "common";
-    private List<FieldMetaData> fields = new ArrayList<>(2);
 
     public SemaphoreReleaseOnlyOnceCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
 
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "AtomicBoolean", "released", "new AtomicBoolean(false)"));
-        fields.add(new FieldMetaData(PRIVATE_FINAL, "Semaphore", "semaphore"));
+        List<FieldInfo> fields = new ArrayList<>(2);
+        fields.add(new FieldInfo(PRIVATE_FINAL, "AtomicBoolean", "released", "new AtomicBoolean(false)"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Semaphore", "semaphore"));
+        setFields(fields);
     }
 
     @Override
     public String buildImports() {
         return "import java.util.concurrent.Semaphore;\n" +
                 "import java.util.concurrent.atomic.AtomicBoolean;\n\n";
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
     }
 
     @Override

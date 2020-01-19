@@ -1,13 +1,10 @@
 package com.shallowinggg.narep.core.generators.exception;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
+import com.shallowinggg.narep.core.lang.Modifier;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE_STATIC_FINAL;
+import java.util.Collections;
 
 /**
  * @author shallowinggg
@@ -16,16 +13,11 @@ public class RemotingExceptionCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingException";
     private static final String PARENT_CLASS = "Exception";
     private static final String SUB_PACKAGE = "exception";
-    private List<FieldMetaData> fields = new ArrayList<>(1);
 
     public RemotingExceptionCodeGenerator() {
         super(CLASS_NAME, PARENT_CLASS, SUB_PACKAGE);
-        fields.add(new FieldMetaData(PRIVATE_STATIC_FINAL, "long", "serialVersionUID", "-5690687334570505110L"));
-    }
-
-    @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
+        setFields(Collections.singletonList(new FieldInfo(Modifier.PRIVATE_STATIC_FINAL, "long",
+                "serialVersionUID", "-5690687334570505110L")));
     }
 
     @Override

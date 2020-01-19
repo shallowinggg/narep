@@ -5,7 +5,7 @@ import com.shallowinggg.narep.core.util.FileUtils;
 
 import java.io.File;
 
-import static com.shallowinggg.narep.core.common.JLSConstants.FILE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.FILE_SEPARATOR;
 
 /**
  * @author shallowinggg

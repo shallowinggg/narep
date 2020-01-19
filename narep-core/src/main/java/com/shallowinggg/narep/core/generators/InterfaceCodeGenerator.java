@@ -28,8 +28,8 @@ public class InterfaceCodeGenerator extends AbstractJavaCodeGenerator {
     }
 
     @Override
-    public String buildName() {
-        return ClassDeclarations.buildStrategy(getName(), getParentName(), null, null,
-                true, false).buildDeclaration();
+    public String buildDeclaration() {
+        return ClassDeclarations.buildStrategy(getModifier(), getName(), getParentName(), null, null,
+                true, false, false, false).buildDeclaration();
     }
 }

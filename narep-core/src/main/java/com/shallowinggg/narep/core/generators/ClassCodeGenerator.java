@@ -1,6 +1,9 @@
 package com.shallowinggg.narep.core.generators;
 
 import com.shallowinggg.narep.core.common.ClassDeclarations;
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.lang.FieldInfo;
+import com.shallowinggg.narep.core.util.CollectionUtils;
 
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
  */
 public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
     private String[] interfaceNames;
+    private List<FieldInfo> fields;
 
     public ClassCodeGenerator(String name) {
         super(name);
@@ -39,9 +43,17 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
     }
 
     @Override
-    public String buildName() {
-        return ClassDeclarations.buildStrategy(getName(), getParentName(), interfaceNames, null,
-                false, false).buildDeclaration();
+    public String buildDeclaration() {
+        return ClassDeclarations.buildStrategy(getModifier(), getName(), getParentName(), interfaceNames, null,
+                false, false, false, false).buildDeclaration();
+    }
+
+    @Override
+    public String buildFields() {
+        if(CollectionUtils.isNotEmpty(fields)) {
+            return CodeGeneratorHelper.buildFieldsByFieldInfos(fields);
+        }
+        return super.buildFields();
     }
 
     public void setInterfaceNames(String[] interfaceNames) {
@@ -50,5 +62,13 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
 
     public String[] getInterfaceNames() {
         return interfaceNames;
+    }
+
+    public List<FieldInfo> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<FieldInfo> fields) {
+        this.fields = fields;
     }
 }

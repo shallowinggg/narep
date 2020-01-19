@@ -1,4 +1,4 @@
-package com.shallowinggg.narep.core.common;
+package com.shallowinggg.narep.core.util;
 
 import java.util.ArrayList;
 import java.util.List;

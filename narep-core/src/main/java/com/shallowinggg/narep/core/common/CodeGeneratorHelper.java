@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.JavaCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.FileUtils;
@@ -10,7 +11,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
-import static com.shallowinggg.narep.core.common.JLSConstants.*;
+import static com.shallowinggg.narep.core.lang.JLSConstants.*;
 
 /**
  * @author shallowinggg
@@ -55,65 +56,6 @@ public class CodeGeneratorHelper {
                 subPackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
-    public static String buildInterfaceDeclaration(String interfaceName) {
-        return INTERFACE_DECL + interfaceName + DECL_END;
-    }
-
-    public static String buildInterfaceDeclaration(String interfaceName, String parent) {
-        return INTERFACE_DECL + interfaceName + EXTENDS_DECL + parent + DECL_END;
-    }
-
-    public static String buildClassDeclaration(String className) {
-        return CLASS_DECL + className + DECL_END;
-    }
-
-    public static String buildClassDeclaration(String className, String parent) {
-        return CLASS_DECL + className + EXTENDS_DECL + parent + DECL_END;
-    }
-
-    public static String buildClassDeclaration(String className, String... interfaceNames) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
-                "At least one interface should be specified");
-        StringBuilder builder = new StringBuilder(50);
-        builder.append(CLASS_DECL).append(className).append(IMPLEMENTS_DECL);
-        for (String interfaceName : interfaceNames) {
-            builder.append(interfaceName).append(", ");
-        }
-        builder.setLength(builder.length() - 2);
-        builder.append(DECL_END);
-        return builder.toString();
-    }
-
-    public static String buildClassDeclaration(String className, String parent, String... interfaceNames) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
-                "At least one interface should be specified");
-        StringBuilder builder = new StringBuilder(50);
-        builder.append(CLASS_DECL).append(className).append(EXTENDS_DECL).append(parent)
-                .append(IMPLEMENTS_DECL);
-        for (String interfaceName : interfaceNames) {
-            builder.append(interfaceName).append(", ");
-        }
-        builder.setLength(builder.length() - 2);
-        builder.append(DECL_END);
-        return builder.toString();
-    }
-
-    public static String buildEnumDeclaration(String enumName) {
-        return ENUM_DECL + enumName + DECL_END;
-    }
-
-    public static String buildGenericClassDeclaration(String className, List<String> generics) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(generics), "generics must not be null");
-        StringBuilder declaration = new StringBuilder(30);
-        declaration.append(CLASS_DECL).append(className).append("<");
-        for (String generic : generics) {
-            declaration.append(generic).append(", ");
-        }
-        declaration.setLength(declaration.length() - 2);
-        declaration.append(">").append(DECL_END);
-        return declaration.toString();
-    }
-
     public static String buildNecessaryFolders(String basePath) {
         // src/main/java
         String source = basePath + FILE_SEPARATOR + MODULE_NAME + FILE_SEPARATOR + JAVA_FOLDER;
@@ -144,12 +86,29 @@ public class CodeGeneratorHelper {
         return builder.toString();
     }
 
-    public static String buildGetterAndSetterMethods(List<FieldMetaData> fields) {
+    public static String buildFieldsByFieldInfos(List<FieldInfo> fields) {
+        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
+        StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
+        for (FieldInfo field : fields) {
+            if (field.getComment() != null) {
+                builder.append(field.getComment()).append("\n");
+            }
+            builder.append("    ").append(field.getModifier()).append(field.getType()).append(" ")
+                    .append(field.getName());
+            if (field.getInitValue() != null) {
+                builder.append(" = ").append(field.getInitValue());
+            }
+            builder.append(";\n");
+        }
+        return builder.toString();
+    }
+
+    public static String buildGetterAndSetterMethods(List<FieldInfo> fields) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_METHOD_LEN);
-        for (FieldMetaData field : fields) {
+        for (FieldInfo field : fields) {
             String name = field.getName();
-            String type = field.getClazz();
+            String type = field.getType();
             builder.append(setterMethodDeclaration(type, name)).append(" {\n")
                     .append("        this.").append(name).append(" = ").append(name).append(";\n")
                     .append("    }\n")
@@ -161,12 +120,12 @@ public class CodeGeneratorHelper {
         return builder.toString();
     }
 
-    public static void buildGetterAndSetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+    public static void buildGetterAndSetterMethods(StringBuilder builder, List<FieldInfo> fields) {
         Conditions.checkArgument(builder != null, "builder must not be null");
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
-        for (FieldMetaData field : fields) {
+        for (FieldInfo field : fields) {
             String name = field.getName();
-            String type = field.getClazz();
+            String type = field.getType();
             builder.append(setterMethodDeclaration(type, name)).append(" {\n")
                     .append("        this.").append(name).append(" = ").append(name).append(";\n")
                     .append("    }\n")
@@ -197,12 +156,12 @@ public class CodeGeneratorHelper {
                 + "    }\n\n";
     }
 
-    public static void buildGetterMethod(StringBuilder builder, FieldMetaData field) {
+    public static void buildGetterMethod(StringBuilder builder, FieldInfo field) {
         Objects.requireNonNull(builder, "builder must not be null");
         Objects.requireNonNull(field, "field must not be null");
 
         String name = field.getName();
-        String type = field.getClazz();
+        String type = field.getType();
         builder.append(getterMethodDeclaration(type, name)).append(" {\n")
                 .append("        return ").append(name).append(";\n")
                 .append("    }\n\n");
@@ -219,10 +178,10 @@ public class CodeGeneratorHelper {
                 .append("    }\n\n");
     }
 
-    public static void buildGetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+    public static void buildGetterMethods(StringBuilder builder, List<FieldInfo> fields) {
         Objects.requireNonNull(builder, "builder must not be null");
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
-        for (FieldMetaData field : fields) {
+        for (FieldInfo field : fields) {
             buildGetterMethod(builder, field);
         }
     }
@@ -245,14 +204,14 @@ public class CodeGeneratorHelper {
         return "    public " + type + getterName + "()";
     }
 
-    public static String buildToStringMethod(String className, List<FieldMetaData> fields) {
+    public static String buildToStringMethod(String className, List<FieldInfo> fields) {
         Conditions.checkArgument(StringTinyUtils.isNotEmpty(className), "className must not be empty");
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
         builder.append("    @Override\n" +
                 "    public String toString() {\n" +
                 "        return \"").append(className).append(" [");
-        for (FieldMetaData field : fields) {
+        for (FieldInfo field : fields) {
             String name = field.getName();
             builder.append(name).append("=\" + ").append(name)
                     .append("\n                + \", ");

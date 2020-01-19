@@ -22,8 +22,8 @@ public class GenericClassCodeGenerator extends ClassCodeGenerator {
     }
 
     @Override
-    public String buildName() {
-        return ClassDeclarations.buildStrategy(getName(), getParentName(), getInterfaceNames(),
-                generics, false, true).buildDeclaration();
+    public String buildDeclaration() {
+        return ClassDeclarations.buildStrategy(getModifier(), getName(), getParentName(), getInterfaceNames(),
+                generics,false, false, false, true).buildDeclaration();
     }
 }

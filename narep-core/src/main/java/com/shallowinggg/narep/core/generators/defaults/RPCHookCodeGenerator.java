@@ -5,7 +5,7 @@ import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 import java.util.Collections;
 
-import static com.shallowinggg.narep.core.common.JLSConstants.DOUBLE_LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.DOUBLE_LINE_SEPARATOR;
 
 /**
  * @author shallowinggg

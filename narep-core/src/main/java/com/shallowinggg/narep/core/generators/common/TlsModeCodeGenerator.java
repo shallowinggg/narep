@@ -1,12 +1,11 @@
 package com.shallowinggg.narep.core.generators.common;
 
-import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.generators.EnumCodeGenerator;
 
 /**
  * @author shallowinggg
  */
-public class TlsModeCodeGenerator extends ClassCodeGenerator {
+public class TlsModeCodeGenerator extends EnumCodeGenerator {
     private static final String ENUM_NAME = "TlsMode";
     private static final String SUB_PACKAGE = "common";
 
@@ -24,11 +23,6 @@ public class TlsModeCodeGenerator extends ClassCodeGenerator {
                 " *     <li><strong>enforcing:</strong> SSL is required, aka, non SSL connection will be rejected.</li>\n" +
                 " * </ol>\n" +
                 " */\n";
-    }
-
-    @Override
-    public String buildName() {
-        return CodeGeneratorHelper.buildEnumDeclaration(ENUM_NAME);
     }
 
     @Override

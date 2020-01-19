@@ -1,14 +1,14 @@
 package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
-import com.shallowinggg.narep.core.common.GenericBuilder;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shallowinggg.narep.core.common.FieldMetaData.Modifier.PRIVATE;
+import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE;
+
 
 /**
  * @author shallowinggg
@@ -17,26 +17,24 @@ public class NettyServerConfigCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyServerConfig";
     private static final String[] INTERFACES = new String[]{"Cloneable"};
     private static final String SUB_PACKAGE = "netty";
-    private List<FieldMetaData> fields = new ArrayList<>(11);
 
     public NettyServerConfigCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE, INTERFACES);
-        fields.add(new FieldMetaData(PRIVATE, "int", "listenPort", "8888"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverWorkerThreads", "8"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverCallbackExecutorThreads", "0"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverSelectorThreads", "3"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverOnewaySemaphoreValue", "256"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverAsyncSemaphoreValue", "64"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverChannelMaxIdleTimeSeconds", "120"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverSocketSndBufSize", "NettySystemConfig.socketSndbufSize"));
-        fields.add(new FieldMetaData(PRIVATE, "int", "serverSocketRcvBufSize", "NettySystemConfig.socketRcvbufSize"));
-        fields.add(new FieldMetaData(PRIVATE, "boolean", "serverPooledByteBufAllocatorEnable", "true"));
-        fields.add(GenericBuilder.of(FieldMetaData::new)
-                .with(FieldMetaData::setModifier, PRIVATE)
-                .with(FieldMetaData::setClazz, "boolean")
-                .with(FieldMetaData::setName, "useEpollNativeSelector")
-                .with(FieldMetaData::setDefaultValue, "false")
-                .with(FieldMetaData::setComment, "    /**\n" +
+
+        List<FieldInfo> fields = new ArrayList<>(11);
+        fields.add(new FieldInfo(PRIVATE, "int", "listenPort", "8888"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverWorkerThreads", "8"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverCallbackExecutorThreads", "0"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverSelectorThreads", "3"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverOnewaySemaphoreValue", "256"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverAsyncSemaphoreValue", "64"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverChannelMaxIdleTimeSeconds", "120"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverSocketSndBufSize", "NettySystemConfig.socketSndbufSize"));
+        fields.add(new FieldInfo(PRIVATE, "int", "serverSocketRcvBufSize", "NettySystemConfig.socketRcvbufSize"));
+        fields.add(new FieldInfo(PRIVATE, "boolean", "serverPooledByteBufAllocatorEnable", "true"));
+        fields.add(new FieldInfo.Builder().modifier(PRIVATE)
+                .type("boolean").name("useEpollNativeSelector").initValue("false")
+                .comment("    /**\n" +
                         "     * make make install\n" +
                         "     *\n" +
                         "     *\n" +
@@ -46,13 +44,8 @@ public class NettyServerConfigCodeGenerator extends ClassCodeGenerator {
     }
 
     @Override
-    public String buildFields() {
-        return CodeGeneratorHelper.buildFieldsByMetaData(fields);
-    }
-
-    @Override
     public String buildMethods() {
-        return CodeGeneratorHelper.buildGetterAndSetterMethods(fields) +
+        return CodeGeneratorHelper.buildGetterAndSetterMethods(getFields()) +
                 "    @Override\n" +
                 "    public Object clone() throws CloneNotSupportedException {\n" +
                 "        return (NettyServerConfig) super.clone();\n" +
