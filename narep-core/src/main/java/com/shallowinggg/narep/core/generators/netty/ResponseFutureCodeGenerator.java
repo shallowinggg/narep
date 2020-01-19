@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
-import com.shallowinggg.narep.core.common.FieldMetaData;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 
@@ -21,7 +20,6 @@ public class ResponseFutureCodeGenerator extends ClassCodeGenerator {
     private static final String SUB_PACKAGE = "netty";
     private static final List<String> DEPENDENCIES = Arrays.asList("InvokeCallback.java",
             "SemaphoreReleaseOnlyOnce.java", "RemotingCommand.java");
-    private List<FieldMetaData> fields = new ArrayList<>(11);
 
     public ResponseFutureCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);

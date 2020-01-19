@@ -69,23 +69,6 @@ public class CodeGeneratorHelper {
                 (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class") + ")";
     }
 
-    public static String buildFieldsByMetaData(List<FieldMetaData> fields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
-        StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
-        for (FieldMetaData field : fields) {
-            if (field.getComment() != null) {
-                builder.append(field.getComment()).append("\n");
-            }
-            builder.append("    ").append(field.getModifier()).append(field.getClazz()).append(" ")
-                    .append(field.getName());
-            if (field.getDefaultValue() != null) {
-                builder.append(" = ").append(field.getDefaultValue());
-            }
-            builder.append(";\n");
-        }
-        return builder.toString();
-    }
-
     public static String buildFieldsByFieldInfos(List<FieldInfo> fields) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
@@ -136,20 +119,20 @@ public class CodeGeneratorHelper {
         }
     }
 
-    public static String buildGetterMethod(FieldMetaData field) {
+    public static String buildGetterMethod(FieldInfo field) {
         Objects.requireNonNull(field, "field must not be null");
         String name = field.getName();
-        String type = field.getClazz();
+        String type = field.getType();
 
         return getterMethodDeclaration(type, name) + " {\n" +
                 "        return " + name + ";\n" +
                 "    }\n\n";
     }
 
-    public static String buildSetterMethod(FieldMetaData field) {
+    public static String buildSetterMethod(FieldInfo field) {
         Objects.requireNonNull(field, "field must not be null");
         String name = field.getName();
-        String type = field.getClazz();
+        String type = field.getType();
 
         return setterMethodDeclaration(type, name) + " {\n"
                 + "        this." + name + " = " + name + ";\n"
@@ -167,12 +150,12 @@ public class CodeGeneratorHelper {
                 .append("    }\n\n");
     }
 
-    public static void buildSetterMethod(StringBuilder builder, FieldMetaData field) {
+    public static void buildSetterMethod(StringBuilder builder, FieldInfo field) {
         Objects.requireNonNull(builder, "builder must not be null");
         Objects.requireNonNull(field, "field must not be null");
 
         String name = field.getName();
-        String type = field.getClazz();
+        String type = field.getType();
         builder.append(setterMethodDeclaration(type, name)).append(" {\n")
                 .append("        this.").append(name).append(" = ").append(name).append(";\n")
                 .append("    }\n\n");
@@ -186,10 +169,10 @@ public class CodeGeneratorHelper {
         }
     }
 
-    public static void buildSetterMethods(StringBuilder builder, List<FieldMetaData> fields) {
+    public static void buildSetterMethods(StringBuilder builder, List<FieldInfo> fields) {
         Objects.requireNonNull(builder, "builder must not be null");
         Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
-        for (FieldMetaData field : fields) {
+        for (FieldInfo field : fields) {
             buildSetterMethod(builder, field);
         }
     }

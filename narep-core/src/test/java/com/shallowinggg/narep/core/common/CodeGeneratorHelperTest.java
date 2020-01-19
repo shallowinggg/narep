@@ -61,8 +61,8 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildFieldsByMetaData() {
-        FieldMetaData data = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
-        String val = CodeGeneratorHelper.buildFieldsByMetaData(Collections.singletonList(data));
+        FieldInfo data = new FieldInfo(Modifier.PRIVATE, "int", "name");
+        String val = CodeGeneratorHelper.buildFieldsByFieldInfos(Collections.singletonList(data));
         Assert.assertEquals("    private int name;\n", val);
     }
 
@@ -89,8 +89,8 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildSetterMethods() {
-        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
-        FieldMetaData compress = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "boolean", "compress");
+        FieldInfo name = new FieldInfo(Modifier.PRIVATE, "int", "name");
+        FieldInfo compress = new FieldInfo(Modifier.PRIVATE, "boolean", "compress");
         StringBuilder builder = new StringBuilder();
         CodeGeneratorHelper.buildSetterMethods(builder, Arrays.asList(name, compress));
         Assert.assertEquals("    public void setName(int name) {\n" +
@@ -117,7 +117,7 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildSetterMethod() {
-        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        FieldInfo name = new FieldInfo(Modifier.PRIVATE, "int", "name");
         String val = CodeGeneratorHelper.buildSetterMethod(name);
         Assert.assertEquals("    public void setName(int name) {\n" +
                 "        this.name = name;\n" +
@@ -126,7 +126,7 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildGetterMethod() {
-        FieldMetaData name = new FieldMetaData(FieldMetaData.Modifier.PRIVATE, "int", "name");
+        FieldInfo name = new FieldInfo(Modifier.PRIVATE, "int", "name");
         String val = CodeGeneratorHelper.buildGetterMethod(name);
         Assert.assertEquals("    public int getName() {\n" +
                 "        return name;\n" +
