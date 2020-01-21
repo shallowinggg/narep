@@ -31,6 +31,10 @@ public class CodeGeneratorHelper {
                 PACKAGE_DELIMITER + className;
     }
 
+    public static String buildInnerClassFullQualifiedName(String outer, String name) {
+        return outer + INNER_CLASS_SEPARATOR + name;
+    }
+
     public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
         Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
@@ -48,12 +52,12 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildDefaultPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
+        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + LINE_SEPARATOR;
     }
 
     public static String buildSubPackage(String basePackageName, String subPackageName) {
         return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                subPackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
+                subPackageName + END_OF_STATEMENT + LINE_SEPARATOR;
     }
 
     public static String buildNecessaryFolders(String basePath) {
@@ -83,6 +87,7 @@ public class CodeGeneratorHelper {
             }
             builder.append(";\n");
         }
+        builder.append("\n");
         return builder.toString();
     }
 

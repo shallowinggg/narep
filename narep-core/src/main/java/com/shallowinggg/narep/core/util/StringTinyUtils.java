@@ -4,6 +4,8 @@ package com.shallowinggg.narep.core.util;
  * @author shallowinggg
  */
 public class StringTinyUtils {
+    public static final String EMPTY_STRING = "";
+
     /**
      * 检查给定的<tt>CharSequence</tt>是否为{@code null}或者
      * 没有内容。

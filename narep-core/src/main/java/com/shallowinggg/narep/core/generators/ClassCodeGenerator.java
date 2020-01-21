@@ -3,6 +3,7 @@ package com.shallowinggg.narep.core.generators;
 import com.shallowinggg.narep.core.common.ClassDeclarations;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.lang.FieldInfo;
+import com.shallowinggg.narep.core.lang.Modifier;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 
 import java.util.List;
@@ -18,6 +19,10 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
 
     public ClassCodeGenerator(String name) {
         super(name);
+    }
+
+    public ClassCodeGenerator(Modifier modifier, String name) {
+        super(modifier, name);
     }
 
     public ClassCodeGenerator(String name, String parentName) {

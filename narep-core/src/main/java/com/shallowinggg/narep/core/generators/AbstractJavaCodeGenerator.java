@@ -12,6 +12,7 @@ import com.shallowinggg.narep.core.util.StringTinyUtils;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.shallowinggg.narep.core.lang.JLSConstants.FILE_SEPARATOR;
 import static com.shallowinggg.narep.core.lang.JLSConstants.LINE_SEPARATOR;
@@ -31,7 +32,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     private String subPackageName;
     private List<String> dependenciesName;
     private List<JavaCodeGenerator> dependencies;
-    private List<JavaCodeGenerator> innerClass;
+    private List<InnerClassCodeGenerator> innerClass;
 
     public AbstractJavaCodeGenerator(String name) {
         this(name, NON_PARENT);
@@ -61,7 +62,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
-                                     List<String> dependenciesName, List<JavaCodeGenerator> innerClass) {
+                                     List<String> dependenciesName, List<InnerClassCodeGenerator> innerClass) {
         this.name = name;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
@@ -70,7 +71,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     }
 
     public AbstractJavaCodeGenerator(Modifier modifier, String name, String parentName, String subPackageName,
-                                     List<String> dependenciesName, List<JavaCodeGenerator> innerClass) {
+                                     List<String> dependenciesName, List<InnerClassCodeGenerator> innerClass) {
         this.modifier = modifier;
         this.name = name;
         this.parentName = parentName;
@@ -148,7 +149,23 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public String buildInnerClass() {
-        return null;
+        if (CollectionUtils.isNotEmpty(innerClass)) {
+            StringBuilder builder = new StringBuilder(1000 * innerClass.size());
+            builder.append("\n");
+            for (InnerClassCodeGenerator inner : innerClass) {
+                // TODO: 作为可配置选项
+                String indent = "    ";
+                String content = inner.buildClassComment() +
+                        inner.buildDeclaration() +
+                        inner.buildFields() +
+                        inner.buildMethods() +
+                        inner.buildInnerClass() +
+                        JavaCodeGenerator.END_OF_CLASS;
+                Stream.of(content.split("\n")).forEach(s -> builder.append(indent).append(s).append("\n"));
+            }
+            return builder.toString();
+        }
+        return "";
     }
 
     @Override
@@ -161,6 +178,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
                 buildDeclaration() +
                 buildFields() +
                 buildMethods() +
+                buildInnerClass() +
                 JavaCodeGenerator.END_OF_CLASS;
         FileUtils.writeFile(storePath, content, JavaCodeGenerator.DEFAULT_CHARSET);
     }
@@ -183,7 +201,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
         this.dependenciesName = dependenciesName;
     }
 
-    public void setInnerClass(List<JavaCodeGenerator> innerClass) {
+    public void setInnerClass(List<InnerClassCodeGenerator> innerClass) {
         this.innerClass = innerClass;
     }
 

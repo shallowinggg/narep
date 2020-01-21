@@ -11,27 +11,33 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.shallowinggg.narep.core.lang.JLSConstants.DOUBLE_LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.LINE_SEPARATOR;
 
 public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildFullQualifiedName() {
         String val = CodeGeneratorHelper.buildFullQualifiedName("com.example", "App");
-        Assert.assertEquals(val, "com.example.App");
+        Assert.assertEquals("com.example.App", val);
 
         val = CodeGeneratorHelper.buildFullQualifiedName("com.example",
                 "common", "App");
-        Assert.assertEquals(val, "com.example.common.App");
+        Assert.assertEquals("com.example.common.App", val);
+    }
+
+    @Test
+    public void testBuildInnerClassFullQualifiedName() {
+        Assert.assertEquals("com.example.Outer$Inner",
+                CodeGeneratorHelper.buildInnerClassFullQualifiedName("com.example.Outer", "Inner"));
     }
 
     @Test
     public void testBuildPackage() {
         String val = CodeGeneratorHelper.buildDefaultPackage("com.example");
-        Assert.assertEquals(val, "package com.example;" + DOUBLE_LINE_SEPARATOR);
+        Assert.assertEquals("package com.example;" + LINE_SEPARATOR, val);
 
         val = CodeGeneratorHelper.buildSubPackage("com.example", "common");
-        Assert.assertEquals(val, "package com.example.common;" + DOUBLE_LINE_SEPARATOR);
+        Assert.assertEquals("package com.example.common;" + LINE_SEPARATOR, val);
     }
 
     @Test
@@ -63,7 +69,7 @@ public class CodeGeneratorHelperTest {
     public void testBuildFieldsByMetaData() {
         FieldInfo data = new FieldInfo(Modifier.PRIVATE, "int", "name");
         String val = CodeGeneratorHelper.buildFieldsByFieldInfos(Collections.singletonList(data));
-        Assert.assertEquals("    private int name;\n", val);
+        Assert.assertEquals("    private int name;\n\n", val);
     }
 
     @Test

@@ -21,6 +21,7 @@ public class JLSConstants {
 
     public static final String PACKAGE_DELIMITER = ".";
     public static final String END_OF_STATEMENT = ";";
+    public static final String INNER_CLASS_SEPARATOR = "$";
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String DOUBLE_LINE_SEPARATOR = System.lineSeparator() + System.lineSeparator();
     public static final char FILE_SEPARATOR = File.separatorChar;
