@@ -193,7 +193,7 @@ public class ClassCodeGeneratorTest {
             @Override
             public String buildMethods() {
                 return "    public void test() {\n" +
-                        "    }\n";
+                        "    }\n\n";
             }
         };
 
@@ -201,7 +201,7 @@ public class ClassCodeGeneratorTest {
             @Override
             public String buildMethods() {
                 return "    public void test2() {\n" +
-                        "    }\n";
+                        "    }\n\n";
             }
         };
 

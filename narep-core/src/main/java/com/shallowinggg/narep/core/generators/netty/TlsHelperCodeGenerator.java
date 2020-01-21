@@ -2,10 +2,13 @@ package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
+import com.shallowinggg.narep.core.generators.InnerClassCodeGenerator;
+import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC;
@@ -59,8 +62,7 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildMethods() {
-        return innerClass() +
-                registerDecryptionStrategy() +
+        return registerDecryptionStrategy() +
                 buildSslContext() +
                 extractTlsConfigFromFile() +
                 logTheFinalUsedTlsConfig() +
@@ -68,21 +70,15 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
                 isNullOrEmpty();
     }
 
-    // methods
-
-    private String innerClass() {
-        return "    public interface DecryptionStrategy {\n" +
-                "        /**\n" +
-                "         * Decrypt the target encrpted private key file.\n" +
-                "         *\n" +
-                "         * @param privateKeyEncryptPath A pathname string\n" +
-                "         * @param forClient             tells whether it's a client-side key file\n" +
-                "         * @return An input stream for a decrypted key file\n" +
-                "         * @throws IOException if an I/O error has occurred\n" +
-                "         */\n" +
-                "        InputStream decryptPrivateKey(String privateKeyEncryptPath, boolean forClient) throws IOException;\n" +
-                "    }\n\n";
+    @Override
+    public String buildInnerClass() {
+        DecryptionStrategyCodeGenerator decryptionStrategy = new DecryptionStrategyCodeGenerator();
+        InnerClassCodeGenerator innerClass = new InnerClassCodeGenerator(this, decryptionStrategy);
+        setInnerClass(Collections.singletonList(innerClass));
+        return super.buildInnerClass();
     }
+
+    // methods
 
     private String registerDecryptionStrategy() {
         return "    public static void registerDecryptionStrategy(final DecryptionStrategy decryptionStrategy) {\n" +
@@ -238,5 +234,26 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
         return "    private static boolean isNullOrEmpty(String s) {\n" +
                 "        return s == null || s.isEmpty();\n" +
                 "    }\n\n";
+    }
+
+    private static class DecryptionStrategyCodeGenerator extends InterfaceCodeGenerator {
+        private static final String INTERFACE_NAME = "DecryptionStrategy";
+
+        DecryptionStrategyCodeGenerator() {
+            super(INTERFACE_NAME);
+        }
+
+        @Override
+        public String buildMethods() {
+            return "    /**\n" +
+                    "     * Decrypt the target encrpted private key file.\n" +
+                    "     *\n" +
+                    "     * @param privateKeyEncryptPath A pathname string\n" +
+                    "     * @param forClient             tells whether it's a client-side key file\n" +
+                    "     * @return An input stream for a decrypted key file\n" +
+                    "     * @throws IOException if an I/O error has occurred\n" +
+                    "     */\n" +
+                    "    InputStream decryptPrivateKey(String privateKeyEncryptPath, boolean forClient) throws IOException;";
+        }
     }
 }
