@@ -21,6 +21,10 @@ public class AnnotationCodeGenerator extends AbstractJavaCodeGenerator {
         super(name, dependenciesName);
     }
 
+    public AnnotationCodeGenerator(String name, String subPackageName) {
+        super(name, null, subPackageName);
+    }
+
     @Override
     public String buildDeclaration() {
         return ClassDeclarations.buildStrategy(getModifier(), getName(), null, null,
