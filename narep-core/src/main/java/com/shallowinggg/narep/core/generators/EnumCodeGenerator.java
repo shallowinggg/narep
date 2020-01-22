@@ -21,8 +21,8 @@ public class EnumCodeGenerator extends AbstractJavaCodeGenerator {
         super(name, dependenciesName);
     }
 
-    public EnumCodeGenerator(String name, String parentName, String subPackageName) {
-        super(name, parentName, subPackageName);
+    public EnumCodeGenerator(String name, String subPackageName) {
+        super(name, null, subPackageName);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class NettyEventTypeCodeGenerator extends EnumCodeGenerator {
     private static final String SUB_PACKAGE = "netty";
 
     public NettyEventTypeCodeGenerator() {
-        super(ENUM_NAME, null, SUB_PACKAGE);
+        super(ENUM_NAME, SUB_PACKAGE);
     }
 
     @Override

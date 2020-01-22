@@ -29,6 +29,7 @@ public enum Modifier {
 
     PUBLIC_STATIC_FINAL("public static final "),
     PUBLIC_STATIC("public static "),
+    PUBLIC_ABSTRACT("public abstract "),
     PRIVATE_STATIC_FINAL("private static final "),
     PRIVATE_STATIC("private static "),
     PRIVATE_FINAL("private final "),

@@ -10,7 +10,7 @@ public class TlsModeCodeGenerator extends EnumCodeGenerator {
     private static final String SUB_PACKAGE = "common";
 
     public TlsModeCodeGenerator() {
-        super(ENUM_NAME, null, SUB_PACKAGE);
+        super(ENUM_NAME, SUB_PACKAGE);
     }
 
     @Override
