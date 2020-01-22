@@ -124,9 +124,9 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildInnerClass() {
-        NettyEventExecutorCodeGenerator nettyEventExecutor = new NettyEventExecutorCodeGenerator();
-        InnerClassCodeGenerator innerClass = new InnerClassCodeGenerator(this, nettyEventExecutor);
-        setInnerClass(Collections.singletonList(innerClass));
+        InnerClassCodeGenerator nettyEventExecutor = new InnerClassCodeGenerator(this,
+                new NettyEventExecutorCodeGenerator());
+        setInnerClass(Collections.singletonList(nettyEventExecutor));
         return super.buildInnerClass();
     }
 

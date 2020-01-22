@@ -53,11 +53,11 @@ public class NettyLoggerCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildInnerClass() {
-        NettyBridgeLoggerFactoryCodeGenerator nettyBridgeLoggerFactory = new NettyBridgeLoggerFactoryCodeGenerator();
-        InnerClassCodeGenerator innerClass1 = new InnerClassCodeGenerator(this, nettyBridgeLoggerFactory);
-        NettyBridgeLoggerCodeGenerator nettyBridgeLogger = new NettyBridgeLoggerCodeGenerator();
-        InnerClassCodeGenerator innerClass2 = new InnerClassCodeGenerator(this, nettyBridgeLogger);
-        setInnerClass(Arrays.asList(innerClass1, innerClass2));
+        InnerClassCodeGenerator nettyBridgeLoggerFactory = new InnerClassCodeGenerator(this,
+                new NettyBridgeLoggerFactoryCodeGenerator());
+        InnerClassCodeGenerator nettyBridgeLogger = new InnerClassCodeGenerator(this,
+                new NettyBridgeLoggerCodeGenerator());
+        setInnerClass(Arrays.asList(nettyBridgeLoggerFactory, nettyBridgeLogger));
         return super.buildInnerClass();
     }
 

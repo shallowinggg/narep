@@ -73,9 +73,9 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildInnerClass() {
-        DecryptionStrategyCodeGenerator decryptionStrategy = new DecryptionStrategyCodeGenerator();
-        InnerClassCodeGenerator innerClass = new InnerClassCodeGenerator(this, decryptionStrategy);
-        setInnerClass(Collections.singletonList(innerClass));
+        InnerClassCodeGenerator decryptionStrategy = new InnerClassCodeGenerator(this,
+                new DecryptionStrategyCodeGenerator());
+        setInnerClass(Collections.singletonList(decryptionStrategy));
         return super.buildInnerClass();
     }
 

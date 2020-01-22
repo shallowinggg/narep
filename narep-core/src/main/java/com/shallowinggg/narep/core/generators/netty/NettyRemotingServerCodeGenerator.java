@@ -106,13 +106,13 @@ public class NettyRemotingServerCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildInnerClass() {
-        HandshakeHandlerCodeGenerator handshakeHandler = new HandshakeHandlerCodeGenerator();
-        InnerClassCodeGenerator innerClass1 = new InnerClassCodeGenerator(this, handshakeHandler);
-        NettyServerHandlerCodeGenerator nettyServerHandler = new NettyServerHandlerCodeGenerator();
-        InnerClassCodeGenerator innerClass2 = new InnerClassCodeGenerator(this, nettyServerHandler);
-        NettyConnectManageHandlerCodeGenerator nettyConnectManageHandler = new NettyConnectManageHandlerCodeGenerator();
-        InnerClassCodeGenerator innerClass3 = new InnerClassCodeGenerator(this, nettyConnectManageHandler);
-        setInnerClass(Arrays.asList(innerClass1, innerClass2, innerClass3));
+        InnerClassCodeGenerator handshakeHandler = new InnerClassCodeGenerator(this,
+                new HandshakeHandlerCodeGenerator());
+        InnerClassCodeGenerator nettyServerHandler = new InnerClassCodeGenerator(this,
+                new NettyServerHandlerCodeGenerator());
+        InnerClassCodeGenerator nettyConnectManageHandler = new InnerClassCodeGenerator(this,
+                new NettyConnectManageHandlerCodeGenerator());
+        setInnerClass(Arrays.asList(handshakeHandler, nettyServerHandler, nettyConnectManageHandler));
         return super.buildInnerClass();
     }
 
