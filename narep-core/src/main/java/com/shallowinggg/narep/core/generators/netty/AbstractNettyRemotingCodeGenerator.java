@@ -118,7 +118,8 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
                 invokeAsyncImpl() +
                 requestFail() +
                 failFast() +
-                invokeAsyncImpl();
+                invokeAsyncImpl() +
+                "\n";
     }
 
     @Override
