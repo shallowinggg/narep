@@ -67,7 +67,8 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
                 extractTlsConfigFromFile() +
                 logTheFinalUsedTlsConfig() +
                 parseClientAuthMode() +
-                isNullOrEmpty();
+                isNullOrEmpty() +
+                "\n";
     }
 
     @Override

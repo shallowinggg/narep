@@ -48,7 +48,7 @@ public class NettyLoggerCodeGenerator extends ClassCodeGenerator {
                 "            }\n" +
                 "            nettyLoggerSeted.set(true);\n" +
                 "        }\n" +
-                "    }\n";
+                "    }\n\n";
     }
 
     @Override

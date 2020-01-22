@@ -26,6 +26,7 @@ public enum Modifier {
      * public
      */
     PUBLIC("public "),
+    STATIC("static "),
 
     PUBLIC_STATIC_FINAL("public static final "),
     PUBLIC_STATIC("public static "),
