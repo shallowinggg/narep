@@ -32,8 +32,10 @@ public enum Modifier {
     PUBLIC_STATIC("public static "),
     PUBLIC_ABSTRACT("public abstract "),
     PRIVATE_STATIC_FINAL("private static final "),
+    PRIVATE_STATIC_VOLATILE("private static volatile "),
     PRIVATE_STATIC("private static "),
     PRIVATE_FINAL("private final "),
+    PRIVATE_TRANSIENT("private transient "),
     PRIVATE_VOLATILE("private volatile "),
     PROTECTED_FINAL("protected final "),
     PROTECTED_VOLATILE("protected volatile ");

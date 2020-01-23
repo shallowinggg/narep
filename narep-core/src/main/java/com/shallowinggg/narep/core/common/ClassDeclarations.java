@@ -66,7 +66,7 @@ public class ClassDeclarations {
             }
             ClassDeclarationBuildStrategy strategy = buildStrategy(modifier, className, parentName, interfaceNames,
                     generics, isInterface, false, false, false);
-            return new GenericDeclarationStrategyWrapper(strategy, className, generics);
+            return new GenericDeclarationStrategyDecorator(strategy, className, generics);
         }
         if (isInterface) {
             if (StringTinyUtils.isNotEmpty(parentName)) {
@@ -91,10 +91,10 @@ public class ClassDeclarations {
         }
     }
 
-    static class DeclarationStrategyWrapper implements ClassDeclarationBuildStrategy {
+    static class DeclarationStrategyDecorator implements ClassDeclarationBuildStrategy {
         ClassDeclarationBuildStrategy strategy;
 
-        DeclarationStrategyWrapper(ClassDeclarationBuildStrategy strategy) {
+        DeclarationStrategyDecorator(ClassDeclarationBuildStrategy strategy) {
             this.strategy = strategy;
         }
 
@@ -105,7 +105,7 @@ public class ClassDeclarations {
 
     }
 
-    static class GenericDeclarationStrategyWrapper extends DeclarationStrategyWrapper {
+    static class GenericDeclarationStrategyDecorator extends DeclarationStrategyDecorator {
         /**
          * "class ".length()
          */
@@ -113,7 +113,7 @@ public class ClassDeclarations {
         private String name;
         private List<String> generics;
 
-        GenericDeclarationStrategyWrapper(ClassDeclarationBuildStrategy strategy,
+        GenericDeclarationStrategyDecorator(ClassDeclarationBuildStrategy strategy,
                                           String name, List<String> generics) {
             super(strategy);
             this.name = name;
