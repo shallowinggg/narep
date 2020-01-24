@@ -74,4 +74,13 @@ public class ProtocolField implements Comparable<ProtocolField> {
     public int hashCode() {
         return Objects.hash(name, clazz, len);
     }
+
+    @Override
+    public String toString() {
+        return "ProtocolField[" +
+                "name='" + name + '\'' +
+                ", clazz=" + clazz +
+                ", len=" + len +
+                ']';
+    }
 }

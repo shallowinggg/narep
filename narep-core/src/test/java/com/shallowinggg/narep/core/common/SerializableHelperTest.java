@@ -1,17 +1,148 @@
 package com.shallowinggg.narep.core.common;
 
+import com.shallowinggg.narep.core.GeneratorController;
+import com.shallowinggg.narep.core.lang.ProtocolField;
+import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SerializableHelperTest {
 
+    @BeforeClass
+    public static void before() {
+        GeneratorController controller = new GeneratorController();
+        controller.init();
+        controller.registerProtocolField(new ProtocolField("ext", HashMap.class, -1));
+    }
+
     @Test
-    public void testBuildLocalVarLenNames() {
-        List<String> list = new ArrayList<>();
-        list.add("11");
-        list.add("22");
-        System.out.println(list);
+    public void testPrimitiveFields() {
+        List<ProtocolField> val = SerializableHelper.primitiveFields(ConfigInfos.getInstance().protocolFields());
+        Assert.assertEquals("[ProtocolField[name='code', clazz=int, len=2], ProtocolField[name='flag', clazz=int, len=1], " +
+                "ProtocolField[name='opaque', clazz=int, len=4]]", val.toString());
+
+    }
+
+    @Test
+    public void testCompositeFields() {
+        List<ProtocolField> val = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
+        Assert.assertEquals("[ProtocolField[name='remark', clazz=class java.lang.String, len=-1], " +
+                "ProtocolField[name='ext', clazz=class java.util.HashMap, len=-1]]", val.toString());
+    }
+
+    @Test
+    public void testBuildCompositeField() {
+        List<ProtocolField> compositeFields = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
+        StringBuilder builder = new StringBuilder(600);
+        for(ProtocolField field : compositeFields) {
+            builder.append(SerializableHelper.buildCompositeField(field));
+        }
+        Assert.assertEquals("        // String remark\n" +
+                "        byte[] remarkBytes = null;\n" +
+                "        int remarkLen = 0;\n" +
+                "        if (cmd.getRemark() != null && cmd.getRemark().length() > 0) {\n" +
+                "            remarkBytes = cmd.getRemark().getBytes(CHARSET_UTF8);\n" +
+                "            remarkLen = remarkBytes.length;\n" +
+                "        }\n" +
+                "\n" +
+                "        // HashMap ext\n" +
+                "        byte[] extBytes = null;\n" +
+                "        int extLen = 0;\n" +
+                "        if (cmd.getExt() != null && !cmd.getExt().isEmpty()) {\n" +
+                "            extBytes = mapSerialize(cmd.getExt());\n" +
+                "            extLen = extBytes.length;\n" +
+                "        }\n\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildPutCompositeField() {
+        List<ProtocolField> compositeFields = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
+        StringBuilder builder = new StringBuilder(500);
+        for(ProtocolField field : compositeFields) {
+            builder.append(SerializableHelper.buildPutCompositeField(field));
+        }
+        Assert.assertEquals("        // String remark\n" +
+                "        if (remarkBytes != null ) {\n" +
+                "            headerBuffer.putInt(remarkBytes.length);\n" +
+                "            headerBuffer.put(remarkBytes);\n" +
+                "        } else {\n" +
+                "            headerBuffer.putInt(0);\n" +
+                "        }\n" +
+                "        // HashMap ext\n" +
+                "        if (extBytes != null ) {\n" +
+                "            headerBuffer.putInt(extBytes.length);\n" +
+                "            headerBuffer.put(extBytes);\n" +
+                "        } else {\n" +
+                "            headerBuffer.putInt(0);\n" +
+                "        }\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildPutPrimitiveField() {
+        List<ProtocolField> primitiveFields = SerializableHelper.primitiveFields(ConfigInfos.getInstance().protocolFields());
+        StringBuilder builder = new StringBuilder(300);
+        for(ProtocolField field : primitiveFields) {
+            builder.append(SerializableHelper.buildPutPrimitiveField(field));
+        }
+        Assert.assertEquals("        // int code\n" +
+                "        headerBuffer.putShort((short) cmd.getCode());\n" +
+                "        // int flag\n" +
+                "        headerBuffer.put((byte) cmd.getFlag());\n" +
+                "        // int opaque\n" +
+                "        headerBuffer.putInt(cmd.getOpaque());\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildGetPrimitiveField() {
+        List<ProtocolField> primitiveFields = SerializableHelper.primitiveFields(ConfigInfos.getInstance().protocolFields());
+        StringBuilder builder = new StringBuilder(200);
+        for(ProtocolField field : primitiveFields) {
+            builder.append(SerializableHelper.buildGetPrimitiveField(field));
+        }
+        Assert.assertEquals("        // int code\n" +
+                "        cmd.setCode((headBuffer.getShort());\n" +
+                "        // int flag\n" +
+                "        cmd.setFlag((headBuffer.get());\n" +
+                "        // int opaque\n" +
+                "        cmd.setOpaque((headBuffer.getInt());\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildGetCompositeField() {
+        List<ProtocolField> compositeFields = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
+        StringBuilder builder = new StringBuilder(600);
+        for(ProtocolField field : compositeFields) {
+            builder.append(SerializableHelper.buildGetCompositeField(field));
+        }
+        Assert.assertEquals("        // String remark\n" +
+                "        int remarkLength = headerBuffer.getInt();\n" +
+                "        if (remarkLength > 0) {\n" +
+                "            byte[] remarkContent = new byte[remarkLength];\n" +
+                "            headerBuffer.get(remarkContent);\n" +
+                "            cmd.setRemark(new String(remarkContent, CHARSET_UTF8));\n" +
+                "        }\n" +
+                "        // HashMap ext\n" +
+                "        int extLength = headerBuffer.getInt();\n" +
+                "        if (extLength > 0) {\n" +
+                "            byte[] extContent = new byte[extLength];\n" +
+                "            headerBuffer.get(extContent);\n" +
+                "            cmd.setExt(mapDeserialize(extContent));\n" +
+                "        }\n", builder.toString());
+    }
+
+    @Test
+    public void testBuildCalcTotalLen() {
+        List<ProtocolField> fields = ConfigInfos.getInstance().protocolFields();
+        Assert.assertEquals("    private static int calTotalLen(int[] composites) {\n" +
+                "        return 2 // int code\n" +
+                "                + 1 // int flag\n" +
+                "                + 4 // int opaque\n" +
+                "                + 4 + composite[0] // String remark\n" +
+                "                + 4 + composite[1] // HashMap ext\n" +
+                "                ;\n" +
+                "    }\n\n", SerializableHelper.buildCalcTotalLen(fields));
     }
 }

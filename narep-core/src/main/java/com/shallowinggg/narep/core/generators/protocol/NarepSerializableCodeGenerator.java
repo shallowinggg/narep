@@ -30,24 +30,37 @@ public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
         compositeFields = SerializableHelper.compositeFields(protocolFields);
     }
 
+    @Override
+    public String buildMethods() {
+        return narepProtocolEncode() +
+                mapSerialize() +
+                calcTotalLen() +
+                narepProtocolDecode() +
+                mapDeserialize();
+    }
+
     private String narepProtocolEncode() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(3000);
         builder.append("    public static byte[] narepProtocolEncode(RemotingCommand cmd) {\n");
-        for(ProtocolField compositeField : compositeFields) {
+        for (ProtocolField compositeField : compositeFields) {
             builder.append(SerializableHelper.buildCompositeField(compositeField));
         }
         List<String> lens = SerializableHelper.buildLocalVarLenNames(compositeFields);
         String values = lens.toString();
         values = values.substring(1, values.length() - 1);
-        builder.append("    int[] composites = new int[]{").append(values).append("};\n");
-        builder.append("        int totalLen = calTotalLen(composites);\n" +
-                "\n" +
-                "        ByteBuffer headerBuffer = ByteBuffer.allocate(totalLen);\n");
-
-
-        for(ProtocolField compositeField : compositeFields) {
+        builder.append("        int[] composites = new int[]{").append(values).append("};\n");
+        builder.append("        int totalLen = calTotalLen(composites);\n")
+                .append("\n")
+                .append("        ByteBuffer headerBuffer = ByteBuffer.allocate(totalLen);\n");
+        for (ProtocolField primitiveField : primitiveFields) {
+            builder.append(SerializableHelper.buildPutPrimitiveField(primitiveField));
+        }
+        for (ProtocolField compositeField : compositeFields) {
             builder.append(SerializableHelper.buildPutCompositeField(compositeField));
         }
+        builder.append("\n")
+                .append("        return headerBuffer.array();\n")
+                .append("    }\n\n");
 
         return builder.toString();
     }
@@ -101,7 +114,19 @@ public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
     }
 
     private String narepProtocolDecode() {
-        return "";
+        StringBuilder builder = new StringBuilder(3000);
+        builder.append("    public static RemotingCommand narepProtocolDecode(final byte[] headerArray) {\n")
+                .append("        RemotingCommand cmd = new RemotingCommand();\n")
+                .append("        ByteBuffer headerBuffer = ByteBuffer.wrap(headerArray);\n");
+        for (ProtocolField primitiveField : primitiveFields) {
+            builder.append(SerializableHelper.buildGetPrimitiveField(primitiveField));
+        }
+        for (ProtocolField compositeField : compositeFields) {
+            builder.append(SerializableHelper.buildGetCompositeField(compositeField));
+        }
+        builder.append("        return cmd;\n")
+                .append("    }\n\n");
+        return builder.toString();
     }
 
     private String mapDeserialize() {
