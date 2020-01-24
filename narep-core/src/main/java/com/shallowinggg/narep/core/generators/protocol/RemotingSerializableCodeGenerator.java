@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 
@@ -11,6 +12,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_ABSTRACT;
 /**
  * @author shallowinggg
  */
+@Generator
 public class RemotingSerializableCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingSerializable";
     private static final String SUB_PACKAGE = "protocol";

@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.common;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.GenericClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
@@ -14,6 +15,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE;
 /**
  * @author shallowinggg
  */
+@Generator
 public class PairCodeGenerator extends GenericClassCodeGenerator {
     private static final String CLASS_NAME = "Pair";
     private static final String SUB_PACKAGE = "common";

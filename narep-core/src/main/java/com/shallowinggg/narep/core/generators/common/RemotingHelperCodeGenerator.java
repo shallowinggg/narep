@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.common;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
@@ -16,6 +17,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC_FINAL;
 /**
  * @author shallowinggg
  */
+@Generator
 public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingHelper";
     private static final String SUB_PACKAGE = "common";

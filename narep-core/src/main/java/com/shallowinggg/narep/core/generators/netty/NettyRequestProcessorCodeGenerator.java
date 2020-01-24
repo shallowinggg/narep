@@ -1,10 +1,12 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 /**
  * @author shallowinggg
  */
+@Generator
 public class NettyRequestProcessorCodeGenerator extends InterfaceCodeGenerator {
     private static final String CLASS_NAME = "NettyRequestProcessor";
     private static final String SUB_PACKAGE = "netty";

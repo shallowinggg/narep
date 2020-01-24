@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
@@ -15,6 +16,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_FINAL;
 /**
  * @author shallowinggg
  */
+@Generator
 public class RequestTaskCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RequestTask";
     private static final String[] INTERFACES = new String[]{"Runnable"};

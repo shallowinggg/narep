@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.common.SerializableHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author shallowinggg
  */
+@Generator
 public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NarepSerializable";
     private static final String SUB_PACKAGE = "protocol";

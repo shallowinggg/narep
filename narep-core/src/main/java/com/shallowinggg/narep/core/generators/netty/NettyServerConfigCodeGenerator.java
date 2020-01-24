@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
@@ -13,6 +14,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE;
 /**
  * @author shallowinggg
  */
+@Generator
 public class NettyServerConfigCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyServerConfig";
     private static final String[] INTERFACES = new String[]{"Cloneable"};
@@ -41,6 +43,7 @@ public class NettyServerConfigCodeGenerator extends ClassCodeGenerator {
                         "     * ../glibc-2.10.1/configure \\ --prefix=/usr \\ --with-headers=/usr/include \\\n" +
                         "     * --host=x86_64-linux-gnu \\ --build=x86_64-pc-linux-gnu \\ --without-gd\n" +
                         "     */").build());
+        setFields(fields);
     }
 
     @Override

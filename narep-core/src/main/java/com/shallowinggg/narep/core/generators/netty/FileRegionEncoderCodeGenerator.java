@@ -1,10 +1,12 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 
 /**
  * @author shallowinggg
  */
+@Generator
 public class FileRegionEncoderCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "FileRegionEncoder";
     private static final String PARENT_NAME = "MessageToByteEncoder<FileRegion>";

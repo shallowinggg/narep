@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
@@ -14,6 +15,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC_FINAL;
 /**
  * @author shallowinggg
  */
+@Generator
 public class NettyDecoderCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyDecoder";
     private static final String PARENT_NAME = "LengthFieldBasedFrameDecoder";

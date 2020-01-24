@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 
@@ -13,6 +14,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC_FINAL;
 /**
  * @author shallowinggg
  */
+@Generator
 public class TlsSystemConfigCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "TlsSystemConfig";
     private static final String SUB_PACKAGE = "netty";

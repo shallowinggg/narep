@@ -1,10 +1,12 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 /**
  * @author shallowinggg
  */
+@Generator
 public class ChannelEventListenerCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "ChannelEventListener";
 

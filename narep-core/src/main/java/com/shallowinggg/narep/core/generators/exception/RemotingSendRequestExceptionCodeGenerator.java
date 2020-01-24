@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.exception;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 import com.shallowinggg.narep.core.lang.Modifier;
@@ -9,6 +10,7 @@ import java.util.Collections;
 /**
  * @author shallowinggg
  */
+@Generator
 public class RemotingSendRequestExceptionCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingSendRequestException";
     private static final String PARENT_CLASS = "RemotingException";

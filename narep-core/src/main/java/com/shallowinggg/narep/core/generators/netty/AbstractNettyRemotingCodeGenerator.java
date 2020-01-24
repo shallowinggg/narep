@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.generators.InnerClassCodeGenerator;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * @author shallowinggg
  */
+@Generator
 public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "AbstractNettyRemoting";
     private static final String SUB_PACKAGE = "netty";

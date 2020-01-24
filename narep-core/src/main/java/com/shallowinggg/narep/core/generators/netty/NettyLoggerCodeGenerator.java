@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.netty;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.generators.InnerClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
@@ -15,6 +16,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC;
 /**
  * @author shallowinggg
  */
+@Generator
 public class NettyLoggerCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyLogger";
     private static final String SUB_PACKAGE = "netty";

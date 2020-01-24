@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
+import com.shallowinggg.narep.core.annotation.Generator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
@@ -10,11 +11,12 @@ import static com.shallowinggg.narep.core.lang.JLSConstants.DOUBLE_LINE_SEPARATO
 /**
  * @author shallowinggg
  */
+@Generator
 public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "RPCHook";
 
     public RPCHookCodeGenerator() {
-        super(INTERFACE_NAME, Collections.singletonList("RemotingCommandCodeGenerator.java"));
+        super(INTERFACE_NAME, Collections.singletonList("RemotingCommand.java"));
     }
 
     @Override

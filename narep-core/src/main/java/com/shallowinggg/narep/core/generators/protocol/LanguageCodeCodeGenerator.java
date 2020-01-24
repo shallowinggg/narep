@@ -1,10 +1,14 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
+import com.shallowinggg.narep.core.annotation.Generator;
+import com.shallowinggg.narep.core.annotation.Profiler;
 import com.shallowinggg.narep.core.generators.EnumCodeGenerator;
 
 /**
  * @author shallowinggg
  */
+@Generator
+@Profiler("default")
 public class LanguageCodeCodeGenerator extends EnumCodeGenerator {
     private static final String ENUM_NAME = "LanguageCode";
     private static final String SUB_PACKAGE = "protocol";
