@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="narep-admin" />
         <module name="narep-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="narep" target="1.8" />
+      <module name="narep-admin" target="1.8" />
       <module name="narep-core" target="1.8" />
     </bytecodeTargetLevel>
   </component>

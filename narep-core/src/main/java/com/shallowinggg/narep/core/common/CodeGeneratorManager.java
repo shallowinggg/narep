@@ -1,4 +1,4 @@
-package com.shallowinggg.narep.core.generators;
+package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.DependencyResolver;
@@ -68,6 +68,11 @@ public class CodeGeneratorManager implements DependencyResolver {
         if (LOG.isDebugEnabled()) {
             LOG.debug("register CodeGenerator: {}", name);
         }
+    }
+
+    public boolean containsGenerator(String generatorName) {
+        Conditions.hasText(generatorName, "generatorName must not be empty");
+        return generators.containsKey(generatorName);
     }
 
     public void registerDefaultCodeGenerators() {

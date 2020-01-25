@@ -3,6 +3,7 @@ package com.shallowinggg.narep.core.generators;
 import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.CodeGeneratorManager;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.common.GeneratorConfig;
 import com.shallowinggg.narep.core.lang.Modifier;

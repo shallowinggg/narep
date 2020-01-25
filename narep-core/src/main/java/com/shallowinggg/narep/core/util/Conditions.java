@@ -1,9 +1,24 @@
 package com.shallowinggg.narep.core.util;
 
+import com.sun.istack.internal.Nullable;
+
 /**
  * @author shallowinggg
  */
 public class Conditions {
+
+    /**
+     * Assert that an object is not {@code null}.
+     * <pre class="code">Assert.notNull(clazz, "The class must not be null");</pre>
+     * @param object the object to check
+     * @param message the exception message to use if the assertion fails
+     * @throws IllegalArgumentException if the object is {@code null}
+     */
+    public static void notNull(@Nullable Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 
     /**
      * 检查给定的条件是否为{@literal true}。这个方法主要是用来进行构造方法和
@@ -42,6 +57,27 @@ public class Conditions {
     public static void checkArgument(boolean expr, String formatMsg, Object... objects) {
         if (!expr) {
             throw new IllegalArgumentException(String.format(formatMsg, objects));
+        }
+    }
+
+    public static void checkState(boolean expr, String formatMsg, Object... objects) {
+        if (!expr) {
+            throw new IllegalStateException(String.format(formatMsg, objects));
+        }
+    }
+
+    /**
+     * Assert that the given String contains valid text content; that is, it must not
+     * be {@code null} and must contain at least one non-whitespace character.
+     * <pre class="code">Assert.hasText(name, "'name' must not be empty");</pre>
+     * @param text the String to check
+     * @param message the exception message to use if the assertion fails
+     * @throws IllegalArgumentException if the text does not contain valid text content
+     * @see StringTinyUtils#isNotBlank(CharSequence)
+     */
+    public static void hasText(@Nullable String text, String message) {
+        if (!StringTinyUtils.isNotBlank(text)) {
+            throw new IllegalArgumentException(message);
         }
     }
 

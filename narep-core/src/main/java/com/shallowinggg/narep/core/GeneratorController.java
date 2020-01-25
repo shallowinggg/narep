@@ -1,7 +1,7 @@
 package com.shallowinggg.narep.core;
 
 import com.shallowinggg.narep.core.common.*;
-import com.shallowinggg.narep.core.generators.CodeGeneratorManager;
+import com.shallowinggg.narep.core.common.CodeGeneratorManager;
 import com.shallowinggg.narep.core.lang.ProtocolField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
