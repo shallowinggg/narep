@@ -6,6 +6,7 @@ import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -103,6 +104,118 @@ public class ClassUtils {
     private static void registerCommonClasses(Class<?>... commonClasses) {
         for (Class<?> clazz : commonClasses) {
             commonClassCache.put(clazz.getName(), clazz);
+        }
+    }
+
+    public static String classPackageAsResourcePath(@Nullable Class<?> clazz) {
+        if (clazz == null) {
+            return "";
+        }
+        String className = clazz.getName();
+        int packageEndIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+        if (packageEndIndex == -1) {
+            return "";
+        }
+        String packageName = className.substring(0, packageEndIndex);
+        return packageName.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
+    }
+
+    public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
+        try {
+            forName(className, classLoader);
+            return true;
+        }
+        catch (IllegalAccessError err) {
+            throw new IllegalStateException("Readability mismatch in inheritance hierarchy of class [" +
+                    className + "]: " + err.getMessage(), err);
+        }
+        catch (Throwable ex) {
+            // Typically ClassNotFoundException or NoClassDefFoundError...
+            return false;
+        }
+    }
+
+    public static boolean isInnerClass(Class<?> clazz) {
+        return (clazz.isMemberClass() && !Modifier.isStatic(clazz.getModifiers()));
+    }
+
+    public static boolean isAssignable(Class<?> lhsType, Class<?> rhsType) {
+        Conditions.notNull(lhsType, "Left-hand side type must not be null");
+        Conditions.notNull(rhsType, "Right-hand side type must not be null");
+        if (lhsType.isAssignableFrom(rhsType)) {
+            return true;
+        }
+        if (lhsType.isPrimitive()) {
+            Class<?> resolvedPrimitive = primitiveWrapperTypeMap.get(rhsType);
+            if (lhsType == resolvedPrimitive) {
+                return true;
+            }
+        }
+        else {
+            Class<?> resolvedWrapper = primitiveTypeToWrapperMap.get(rhsType);
+            if (resolvedWrapper != null && lhsType.isAssignableFrom(resolvedWrapper)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Class<?>[] getAllInterfacesForClass(Class<?> clazz) {
+        return getAllInterfacesForClass(clazz, null);
+    }
+
+    public static Class<?>[] getAllInterfacesForClass(Class<?> clazz, @Nullable ClassLoader classLoader) {
+        return toClassArray(getAllInterfacesForClassAsSet(clazz, classLoader));
+    }
+
+    public static Class<?>[] toClassArray(Collection<Class<?>> collection) {
+        return collection.toArray(new Class<?>[0]);
+    }
+
+    public static Set<Class<?>> getAllInterfacesForClassAsSet(Class<?> clazz, @Nullable ClassLoader classLoader) {
+        Conditions.notNull(clazz, "Class must not be null");
+        if (clazz.isInterface() && isVisible(clazz, classLoader)) {
+            return Collections.singleton(clazz);
+        }
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+        Class<?> current = clazz;
+        while (current != null) {
+            Class<?>[] ifcs = current.getInterfaces();
+            for (Class<?> ifc : ifcs) {
+                if (isVisible(ifc, classLoader)) {
+                    interfaces.add(ifc);
+                }
+            }
+            current = current.getSuperclass();
+        }
+        return interfaces;
+    }
+
+    public static boolean isVisible(Class<?> clazz, @Nullable ClassLoader classLoader) {
+        if (classLoader == null) {
+            return true;
+        }
+        try {
+            if (clazz.getClassLoader() == classLoader) {
+                return true;
+            }
+        }
+        catch (SecurityException ex) {
+            // Fall through to loadable check below
+        }
+
+        // Visible if same Class can be loaded from given ClassLoader
+        return isLoadable(clazz, classLoader);
+    }
+
+    private static boolean isLoadable(Class<?> clazz, ClassLoader classLoader) {
+        try {
+            return (clazz == classLoader.loadClass(clazz.getName()));
+            // Else: different class with same name found
+        }
+        catch (ClassNotFoundException ex) {
+            // No corresponding class found at all
+            return false;
         }
     }
 
@@ -271,5 +384,10 @@ public class ClassUtils {
             }
         }
         return cl;
+    }
+
+    public static Class<?> resolvePrimitiveIfNecessary(Class<?> clazz) {
+        Conditions.notNull(clazz, "Class must not be null");
+        return (clazz.isPrimitive() && clazz != void.class ? primitiveTypeToWrapperMap.get(clazz) : clazz);
     }
 }

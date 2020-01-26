@@ -27,9 +27,6 @@
 // THE POSSIBILITY OF SUCH DAMAGE.
 package com.shallowinggg.narep.core.asm;
 
-import com.sun.tools.doclets.internal.toolkit.FieldWriter;
-import com.sun.tools.javap.AnnotationWriter;
-
 /**
  * A {@link ClassVisitor} that generates a corresponding ClassFile structure, as defined in the Java
  * Virtual Machine Specification (JVMS). It can be used alone, to generate a Java class "from
@@ -99,16 +96,8 @@ public class ClassWriter extends ClassVisitor {
   /** The 'interfaces' array of the JVMS ClassFile structure. */
   private int[] interfaces;
 
-  /**
-   * The fields of this class, stored in a linked list of {@link FieldWriter} linked via their
-   * {@link FieldWriter#fv} field. This field stores the first element of this list.
-   */
   private FieldWriter firstField;
 
-  /**
-   * The fields of this class, stored in a linked list of {@link FieldWriter} linked via their
-   * {@link FieldWriter#fv} field. This field stores the last element of this list.
-   */
   private FieldWriter lastField;
 
   /**
@@ -144,32 +133,16 @@ public class ClassWriter extends ClassVisitor {
   /** The debug_extension field of the SourceDebugExtension attribute, or {@literal null}. */
   private ByteVector debugExtension;
 
-  /**
-   * The last runtime visible annotation of this class. The previous ones can be accessed with the
-   * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
-   */
   private AnnotationWriter lastRuntimeVisibleAnnotation;
 
-  /**
-   * The last runtime invisible annotation of this class. The previous ones can be accessed with the
-   * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
-   */
   private AnnotationWriter lastRuntimeInvisibleAnnotation;
 
-  /**
-   * The last runtime visible type annotation of this class. The previous ones can be accessed with
-   * the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
-   */
   private AnnotationWriter lastRuntimeVisibleTypeAnnotation;
 
-  /**
-   * The last runtime invisible type annotation of this class. The previous ones can be accessed
-   * with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
-   */
   private AnnotationWriter lastRuntimeInvisibleTypeAnnotation;
 
   /** The Module attribute of this class, or {@literal null}. */
-  private org.springframework.asm.ModuleWriter moduleWriter;
+  private ModuleWriter moduleWriter;
 
   /** The host_class_index field of the NestHost attribute, or 0. */
   private int nestHostClassIndex;
@@ -237,14 +210,14 @@ public class ClassWriter extends ClassVisitor {
    *     maximum stack size nor the stack frames will be computed for these methods</i>.
    */
   public ClassWriter(final ClassReader classReader, final int flags) {
-    super(org.springframework.asm.Opcodes.ASM7);
+    super(Opcodes.ASM7);
     symbolTable = classReader == null ? new SymbolTable(this) : new SymbolTable(this, classReader);
     if ((flags & COMPUTE_FRAMES) != 0) {
-      this.compute = org.springframework.asm.MethodWriter.COMPUTE_ALL_FRAMES;
+      this.compute = MethodWriter.COMPUTE_ALL_FRAMES;
     } else if ((flags & COMPUTE_MAXS) != 0) {
-      this.compute = org.springframework.asm.MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL;
+      this.compute = MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL;
     } else {
-      this.compute = org.springframework.asm.MethodWriter.COMPUTE_NOTHING;
+      this.compute = MethodWriter.COMPUTE_NOTHING;
     }
   }
 
@@ -274,8 +247,8 @@ public class ClassWriter extends ClassVisitor {
         this.interfaces[i] = symbolTable.addConstantClass(interfaces[i]).index;
       }
     }
-    if (compute == org.springframework.asm.MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL && (version & 0xFFFF) >= Opcodes.V1_7) {
-      compute = org.springframework.asm.MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES;
+    if (compute == MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL && (version & 0xFFFF) >= Opcodes.V1_7) {
+      compute = MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES;
     }
   }
 
@@ -290,10 +263,10 @@ public class ClassWriter extends ClassVisitor {
   }
 
   @Override
-  public final org.springframework.asm.ModuleVisitor visitModule(
+  public final ModuleVisitor visitModule(
       final String name, final int access, final String version) {
     return moduleWriter =
-        new org.springframework.asm.ModuleWriter(
+        new ModuleWriter(
             symbolTable,
             symbolTable.addConstantModule(name).index,
             access,
@@ -455,61 +428,61 @@ public class ClassWriter extends ClassVisitor {
     if (innerClasses != null) {
       ++attributesCount;
       size += 8 + innerClasses.length;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.INNER_CLASSES);
+      symbolTable.addConstantUtf8(Constants.INNER_CLASSES);
     }
     if (enclosingClassIndex != 0) {
       ++attributesCount;
       size += 10;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.ENCLOSING_METHOD);
+      symbolTable.addConstantUtf8(Constants.ENCLOSING_METHOD);
     }
     if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0 && (version & 0xFFFF) < Opcodes.V1_5) {
       ++attributesCount;
       size += 6;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.SYNTHETIC);
+      symbolTable.addConstantUtf8(Constants.SYNTHETIC);
     }
     if (signatureIndex != 0) {
       ++attributesCount;
       size += 8;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.SIGNATURE);
+      symbolTable.addConstantUtf8(Constants.SIGNATURE);
     }
     if (sourceFileIndex != 0) {
       ++attributesCount;
       size += 8;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.SOURCE_FILE);
+      symbolTable.addConstantUtf8(Constants.SOURCE_FILE);
     }
     if (debugExtension != null) {
       ++attributesCount;
       size += 6 + debugExtension.length;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.SOURCE_DEBUG_EXTENSION);
+      symbolTable.addConstantUtf8(Constants.SOURCE_DEBUG_EXTENSION);
     }
     if ((accessFlags & Opcodes.ACC_DEPRECATED) != 0) {
       ++attributesCount;
       size += 6;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.DEPRECATED);
+      symbolTable.addConstantUtf8(Constants.DEPRECATED);
     }
     if (lastRuntimeVisibleAnnotation != null) {
       ++attributesCount;
       size +=
           lastRuntimeVisibleAnnotation.computeAnnotationsSize(
-              org.springframework.asm.Constants.RUNTIME_VISIBLE_ANNOTATIONS);
+              Constants.RUNTIME_VISIBLE_ANNOTATIONS);
     }
     if (lastRuntimeInvisibleAnnotation != null) {
       ++attributesCount;
       size +=
           lastRuntimeInvisibleAnnotation.computeAnnotationsSize(
-              org.springframework.asm.Constants.RUNTIME_INVISIBLE_ANNOTATIONS);
+              Constants.RUNTIME_INVISIBLE_ANNOTATIONS);
     }
     if (lastRuntimeVisibleTypeAnnotation != null) {
       ++attributesCount;
       size +=
           lastRuntimeVisibleTypeAnnotation.computeAnnotationsSize(
-              org.springframework.asm.Constants.RUNTIME_VISIBLE_TYPE_ANNOTATIONS);
+              Constants.RUNTIME_VISIBLE_TYPE_ANNOTATIONS);
     }
     if (lastRuntimeInvisibleTypeAnnotation != null) {
       ++attributesCount;
       size +=
           lastRuntimeInvisibleTypeAnnotation.computeAnnotationsSize(
-              org.springframework.asm.Constants.RUNTIME_INVISIBLE_TYPE_ANNOTATIONS);
+              Constants.RUNTIME_INVISIBLE_TYPE_ANNOTATIONS);
     }
     if (symbolTable.computeBootstrapMethodsSize() > 0) {
       ++attributesCount;
@@ -522,12 +495,12 @@ public class ClassWriter extends ClassVisitor {
     if (nestHostClassIndex != 0) {
       ++attributesCount;
       size += 8;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.NEST_HOST);
+      symbolTable.addConstantUtf8(Constants.NEST_HOST);
     }
     if (nestMemberClasses != null) {
       ++attributesCount;
       size += 8 + nestMemberClasses.length;
-      symbolTable.addConstantUtf8(org.springframework.asm.Constants.NEST_MEMBERS);
+      symbolTable.addConstantUtf8(Constants.NEST_MEMBERS);
     }
     if (firstAttribute != null) {
       attributesCount += firstAttribute.getAttributeCount();

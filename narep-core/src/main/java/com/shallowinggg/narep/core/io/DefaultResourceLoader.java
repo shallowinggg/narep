@@ -1,30 +1,25 @@
 package com.shallowinggg.narep.core.io;
 
 import com.shallowinggg.narep.core.util.ClassUtils;
+import com.shallowinggg.narep.core.util.Conditions;
+import com.shallowinggg.narep.core.util.ResourceUtils;
+import com.shallowinggg.narep.core.util.StringTinyUtils;
 import com.sun.istack.internal.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Default implementation of the {@link ResourceLoader} interface.
- * Used by {@link ResourceEditor}, and serves as base class for
- * {@link org.springframework.context.support.AbstractApplicationContext}.
- * Can also be used standalone.
- *
- * <p>Will return a {@link UrlResource} if the location value is a URL,
- * and a {@link ClassPathResource} if it is a non-URL path or a
- * "classpath:" pseudo-URL.
- *
  * @author Juergen Hoeller
  * @since 10.03.2004
  */
 public class DefaultResourceLoader implements ResourceLoader {
 
-    @Nullable
     private ClassLoader classLoader;
 
     private final Set<ProtocolResolver> protocolResolvers = new LinkedHashSet<>(4);
@@ -83,7 +78,7 @@ public class DefaultResourceLoader implements ResourceLoader {
      * @see #getProtocolResolvers()
      */
     public void addProtocolResolver(ProtocolResolver resolver) {
-        Assert.notNull(resolver, "ProtocolResolver must not be null");
+        Conditions.notNull(resolver, "ProtocolResolver must not be null");
         this.protocolResolvers.add(resolver);
     }
 
@@ -119,7 +114,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 
     @Override
     public Resource getResource(String location) {
-        Assert.notNull(location, "Location must not be null");
+        Conditions.notNull(location, "Location must not be null");
 
         for (ProtocolResolver protocolResolver : getProtocolResolvers()) {
             Resource resource = protocolResolver.resolve(location, this);
@@ -155,8 +150,6 @@ public class DefaultResourceLoader implements ResourceLoader {
      * @param path the path to the resource
      * @return the corresponding Resource handle
      * @see ClassPathResource
-     * @see org.springframework.context.support.FileSystemXmlApplicationContext#getResourceByPath
-     * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
      */
     protected Resource getResourceByPath(String path) {
         return new ClassPathContextResource(path, getClassLoader());
@@ -169,7 +162,7 @@ public class DefaultResourceLoader implements ResourceLoader {
      */
     protected static class ClassPathContextResource extends ClassPathResource implements ContextResource {
 
-        public ClassPathContextResource(String path, @Nullable ClassLoader classLoader) {
+        public ClassPathContextResource(String path, ClassLoader classLoader) {
             super(path, classLoader);
         }
 
@@ -180,7 +173,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 
         @Override
         public Resource createRelative(String relativePath) {
-            String pathToUse = StringUtils.applyRelativePath(getPath(), relativePath);
+            String pathToUse = StringTinyUtils.applyRelativePath(getPath(), relativePath);
             return new ClassPathContextResource(pathToUse, getClassLoader());
         }
     }

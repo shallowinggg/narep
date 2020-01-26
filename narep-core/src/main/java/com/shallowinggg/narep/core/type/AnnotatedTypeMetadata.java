@@ -1,7 +1,8 @@
 package com.shallowinggg.narep.core.type;
 
-import com.shallowinggg.narep.core.annotation.MergedAnnotation;
-import com.shallowinggg.narep.core.annotation.MergedAnnotations;
+import com.shallowinggg.narep.core.annotation.*;
+import com.shallowinggg.narep.core.annotation.MergedAnnotation.Adapt;
+import com.shallowinggg.narep.core.util.MultiValueMap;
 import com.sun.istack.internal.Nullable;
 
 import java.lang.annotation.Annotation;

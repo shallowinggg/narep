@@ -2,6 +2,7 @@ package com.shallowinggg.narep.core.type;
 
 import com.shallowinggg.narep.core.annotation.MergedAnnotation;
 import com.shallowinggg.narep.core.annotation.MergedAnnotations;
+import com.shallowinggg.narep.core.annotation.MergedAnnotations.SearchStrategy;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
