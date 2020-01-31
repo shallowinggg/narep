@@ -2,10 +2,7 @@ package com.shallowinggg.narep.core.util;
 
 import com.sun.istack.internal.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.UndeclaredThrowableException;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +16,7 @@ public class ReflectionUtils {
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
-    private static final Map<Class<?>, Method[]> declaredMethodsCache = new ConcurrentReferenceHashMap<>(256);
+    private static final Map<Class<?>, Method[]> DECLARED_METHODS_CACHE = new ConcurrentReferenceHashMap<>(256);
 
     public static final MethodFilter USER_DECLARED_METHODS =
             (method -> !method.isBridge() && !method.isSynthetic());
@@ -29,7 +26,7 @@ public class ReflectionUtils {
      * @see java.lang.Object#equals(Object)
      */
     public static boolean isEqualsMethod(@Nullable Method method) {
-        if (method == null || !method.getName().equals("equals")) {
+        if (method == null || !"equals".equals(method.getName())) {
             return false;
         }
         if (method.getParameterCount() != 1) {
@@ -43,7 +40,7 @@ public class ReflectionUtils {
      * @see java.lang.Object#hashCode()
      */
     public static boolean isHashCodeMethod(@Nullable Method method) {
-        return (method != null && method.getName().equals("hashCode") && method.getParameterCount() == 0);
+        return (method != null && "hashCode".equals(method.getName()) && method.getParameterCount() == 0);
     }
 
     /**
@@ -51,7 +48,7 @@ public class ReflectionUtils {
      * @see java.lang.Object#toString()
      */
     public static boolean isToStringMethod(@Nullable Method method) {
-        return (method != null && method.getName().equals("toString") && method.getParameterCount() == 0);
+        return (method != null && "toString".equals(method.getName()) && method.getParameterCount() == 0);
     }
 
     public static Method[] getDeclaredMethods(Class<?> clazz) {
@@ -60,7 +57,7 @@ public class ReflectionUtils {
 
     private static Method[] getDeclaredMethods(Class<?> clazz, boolean defensive) {
         Conditions.notNull(clazz, "Class must not be null");
-        Method[] result = declaredMethodsCache.get(clazz);
+        Method[] result = DECLARED_METHODS_CACHE.get(clazz);
         if (result == null) {
             try {
                 Method[] declaredMethods = clazz.getDeclaredMethods();
@@ -77,7 +74,7 @@ public class ReflectionUtils {
                 else {
                     result = declaredMethods;
                 }
-                declaredMethodsCache.put(clazz, (result.length == 0 ? EMPTY_METHOD_ARRAY : result));
+                DECLARED_METHODS_CACHE.put(clazz, (result.length == 0 ? EMPTY_METHOD_ARRAY : result));
             }
             catch (Throwable ex) {
                 throw new IllegalStateException("Failed to introspect Class [" + clazz.getName() +
@@ -225,6 +222,13 @@ public class ReflectionUtils {
         if ((!Modifier.isPublic(method.getModifiers()) ||
                 !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
             method.setAccessible(true);
+        }
+    }
+
+    public static void makeAccessible(Constructor<?> ctor) {
+        if ((!Modifier.isPublic(ctor.getModifiers()) ||
+                !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible()) {
+            ctor.setAccessible(true);
         }
     }
 

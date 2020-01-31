@@ -1,6 +1,11 @@
 package com.shallowinggg.narep.core.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author shallowinggg
@@ -33,6 +38,21 @@ public class CollectionUtils {
      */
     public static boolean isNotEmpty(Object[] array) {
         return !isEmpty(array);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> void mergePropertiesIntoMap(@Nullable Properties props, Map<K, V> map) {
+        if (props != null) {
+            for (Enumeration<?> en = props.propertyNames(); en.hasMoreElements();) {
+                String key = (String) en.nextElement();
+                Object value = props.get(key);
+                if (value == null) {
+                    // Allow for defaults fallback or potentially overridden accessor...
+                    value = props.getProperty(key);
+                }
+                map.put((K) key, (V) value);
+            }
+        }
     }
 
     private CollectionUtils() {
