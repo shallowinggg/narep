@@ -5,6 +5,7 @@ import com.shallowinggg.narep.core.io.Resource;
 import com.shallowinggg.narep.core.io.ResourceLoader;
 import com.shallowinggg.narep.core.util.ClassUtils;
 import com.shallowinggg.narep.core.util.Conditions;
+import com.shallowinggg.narep.core.util.StringTinyUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.xml.sax.*;
@@ -16,7 +17,7 @@ import java.io.InputStream;
 /**
  * @author shallowinggg
  */
-public class XmlProtocolDefinitionReader extends AbstractProtocolDefinitionReader {
+public class XmlNarepDefinitionReader extends AbstractNarepDefinitionReader {
     /**
      * Indicates that the validation should be disabled.
      */
@@ -49,22 +50,22 @@ public class XmlProtocolDefinitionReader extends AbstractProtocolDefinitionReade
 
     private final XmlValidationModeDetector validationModeDetector = new XmlValidationModeDetector();
 
-    private Class<? extends ProtocolDefinitionDocumentReader> documentReaderClass =
-            DefaultProtocolDefinitionDocumentReader.class;
+    private Class<? extends NarepDefinitionDocumentReader> documentReaderClass =
+            DefaultNarepDefinitionDocumentReader.class;
 
     /**
-     * Create a default XmlProtocolDefinitionReader
+     * Create a default XmlNarepDefinitionReader
      */
-    public XmlProtocolDefinitionReader() {
+    public XmlNarepDefinitionReader() {
         super();
     }
 
     @Override
-    public ProtocolDefinition loadProtocolDefinition(Resource resource) throws ProtocolDefinitionStoreException {
-        return loadProtocolDefinition(new EncodedResource(resource));
+    public NarepDefinition loadNarepDefinition(Resource resource) throws NarepDefinitionStoreException {
+        return loadNarepDefinition(new EncodedResource(resource));
     }
 
-    public ProtocolDefinition loadProtocolDefinition(EncodedResource encodedResource) throws ProtocolDefinitionStoreException {
+    public NarepDefinition loadNarepDefinition(EncodedResource encodedResource) throws NarepDefinitionStoreException {
         Conditions.notNull(encodedResource, "encodedResource must not be null");
         if (logger.isTraceEnabled()) {
             logger.trace("Loading XML protocol definition from {}", encodedResource);
@@ -76,34 +77,39 @@ public class XmlProtocolDefinitionReader extends AbstractProtocolDefinitionReade
                 if (encodedResource.getEncoding() != null) {
                     inputSource.setEncoding(encodedResource.getEncoding());
                 }
-                return doLoadProtocolDefinition(inputSource, encodedResource.getResource());
+                NarepDefinition definition = doLoadNarepDefinition(inputSource, encodedResource.getResource());
+                String location = definition.getLocation();
+                if(StringTinyUtils.isNotEmpty(location)) {
+                    location = getEnvironment().resolvePlaceholders(location);
+                    definition.setLocation(location);
+                }
+                return definition;
             }
         } catch (IOException e) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "IOException paring XML Document from " + encodedResource.getResource(), e);
         }
     }
 
-    private ProtocolDefinition doLoadProtocolDefinition(InputSource inputSource, Resource resource)
-            throws ProtocolDefinitionStoreException {
+    private NarepDefinition doLoadNarepDefinition(InputSource inputSource, Resource resource)
+            throws NarepDefinitionStoreException {
         try {
             Document document = doLoadDocument(inputSource, resource);
-            ProtocolDefinitionDocumentReader reader = createProtocolDefinitionDocumentReader();
-            return reader.parseProtocolDefinition(document);
+            return parseDocument(document, resource);
         } catch (SAXParseException ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);
         } catch (SAXException ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "XML document from " + resource + " is invalid", ex);
         } catch (ParserConfigurationException ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Parser configuration exception parsing XML from " + resource, ex);
         } catch (IOException ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "IOException parsing XML document from " + resource, ex);
         } catch (Throwable ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Unexpected exception parsing XML document from " + resource, ex);
         }
     }
@@ -139,37 +145,37 @@ public class XmlProtocolDefinitionReader extends AbstractProtocolDefinitionReade
 
     private int detectValidationMode(Resource resource) {
         if (resource.isOpen()) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Passed-in Resource [" + resource + "] contains an open stream: " +
                             "cannot determine validation mode automatically. Either pass in a Resource " +
                             "that is able to create fresh streams, or explicitly specify the validationMode " +
-                            "on your XmlProtocolDefinitionReader instance.");
+                            "on your XmlNarepDefinitionReader instance.");
         }
 
         InputStream inputStream;
         try {
             inputStream = resource.getInputStream();
         } catch (IOException ex) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Unable to determine validation mode for [" + resource + "]: cannot open InputStream. " +
                             "Did you attempt to load directly from a SAX InputSource without specifying the " +
-                            "validationMode on your XmlProtocolDefinitionReader instance?", ex);
+                            "validationMode on your XmlNarepDefinitionReader instance?", ex);
         }
 
         try {
             return this.validationModeDetector.detectValidationMode(inputStream);
         } catch (IOException ex) {
-            throw new ProtocolDefinitionStoreException("Unable to determine validation mode for [" +
+            throw new NarepDefinitionStoreException("Unable to determine validation mode for [" +
                     resource + "]: an error occurred whilst reading from the InputStream.", ex);
         }
     }
 
-    public ProtocolDefinition parseDocument(Document document, Resource resource) throws ProtocolDefinitionStoreException {
-        ProtocolDefinitionDocumentReader documentReader = createProtocolDefinitionDocumentReader();
-        return documentReader.parseProtocolDefinition(document);
+    public NarepDefinition parseDocument(Document document, Resource resource) throws NarepDefinitionStoreException {
+        NarepDefinitionDocumentReader documentReader = createProtocolDefinitionDocumentReader();
+        return documentReader.parseNarepDefinition(document);
     }
 
-    protected ProtocolDefinitionDocumentReader createProtocolDefinitionDocumentReader() {
+    protected NarepDefinitionDocumentReader createProtocolDefinitionDocumentReader() {
         return ClassUtils.instantiateClass(this.documentReaderClass);
     }
 
@@ -198,7 +204,7 @@ public class XmlProtocolDefinitionReader extends AbstractProtocolDefinitionReade
         return errorHandler;
     }
 
-    public void setDocumentReaderClass(Class<? extends ProtocolDefinitionDocumentReader> documentReaderClass) {
+    public void setDocumentReaderClass(Class<? extends NarepDefinitionDocumentReader> documentReaderClass) {
         this.documentReaderClass = documentReaderClass;
     }
 

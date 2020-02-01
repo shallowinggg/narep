@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.shallowinggg.com/schema/narep"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.shallowinggg.com/schema/narep"
+            elementFormDefault="qualified">
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[
+        Narep XML Schema, version 1.0
+        Author: Shimin Ding
+
+        This defines a simple and consistent way to config infos about
+        code generate, read by XmlProtocolDefinitionReader (with
+        DefaultProtocolDefinitionDocumentReader).
+
+        "package" element specify the base java package name of the classes
+        what this project generates.
+
+        "location" element specify the location where files store.
+
+        "protocol" element defines the custom protocol infos, including
+        various protocol fields.
+
+        ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <!-- Top level <narep> tag -->
+    <xsd:element name="narep">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Containers for sub elements, typically the root element in the document.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element ref="package" />
+                    <xsd:element ref="location" />
+                    <xsd:element ref="log" />
+                    <xsd:element ref="protocol" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="package">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Specifies the base java package name of classes that this project generates.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:restriction base="xsd:anyType">
+                    <xsd:attribute name="name" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The base java package name of classes, for example "com.sample.remoting".
+							]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:restriction>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="location">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Specifies the location that generated files store in.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:restriction base="xsd:anyType">
+                    <xsd:attribute name="value" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The location that generated files store in, for example "/home/root/generate".
+							]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:restriction>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="log">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Specifies the log config that generated code uses.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:restriction base="xsd:anyType">
+                    <xsd:attribute name="custom" type="xsd:boolean" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            Determine whether use custom logger name or not.
+                            If the value is "false", the generated class will use its
+                            class name for logger name, otherwise use custom name.
+							]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="name" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The logger name, for example "Remoting".
+                            If attribute "custom" is true, this value must be specified.
+							]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:restriction>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="protocol">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Specifies the custom protocol infos.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element ref="field" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="field">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+            Specifies the custom protocol field infos.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:restriction base="xsd:anyType">
+                    <xsd:attribute name="name" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The name of custom protocol field, for example "ip"
+                            ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="type" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The type of custom protocol field.
+
+                            There are 6 types:
+
+                            1. byte
+                            Similar to java primitive type "byte", occupied 1 byte.
+
+                            2. short
+                            Similar to java primitive type "short", occupied 2 byte.
+
+                            3. int
+                            Similar to java primitive type "int", occupied 4 byte.
+
+                            4. long
+                            Similar to java primitive type "long", occupied 8 byte.
+
+                            5. string
+                            Similar to java class java.lang.String.
+
+                            6. map
+                            Similar to java class java.util.HashMap, its key and value
+                            type only can be java.lang.String.
+
+                            note: the first 4 types default occupy corresponding bytes,
+                            but you can specify "len" attribute to customize its bytes.
+                            e.g. <field name="code" type="int" len="3" />
+                            In the above example, although type "int" default occupies
+                            4 bytes, when send messages it occupies 3 bytes actually.
+                            ]]></xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:NMTOKEN">
+                                <xsd:enumeration value="byte"/>
+                                <xsd:enumeration value="short"/>
+                                <xsd:enumeration value="int"/>
+                                <xsd:enumeration value="long"/>
+                                <xsd:enumeration value="string"/>
+                                <xsd:enumeration value="map"/>
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:attribute>
+                    <xsd:attribute name="len" type="xsd:unsignedShort">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                            The length of custom protocol field, in other words, it is the
+                            occupied bytes in the network message.
+                            ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:restriction>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

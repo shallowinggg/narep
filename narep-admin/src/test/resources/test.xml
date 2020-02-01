@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<narep xmlns="http://www.shallowinggg.com/schema/narep"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.shallowinggg.com/schema/narep
+        http://www.shallowinggg.com/schema/narep.xsd">
+
+    <package name="com.example.remoting"/>
+    <location value="${user.home}/generator"/>
+    <log custom="true" name="Remoting"/>
+
+    <protocol>
+        <field name="code" type="int"/>
+        <field name="ip" type="int" len="3"/>
+    </protocol>
+</narep>

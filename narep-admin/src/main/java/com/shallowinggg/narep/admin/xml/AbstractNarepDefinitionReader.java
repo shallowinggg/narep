@@ -16,19 +16,19 @@ import java.util.Set;
 
 /**
  * Abstract base class for bean definition readers which implement
- * the {@link ProtocolDefinitionReader} interface.
+ * the {@link NarepDefinitionReader} interface.
  *
  * @author shallowinggg
  */
-public abstract class AbstractProtocolDefinitionReader implements ProtocolDefinitionReader, EnvironmentCapable {
-    protected static Logger logger = LoggerFactory.getLogger(AbstractProtocolDefinitionReader.class);
+public abstract class AbstractNarepDefinitionReader implements NarepDefinitionReader, EnvironmentCapable {
+    protected static Logger logger = LoggerFactory.getLogger(AbstractNarepDefinitionReader.class);
 
     @Nullable
     private ResourceLoader resourceLoader;
 
     private Environment environment;
 
-    protected AbstractProtocolDefinitionReader() {
+    protected AbstractNarepDefinitionReader() {
         this.resourceLoader = new PathMatchingResourcePatternResolver();
         this.environment = new StandardEnvironment();
     }
@@ -71,28 +71,28 @@ public abstract class AbstractProtocolDefinitionReader implements ProtocolDefini
     }
 
     @Override
-    public ProtocolDefinition loadProtocolDefinition(String location) throws ProtocolDefinitionStoreException {
+    public NarepDefinition loadNarepDefinition(String location) throws NarepDefinitionStoreException {
         return loadProtocolDefinition(location, null);
     }
 
-    public ProtocolDefinition loadProtocolDefinition(String location, @Nullable Set<Resource> actualResources)
-            throws ProtocolDefinitionStoreException {
+    public NarepDefinition loadProtocolDefinition(String location, @Nullable Set<Resource> actualResources)
+            throws NarepDefinitionStoreException {
         ResourceLoader resourceLoader = getResourceLoader();
         if (resourceLoader == null) {
-            throw new ProtocolDefinitionStoreException(
+            throw new NarepDefinitionStoreException(
                     "Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
         }
 
         // Can only load single resources by absolute URL.
         Resource resource = resourceLoader.getResource(location);
-        ProtocolDefinition protocolDefinition = loadProtocolDefinition(resource);
+        NarepDefinition narepDefinition = loadNarepDefinition(resource);
         if (actualResources != null) {
             actualResources.add(resource);
         }
         if (logger.isTraceEnabled()) {
             logger.trace("Loaded protocol definitions from location [" + location + "]");
         }
-        return protocolDefinition;
+        return narepDefinition;
 
     }
 }

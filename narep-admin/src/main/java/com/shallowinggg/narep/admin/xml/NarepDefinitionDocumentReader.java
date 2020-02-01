@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 
 /**
  * SPI for parsing an XML document that contains Spring bean definitions.
- * Used by {@link XmlProtocolDefinitionReader} for actually parsing a DOM document.
+ * Used by {@link XmlNarepDefinitionReader} for actually parsing a DOM document.
  *
  * <p>Instantiated per document to parse: implementations can hold
  * state in instance variables during the execution of the
@@ -13,9 +13,9 @@ import org.w3c.dom.Document;
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @see XmlProtocolDefinitionReader#setDocumentReaderClass
+ * @see XmlNarepDefinitionReader#setDocumentReaderClass
  */
-public interface ProtocolDefinitionDocumentReader {
+public interface NarepDefinitionDocumentReader {
 
     /**
      * Read bean definitions from the given DOM document and
@@ -23,9 +23,9 @@ public interface ProtocolDefinitionDocumentReader {
      * @param doc the DOM document
      * (includes the target registry and the resource being parsed)
      * @return parse result
-     * @throws ProtocolDefinitionStoreException in case of parsing errors
+     * @throws NarepDefinitionStoreException in case of parsing errors
      */
-    ProtocolDefinition parseProtocolDefinition(Document doc) throws ProtocolDefinitionStoreException;
+    NarepDefinition parseNarepDefinition(Document doc) throws NarepDefinitionStoreException;
 
 }
 
