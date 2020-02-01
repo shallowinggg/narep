@@ -15,11 +15,11 @@ import java.util.List;
 @Profiler("default")
 public class CommandCustomHeaderCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "CommandCustomHeader";
-    private static final List<String> DEPENDENCIES = Collections.singletonList("RemotingCommandException.java");
+    private static final List<String> DEPENDENCY_NAMES = Collections.singletonList("RemotingCommandException");
 
 
     public CommandCustomHeaderCodeGenerator() {
-        super(INTERFACE_NAME, DEPENDENCIES);
+        super(INTERFACE_NAME, DEPENDENCY_NAMES);
     }
 
     @Override

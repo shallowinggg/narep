@@ -77,17 +77,17 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
      *
      * @see this#dependencies
      */
-    private List<String> dependenciesName;
+    private List<String> dependencyNames;
 
     /**
      * 依赖类对应的代码生成器
      *
      * 构造生成器集合后，生成代码之前进行依赖解析，
-     * 将{@link this#dependenciesName}中的值解析为
+     * 将{@link this#dependencyNames}中的值解析为
      * 对应的代码生成器，同时此步可以检查依赖类的代码
      * 生成器是否被注册。
      *
-     * @see this#dependenciesName
+     * @see this#dependencyNames
      * @see DependencyResolver
      * @see CodeGeneratorManager
      */
@@ -109,9 +109,9 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
         this.name = name;
     }
 
-    public AbstractJavaCodeGenerator(String name, List<String> dependenciesName) {
+    public AbstractJavaCodeGenerator(String name, List<String> dependencyNames) {
         this.name = name;
-        this.dependenciesName = dependenciesName;
+        this.dependencyNames = dependencyNames;
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName) {
@@ -123,26 +123,26 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
-                                     List<String> dependenciesName) {
-        this(name, parentName, subPackageName, dependenciesName, null);
+                                     List<String> dependencyNames) {
+        this(name, parentName, subPackageName, dependencyNames, null);
     }
 
     public AbstractJavaCodeGenerator(String name, String parentName, String subPackageName,
-                                     List<String> dependenciesName, List<InnerClassCodeGenerator> innerClass) {
+                                     List<String> dependencyNames, List<InnerClassCodeGenerator> innerClass) {
         this.name = name;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
-        this.dependenciesName = dependenciesName;
+        this.dependencyNames = dependencyNames;
         this.innerClass = innerClass;
     }
 
     public AbstractJavaCodeGenerator(Modifier modifier, String name, String parentName, String subPackageName,
-                                     List<String> dependenciesName, List<InnerClassCodeGenerator> innerClass) {
+                                     List<String> dependencyNames, List<InnerClassCodeGenerator> innerClass) {
         this.modifier = modifier;
         this.name = name;
         this.parentName = parentName;
         this.subPackageName = subPackageName;
-        this.dependenciesName = dependenciesName;
+        this.dependencyNames = dependencyNames;
         this.innerClass = innerClass;
     }
 
@@ -266,7 +266,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public boolean resolveDependencies(DependencyResolver resolver) {
-        List<JavaCodeGenerator> result = resolver.resolve(dependenciesName);
+        List<JavaCodeGenerator> result = resolver.resolve(dependencyNames);
         if (CollectionUtils.isNotEmpty(result)) {
             this.dependencies = result;
             return true;
@@ -278,8 +278,8 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
         return fullQualifiedName().replace('.', FILE_SEPARATOR) + JavaCodeGenerator.EXTENSION;
     }
 
-    public void setDependenciesName(List<String> dependenciesName) {
-        this.dependenciesName = dependenciesName;
+    public void setDependencyNames(List<String> dependencyNames) {
+        this.dependencyNames = dependencyNames;
     }
 
     public void setInnerClass(List<InnerClassCodeGenerator> innerClass) {

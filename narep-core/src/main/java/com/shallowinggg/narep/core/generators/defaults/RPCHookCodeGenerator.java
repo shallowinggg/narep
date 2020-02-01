@@ -16,7 +16,7 @@ public class RPCHookCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "RPCHook";
 
     public RPCHookCodeGenerator() {
-        super(INTERFACE_NAME, Collections.singletonList("RemotingCommand.java"));
+        super(INTERFACE_NAME, Collections.singletonList("RemotingCommand"));
     }
 
     @Override

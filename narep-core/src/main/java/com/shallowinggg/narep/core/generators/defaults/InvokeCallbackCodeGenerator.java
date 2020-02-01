@@ -12,10 +12,10 @@ import java.util.List;
 @Generator
 public class InvokeCallbackCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "InvokeCallback";
-    private static final List<String> DEPENDENCIES = Collections.singletonList("ResponseFuture.java");
+    private static final List<String> DEPENDENCY_NAMES = Collections.singletonList("ResponseFuture");
 
     public InvokeCallbackCodeGenerator() {
-        super(INTERFACE_NAME, DEPENDENCIES);
+        super(INTERFACE_NAME, DEPENDENCY_NAMES);
     }
 
     @Override

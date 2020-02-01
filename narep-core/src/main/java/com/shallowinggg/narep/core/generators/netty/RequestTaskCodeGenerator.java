@@ -21,11 +21,11 @@ public class RequestTaskCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RequestTask";
     private static final String[] INTERFACES = new String[]{"Runnable"};
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Collections.singletonList("RemotingCommand.java");
+    private static final List<String> DEPENDENCY_NAMES = Collections.singletonList("RemotingCommand");
 
     public RequestTaskCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE, INTERFACES);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(5);
         fields.add(new FieldInfo(PRIVATE_FINAL, "Runnable", "runnable"));

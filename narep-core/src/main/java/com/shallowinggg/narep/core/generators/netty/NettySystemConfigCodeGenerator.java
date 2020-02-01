@@ -21,11 +21,11 @@ import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC_FINAL;
 public class NettySystemConfigCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettySystemConfig";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Collections.singletonList("TlsMode.java");
+    private static final List<String> DEPENDENCY_NAMES = Collections.singletonList("TlsMode");
 
     public NettySystemConfigCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         String basePackage = ConfigInfos.getInstance().basePackage();
         String prefix = basePackage.toUpperCase().replace('.', '_');

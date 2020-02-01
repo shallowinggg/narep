@@ -19,12 +19,12 @@ public class NettyEncoderCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyEncoder";
     private static final String PARENT_NAME = "MessageToByteEncoder<RemotingCommand>";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("RemotingHelper.java",
-            "RemotingUtil.java", "RemotingCommand.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("RemotingHelper",
+            "RemotingUtil", "RemotingCommand");
 
     public NettyEncoderCodeGenerator() {
         super(CLASS_NAME, PARENT_NAME, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         setFields(Collections.singletonList(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log",
                 CodeGeneratorHelper.buildLoggerField(CLASS_NAME))));

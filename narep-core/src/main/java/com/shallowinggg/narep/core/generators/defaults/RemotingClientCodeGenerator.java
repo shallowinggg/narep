@@ -14,14 +14,14 @@ import java.util.List;
 public class RemotingClientCodeGenerator extends InterfaceCodeGenerator {
     private static final String INTERFACE_NAME = "RemotingClient";
     private static final String PARENT_INTERFACE = "RemotingService";
-    private static final List<String> DEPENDENCIES = Arrays.asList("RemotingConnectException.java",
-            "RemotingSendRequestException.java", "RemotingTimeoutException.java",
-            "RemotingTooMuchRequestException.java", "NettyRequestProcessor.java",
-            "RemotingCommand.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("RemotingConnectException",
+            "RemotingSendRequestException", "RemotingTimeoutException",
+            "RemotingTooMuchRequestException", "NettyRequestProcessor",
+            "RemotingCommand");
 
     public RemotingClientCodeGenerator() {
         super(INTERFACE_NAME, PARENT_INTERFACE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
     }
 
     @Override

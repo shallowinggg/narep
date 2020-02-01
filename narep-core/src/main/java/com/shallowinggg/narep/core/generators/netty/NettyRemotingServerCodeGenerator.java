@@ -21,15 +21,15 @@ public class NettyRemotingServerCodeGenerator extends ClassCodeGenerator {
     private static final String PARENT_NAME = "AbstractNettyRemoting";
     private static final String[] INTERFACE_NAMES = new String[]{"RemotingServer"};
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("ChannelEventListener.java",
-            "InvokeCallback.java", "RPCHook.java", "RemotingServer.java", "Pair.java",
-            "RemotingHelper.java", "RemotingUtil.java", "TlsMode.java", "RemotingCommand.java",
-            "RemotingSendRequestException.java", "RemotingTimeoutException.java",
-            "RemotingTooMuchRequestException.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("ChannelEventListener",
+            "InvokeCallback", "RPCHook", "RemotingServer", "Pair",
+            "RemotingHelper", "RemotingUtil", "TlsMode", "RemotingCommand",
+            "RemotingSendRequestException", "RemotingTimeoutException",
+            "RemotingTooMuchRequestException");
 
     public NettyRemotingServerCodeGenerator() {
         super(CLASS_NAME, PARENT_NAME, SUB_PACKAGE, INTERFACE_NAMES);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(17);
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));

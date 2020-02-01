@@ -19,16 +19,16 @@ import java.util.List;
 public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "AbstractNettyRemoting";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("ChannelEventListener.java",
-            "InvokeCallback.java", "RPCHook.java", "Pair.java", "RemotingHelper.java",
-            "SemaphoreReleaseOnlyOnce.java", "ServiceThread.java", "RemotingCommand.java",
-            "RemotingSendRequestException.java", "RemotingTimeoutException.java",
-            "RemotingTooMuchRequestException.java", "RemotingSysResponseCode.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("ChannelEventListener",
+            "InvokeCallback", "RPCHook", "Pair", "RemotingHelper",
+            "SemaphoreReleaseOnlyOnce", "ServiceThread", "RemotingCommand",
+            "RemotingSendRequestException", "RemotingTimeoutException",
+            "RemotingTooMuchRequestException", "RemotingSysResponseCode");
 
     public AbstractNettyRemotingCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
         setModifier(Modifier.PUBLIC_ABSTRACT);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>();
         fields.add(new FieldInfo.Builder().modifier(Modifier.PRIVATE_STATIC_FINAL)

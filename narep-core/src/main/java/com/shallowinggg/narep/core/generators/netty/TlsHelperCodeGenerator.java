@@ -23,11 +23,11 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_STATIC_FINAL;
 public class TlsHelperCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "TlsHelper";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("RemotingHelper.java", "TlsSystemConfig.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("RemotingHelper", "TlsSystemConfig");
 
     public TlsHelperCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(2);
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));

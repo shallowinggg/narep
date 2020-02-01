@@ -46,7 +46,7 @@ public class GeneratorController {
     }
 
     public void start() {
-        codeGeneratorManager.registerExceptionCodeGenerators();
+
 
     }
 

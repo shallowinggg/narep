@@ -3,9 +3,6 @@ package com.shallowinggg.narep.core.common;
 import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
-import com.shallowinggg.narep.core.generators.defaults.RPCHookCodeGenerator;
-import com.shallowinggg.narep.core.generators.defaults.RemotingServiceCodeGenerator;
-import com.shallowinggg.narep.core.generators.exception.*;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
@@ -75,25 +72,8 @@ public class CodeGeneratorManager implements DependencyResolver {
         return generators.containsKey(generatorName);
     }
 
-    public void registerDefaultCodeGenerators() {
-        CodeGenerator rpcHook = new RPCHookCodeGenerator();
-        CodeGenerator remotingService = new RemotingServiceCodeGenerator();
-
-    }
-
-    public void registerExceptionCodeGenerators() {
-        CodeGenerator remotingException = new RemotingExceptionCodeGenerator();
-        CodeGenerator remotingCommandException = new RemotingCommandExceptionCodeGenerator();
-        CodeGenerator remotingConnectException = new RemotingConnectExceptionCodeGenerator();
-        CodeGenerator remotingSendRequestException = new RemotingSendRequestExceptionCodeGenerator();
-        CodeGenerator remotingTimeoutException = new RemotingTimeoutExceptionCodeGenerator();
-        CodeGenerator remotingTooMuchException = new RemotingTooMuchRequestExceptionCodeGenerator();
-        register(remotingException.fileName(), remotingException);
-        register(remotingCommandException.fileName(), remotingCommandException);
-        register(remotingConnectException.fileName(), remotingConnectException);
-        register(remotingSendRequestException.fileName(), remotingSendRequestException);
-        register(remotingTimeoutException.fileName(), remotingTimeoutException);
-        register(remotingTooMuchException.fileName(), remotingTooMuchException);
+    public int size() {
+        return generators.size();
     }
 
 

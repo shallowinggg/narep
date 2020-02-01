@@ -24,11 +24,9 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
 
     public RemotingHelperCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        List<String> dependencies = Arrays.asList("RemotingConnectException.java",
-                "RemotingSendRequestException.java",
-                "RemotingTimeoutException.java",
-                "RemotingCommand.java");
-        setDependenciesName(dependencies);
+        List<String> dependencyNames = Arrays.asList("RemotingConnectException",
+                "RemotingSendRequestException", "RemotingTimeoutException", "RemotingCommand");
+        setDependencyNames(dependencyNames);
 
         String loggerName = ConfigInfos.getInstance().loggerName();
         List<FieldInfo> fields = new ArrayList<>(3);

@@ -20,12 +20,12 @@ public class NettyDecoderCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NettyDecoder";
     private static final String PARENT_NAME = "LengthFieldBasedFrameDecoder";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("RemotingHelper.java",
-            "RemotingUtil.java", "RemotingCommand.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("RemotingHelper",
+            "RemotingUtil", "RemotingCommand");
 
     public NettyDecoderCodeGenerator() {
         super(CLASS_NAME, PARENT_NAME, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         String key = ConfigInfos.getInstance().basePackage() + ".frameMaxLength";
         List<FieldInfo> fields = new ArrayList<>(2);

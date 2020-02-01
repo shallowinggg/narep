@@ -20,14 +20,14 @@ import static com.shallowinggg.narep.core.lang.Modifier.*;
 public class DefaultRemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
     private static final String SUB_PACKAGE = "protocol";
-    private static final List<String> DEPENDENCIES = Arrays.asList("CommandCustomHeader.java",
-            "CFNotNull.java", "RemotingHelper.java", "RemotingCommandException.java",
-            "RemotingCommandType.java", "RemotingSerializable.java", "RemotingSysResponseCode.java",
-            "SerializeType.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("CommandCustomHeader",
+            "CFNotNull", "RemotingHelper", "RemotingCommandException",
+            "RemotingCommandType", "RemotingSerializable", "RemotingSysResponseCode",
+            "SerializeType");
 
     public DefaultRemotingCommandCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(31);
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "String", "SERIALIZE_TYPE_PROPERTY", "\"remoting.serialize.type\""));

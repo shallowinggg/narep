@@ -319,7 +319,7 @@ public class SerializableHelper {
     }
 
     private static String getLong(String setter) {
-        return "        " + setter + "(headBuffer.getIntLong());\n";
+        return "        " + setter + "(headBuffer.getLong());\n";
     }
 
     private static String setter(String setter, String val) {

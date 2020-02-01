@@ -20,12 +20,12 @@ import static com.shallowinggg.narep.core.lang.Modifier.PRIVATE_VOLATILE;
 public class ResponseFutureCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "ResponseFuture";
     private static final String SUB_PACKAGE = "netty";
-    private static final List<String> DEPENDENCIES = Arrays.asList("InvokeCallback.java",
-            "SemaphoreReleaseOnlyOnce.java", "RemotingCommand.java");
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("InvokeCallback",
+            "SemaphoreReleaseOnlyOnce", "RemotingCommand");
 
     public ResponseFutureCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        setDependenciesName(DEPENDENCIES);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(11);
         fields.add(new FieldInfo(PRIVATE_FINAL, "int", "opaque"));

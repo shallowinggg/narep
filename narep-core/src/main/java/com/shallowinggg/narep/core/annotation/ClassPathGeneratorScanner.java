@@ -3,9 +3,7 @@ package com.shallowinggg.narep.core.annotation;
 import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.common.*;
 import com.shallowinggg.narep.core.type.AnnotatedTypeMetadata;
-import com.shallowinggg.narep.core.util.CollectionUtils;
-import com.shallowinggg.narep.core.util.Conditions;
-import com.shallowinggg.narep.core.util.StringTinyUtils;
+import com.shallowinggg.narep.core.util.*;
 
 import java.util.Set;
 
@@ -58,14 +56,7 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
                 String name = generatorNameGenerator.generateGeneratorName(candidate, registry);
                 if (checkCandidate(name, candidate)) {
                     Class<?> generatorClass = candidate.getClazz();
-
-                    CodeGenerator codeGenerator = null;
-                    try {
-                        codeGenerator = (CodeGenerator) generatorClass.newInstance();
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-
+                    CodeGenerator codeGenerator = (CodeGenerator) ClassUtils.instantiateClass(generatorClass);
                     registry.register(name, codeGenerator);
                 }
             }
