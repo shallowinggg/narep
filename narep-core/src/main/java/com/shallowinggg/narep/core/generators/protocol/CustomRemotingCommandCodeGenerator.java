@@ -1,7 +1,7 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
 import com.shallowinggg.narep.core.annotation.Generator;
-import com.shallowinggg.narep.core.annotation.Profiler;
+import com.shallowinggg.narep.core.annotation.Profile;
 import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
@@ -17,7 +17,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.*;
  * @author shallowinggg
  */
 @Generator
-@Profiler("custom")
+@Profile("custom")
 public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
     private static final String SUB_PACKAGE = "protocol";

@@ -9,7 +9,7 @@ public class GenericGeneratorDefinition implements GeneratorDefinition {
     private Class<?> clazz;
     private String className;
     private Resource resource;
-    private String profiler;
+    private String profile;
 
     public GenericGeneratorDefinition() {
     }
@@ -42,12 +42,13 @@ public class GenericGeneratorDefinition implements GeneratorDefinition {
         this.resource = resource;
     }
 
-    public String getProfiler() {
-        return profiler;
+    @Override
+    public String getProfile() {
+        return profile;
     }
 
     @Override
-    public void setProfiler(String profiler) {
-        this.profiler = profiler;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }

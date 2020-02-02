@@ -12,15 +12,20 @@ import java.util.List;
 
 
 /**
+ *
+ *
  * @author shallowinggg
  */
 public class ConfigInfos {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigInfos.class);
 
+    public static final String GENERATOR_PACKAGE = "com.shallowinggg.narep.core.generators";
+    public static final String CUSTOM_PROFILE = "custom";
+
     private static final ConfigInfos INSTANCE = new ConfigInfos();
-    private static GeneratorConfig generatorConfig;
-    private static ProtocolConfig protocolConfig;
-    private static LogConfig logConfig;
+    private GeneratorConfig generatorConfig;
+    private ProtocolConfig protocolConfig;
+    private LogConfig logConfig;
 
     private List<FieldInfo> commandFields;
     private volatile boolean init;
@@ -62,18 +67,22 @@ public class ConfigInfos {
     }
 
     public List<FieldInfo> commandFields() {
-        if(commandFields == null) {
-            if (protocolConfig.getProtocolFields().size() > ProtocolConfig.DEFAULT_FIELDS_SIZE) {
-                commandFields = convertConfig2Fields(protocolConfig.getProtocolFields());
+        if(this.commandFields == null) {
+            if (this.protocolConfig.getProtocolFields().size() > ProtocolConfig.DEFAULT_FIELDS_SIZE) {
+                this.commandFields = convertConfig2Fields(this.protocolConfig.getProtocolFields());
             } else {
-                commandFields = Collections.emptyList();
+                this.commandFields = Collections.emptyList();
             }
         }
-        return commandFields;
+        return this.commandFields;
     }
 
     public List<ProtocolField> protocolFields() {
         return protocolConfig.getProtocolFields();
+    }
+
+    public boolean isUseCustomProtocol() {
+        return this.protocolConfig.getProtocolFields().size() > ProtocolConfig.DEFAULT_FIELDS_SIZE;
     }
 
     private static List<FieldInfo> convertConfig2Fields(List<ProtocolField> protocolFields) {

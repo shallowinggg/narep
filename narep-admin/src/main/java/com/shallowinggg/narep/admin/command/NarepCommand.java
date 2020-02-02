@@ -94,8 +94,8 @@ public class NarepCommand implements Command {
         // convert to log config
         boolean customLog = definition.isUseCustomLogger();
         if(customLog) {
-            LogConfig logConfig = new LogConfig();
             String loggerName = definition.getLoggerName();
+            LogConfig logConfig = new LogConfig(loggerName, customLog);
             logConfig.setLoggerName(loggerName);
             controller.registerConfig(LogConfig.CONFIG_NAME, logConfig);
         }

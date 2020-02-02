@@ -13,7 +13,7 @@ public interface GeneratorDefinition {
 
     void setClazz(Class<?> clazz);
 
-    String getProfiler();
+    String getProfile();
 
-    void setProfiler(String profiler);
+    void setProfile(String profile);
 }

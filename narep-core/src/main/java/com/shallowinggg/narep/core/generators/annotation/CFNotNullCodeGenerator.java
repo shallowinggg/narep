@@ -1,14 +1,14 @@
 package com.shallowinggg.narep.core.generators.annotation;
 
 import com.shallowinggg.narep.core.annotation.Generator;
-import com.shallowinggg.narep.core.annotation.Profiler;
+import com.shallowinggg.narep.core.annotation.Profile;
 import com.shallowinggg.narep.core.generators.AnnotationCodeGenerator;
 
 /**
  * @author shallowinggg
  */
 @Generator
-@Profiler("default")
+@Profile("default")
 public class CFNotNullCodeGenerator extends AnnotationCodeGenerator {
     private static final String CLASS_NAME = "CFNotNull";
     private static final String SUB_PACKAGE = "annotation";

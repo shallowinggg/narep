@@ -10,8 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 配置管理器，所有必需的{@link com.shallowinggg.narep.core.Config}都
- * 要注册到此类中。
+ * This class is provided to store configs, it is an unique repository,
+ * all implementations of interface {@link Config} should be registered
+ * to it.
+ *
+ * Before get config from this repository, you should invoke {@link #init()}
+ * method to init all configs. Otherwise, you may get unexpected config infos.
+ * Of course, {@link Config} can only be used to store some data and have no
+ * init operations. So here is no mandatory to invoke {@link #init()} method
+ * before invoking {@link #getConfig(String)} method.
  *
  * @author shallowinggg
  */
@@ -31,6 +38,12 @@ public class ConfigManager {
         configMap.put(name, config);
         if (LOG.isDebugEnabled()) {
             LOG.debug("register config: <{}>", name);
+        }
+    }
+
+    public void init() {
+        for(Config config : configMap.values()) {
+            config.init();
         }
     }
 

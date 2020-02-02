@@ -65,8 +65,8 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
 
     private boolean checkCandidate(String name, GeneratorDefinition gd) {
         if (!registry.containsGenerator(name)) {
-            if (StringTinyUtils.isNotBlank(gd.getProfiler())) {
-                return profiler.equals(gd.getProfiler());
+            if (StringTinyUtils.isNotBlank(gd.getProfile())) {
+                return profiler.equals(gd.getProfile());
             }
             return true;
         }
@@ -78,9 +78,9 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
     }
 
     private static void processCommonDefinitionAnnotations(AnnotatedGeneratorDefinition abd, AnnotatedTypeMetadata metadata) {
-        AnnotationAttributes profiler = attributesFor(metadata, Profiler.class);
-        if (profiler != null) {
-            abd.setProfiler(profiler.getString("value"));
+        AnnotationAttributes profile = attributesFor(metadata, Profile.class);
+        if (profile != null) {
+            abd.setProfile(profile.getString("value"));
         }
     }
 

@@ -1,10 +1,20 @@
 package com.shallowinggg.narep.core;
 
 /**
- * 这是一个标记接口，实现本接口的类表示它是一个配置
+ * Store config infos for generating files.
+ *
+ * The user can implement {@link #init()} method
+ * to execute some required init operations.
+ *
+ * Implementations will be registered to
+ * {@link com.shallowinggg.narep.core.common.ConfigManager} and provide
+ * infos for {@link com.shallowinggg.narep.core.common.ConfigInfos}.
  *
  * @author shallowinggg
+ * @see com.shallowinggg.narep.core.common.ConfigManager#register(String, Config)
+ * @see com.shallowinggg.narep.core.common.ConfigInfos
  */
+@FunctionalInterface
 public interface Config {
 
     /**

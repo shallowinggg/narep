@@ -1,5 +1,6 @@
 package com.shallowinggg.narep.core;
 
+import com.shallowinggg.narep.core.annotation.ClassPathGeneratorScanner;
 import com.shallowinggg.narep.core.common.*;
 import com.shallowinggg.narep.core.common.CodeGeneratorManager;
 import com.shallowinggg.narep.core.lang.ProtocolField;
@@ -19,12 +20,10 @@ public class GeneratorController {
 
     public void init() {
         if(!init) {
+            // register required configs
             if (configManager.getConfig(GeneratorConfig.CONFIG_NAME) == null) {
-                GeneratorConfig config = new GeneratorConfig();
-                config.init();
-
                 LOG.info("No user specified <{}> config found, use default config", GeneratorConfig.CONFIG_NAME);
-                registerConfig(GeneratorConfig.CONFIG_NAME, config);
+                registerConfig(GeneratorConfig.CONFIG_NAME, new GeneratorConfig());
             }
 
             if (configManager.getConfig(ProtocolConfig.CONFIG_NAME) == null) {
@@ -37,6 +36,7 @@ public class GeneratorController {
                 registerConfig(LogConfig.CONFIG_NAME, new LogConfig());
             }
 
+            configManager.init();
             configInfos.init();
             init = true;
             if (LOG.isDebugEnabled()) {
@@ -46,8 +46,18 @@ public class GeneratorController {
     }
 
     public void start() {
+        if(!codeGeneratorManager.resolve()) {
+            return;
+        }
 
-
+        ClassPathGeneratorScanner scanner;
+        if(configInfos.isUseCustomProtocol()) {
+            scanner = new ClassPathGeneratorScanner(ConfigInfos.CUSTOM_PROFILE);
+        } else {
+            scanner = new ClassPathGeneratorScanner();
+        }
+        scanner.doScan(ConfigInfos.GENERATOR_PACKAGE);
+        codeGeneratorManager.generate();
     }
 
     public void registerConfig(String name, Config config) {
