@@ -21,6 +21,11 @@ public class LogConfig implements Config {
         this.useCustomLoggerName = useCustomLoggerName;
     }
 
+    @Override
+    public void init() {
+
+    }
+
     public boolean isUseCustomLoggerName() {
         return useCustomLoggerName;
     }

@@ -15,11 +15,10 @@ public class ProtocolConfig implements Config {
     public static final String CONFIG_NAME = "protocol";
     public static final int DEFAULT_FIELDS_SIZE = 4;
 
-    private final boolean compress;
-
     private final List<ProtocolField> protocolFields = new ArrayList<>();
 
-    {
+    @Override
+    public void init() {
         // required protocol fields
         protocolFields.add(new ProtocolField("code", int.class, 2));
         protocolFields.add(new ProtocolField("flag", int.class, 1));
@@ -27,20 +26,8 @@ public class ProtocolConfig implements Config {
         protocolFields.add(new ProtocolField("remark", String.class, -1));
     }
 
-    public ProtocolConfig() {
-        this(true);
-    }
-
-    public ProtocolConfig(boolean compress) {
-        this.compress = compress;
-    }
-
     public void addProtocolField(ProtocolField protocolField) {
         this.protocolFields.add(protocolField);
-    }
-
-    public boolean isCompress() {
-        return compress;
     }
 
     public List<ProtocolField> getProtocolFields() {

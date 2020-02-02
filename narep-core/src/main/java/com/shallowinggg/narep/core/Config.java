@@ -6,4 +6,9 @@ package com.shallowinggg.narep.core;
  * @author shallowinggg
  */
 public interface Config {
+
+    /**
+     * init config
+     */
+    void init();
 }

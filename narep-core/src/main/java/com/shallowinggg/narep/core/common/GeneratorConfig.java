@@ -16,16 +16,20 @@ public class GeneratorConfig implements Config {
     private static final String DEFAULT_BASE_PACKAGE = "com.example.remoting";
     private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + FILE_SEPARATOR + "generator";
 
-    private String basePackage = DEFAULT_BASE_PACKAGE;
-    private String storeLocation = DEFAULT_STORE_LOCATION;
+    private String basePackage;
+    private String storeLocation;
 
-
+    @Override
     public void init() {
+        FileUtils.ensureDirOk(new File(this.storeLocation));
         this.storeLocation = CodeGeneratorHelper.buildNecessaryFolders(this.storeLocation);
     }
 
     public String getBasePackage() {
-        return basePackage;
+        if(this.basePackage == null) {
+            this.basePackage = DEFAULT_BASE_PACKAGE;
+        }
+        return this.basePackage;
     }
 
     public void setBasePackage(String basePackage) {
@@ -33,11 +37,13 @@ public class GeneratorConfig implements Config {
     }
 
     public String getStoreLocation() {
-        return storeLocation;
+        if (this.storeLocation == null) {
+            this.storeLocation = DEFAULT_STORE_LOCATION;
+        }
+        return this.storeLocation;
     }
 
     public void setStoreLocation(String storeLocation) {
-        FileUtils.ensureDirOk(new File(storeLocation));
         this.storeLocation = storeLocation;
     }
 }
