@@ -21,9 +21,7 @@ public class DefaultRemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
     private static final String SUB_PACKAGE = "protocol";
     private static final List<String> DEPENDENCY_NAMES = Arrays.asList("CommandCustomHeader",
-            "CFNotNull", "RemotingHelper", "RemotingCommandException",
-            "RemotingCommandType", "RemotingSerializable", "RemotingSysResponseCode",
-            "SerializeType");
+            "CFNotNull", "RemotingHelper", "RemotingCommandException");
 
     public DefaultRemotingCommandCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);

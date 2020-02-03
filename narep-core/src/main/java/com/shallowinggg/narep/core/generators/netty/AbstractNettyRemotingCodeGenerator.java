@@ -35,50 +35,50 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
                 .type("Logger").name("log").initValue(CodeGeneratorHelper.buildLoggerField(CLASS_NAME))
                 .comment("    /**\n" +
                         "     * Remoting logger instance.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_FINAL)
                 .type("Semaphore").name("semaphoreOneway")
                 .comment("    /**\n" +
                         "     * Semaphore to limit maximum number of on-going one-way requests, which protects system memory footprint.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_FINAL)
                 .type("Semaphore").name("semaphoreAsync")
                 .comment("    /**\n" +
                         "     * Semaphore to limit maximum number of on-going asynchronous requests, which protects system memory footprint.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_FINAL)
                 .type("ConcurrentMap<Integer, ResponseFuture>").name("responseTable")
                 .initValue("new ConcurrentHashMap<>(256)")
                 .comment("    /**\n" +
                         "     * This map caches all on-going requests.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_FINAL)
                 .type("HashMap<Integer, Pair<NettyRequestProcessor, ExecutorService>>").name("processorTable")
                 .initValue("new HashMap<>(64)")
                 .comment("    /**\n" +
                         "     * This container holds all processors per request code, aka, for each incoming request, we may look up the\n" +
                         "     * responding processor in this map to handle the request.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_FINAL)
                 .type("NettyEventExecutor").name("nettyEventExecutor").initValue("new NettyEventExecutor()")
                 .comment("    /**\n" +
                         "     * Executor to feed netty events to user defined {@link ChannelEventListener}.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED)
                 .type("Pair<NettyRequestProcessor, ExecutorService>").name("defaultRequestProcessor")
                 .comment("    /**\n" +
                         "     * The default request processor to use in case there is no exact match in {@link #processorTable} per request code.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_VOLATILE)
                 .type("SslContext").name("sslContext")
                 .comment("    /**\n" +
                         "     * SSL context via which to create {@link SslHandler}.\n" +
-                        "     */\n").build());
+                        "     */").build());
         fields.add(new FieldInfo.Builder().modifier(Modifier.PROTECTED_VOLATILE)
                 .type("List<RPCHook>").name("rpcHooks").initValue("new ArrayList<>()")
                 .comment("    /**\n" +
                         "     * custom rpc hooks.\n" +
-                        "     */\n").build());
+                        "     */").build());
         setFields(fields);
     }
 
@@ -120,7 +120,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
                 invokeAsyncImpl() +
                 requestFail() +
                 failFast() +
-                invokeAsyncImpl() +
+                invokeOnewayImpl() +
                 "\n";
     }
 
@@ -541,9 +541,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
                 "     * @param channel the channel which is close already\n" +
                 "     */\n" +
                 "    protected void failFast(final Channel channel) {\n" +
-                "        Iterator<Map.Entry<Integer, ResponseFuture>> it = responseTable.entrySet().iterator();\n" +
-                "        while (it.hasNext()) {\n" +
-                "            Map.Entry<Integer, ResponseFuture> entry = it.next();\n" +
+                "        for (Map.Entry<Integer, ResponseFuture> entry : responseTable.entrySet()) {\n" +
                 "            if (entry.getValue().getProcessChannel() == channel) {\n" +
                 "                Integer opaque = entry.getKey();\n" +
                 "                if (opaque != null) {\n" +

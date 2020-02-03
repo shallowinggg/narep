@@ -77,7 +77,7 @@ public class RemotingUtilCodeGenerator extends ClassCodeGenerator {
                 "        return isWindowsPlatform;\n" +
                 "    }\n" +
                 "\n" +
-                "   public static boolean isLinuxPlatform() {\n" +
+                "    public static boolean isLinuxPlatform() {\n" +
                 "        return isLinuxPlatform;\n" +
                 "    }\n\n";
     }

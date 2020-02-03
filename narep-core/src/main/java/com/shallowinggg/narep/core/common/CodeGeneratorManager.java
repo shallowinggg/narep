@@ -4,9 +4,7 @@ import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.DependencyResolver;
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.exception.FileGenerateException;
-import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
-import com.shallowinggg.narep.core.util.StringTinyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +14,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 /**
- * {@link CodeGenerator}管理器，注册所有文件对应的{@link CodeGenerator}
- * 并且生成文件。
+ * This class is designed to store all {@link CodeGenerator} instances,
+ * and implements interface {@link DependencyResolver} for
+ * {@link JavaCodeGenerator} use.
+ * <p>
+ * Due to the interface {@link JavaCodeGenerator} is the sub interface of
+ * {@link CodeGenerator}, the class also provide the function of resolving
+ * all {@link JavaCodeGenerator} instances by {@link #resolve(List)} method.
+ * <p>
+ * Aside from the function introduced above, the class can be used to
+ * generate all files with CodeGenerators stored.
  *
  * @author shallowinggg
  */
@@ -28,22 +34,21 @@ public class CodeGeneratorManager implements DependencyResolver {
     private Map<String, CodeGenerator> generators = new HashMap<>();
 
     /**
-     * 获取CodeGeneratorManager单例
+     * Get the unique instance of class CodeGeneratorManager
      *
-     * @return 单例
+     * @return unique instance
      */
     public static CodeGeneratorManager getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public List<JavaCodeGenerator> resolve(List<String> dependenciesName) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(dependenciesName),
-                "dependenciesName must not be null or empty");
+    public List<JavaCodeGenerator> resolve(List<String> dependencyNames) {
+        Conditions.notEmpty(dependencyNames, "dependencyNames must not empty");
         List<JavaCodeGenerator> dependencies = new ArrayList<>();
         boolean success = true;
 
-        for (String registerName : dependenciesName) {
+        for (String registerName : dependencyNames) {
             CodeGenerator generator = generators.get(registerName);
             if (!(generator instanceof JavaCodeGenerator)) {
                 LOG.error("resolve dependencies fail, dependency: {} don't exist", registerName);
@@ -60,6 +65,17 @@ public class CodeGeneratorManager implements DependencyResolver {
         }
     }
 
+    /**
+     * Resolve all JavaCodeGenerator instances stored in this repository.
+     * <p>
+     * The method will keep executing even if one or more JavaCodeGenerator
+     * instance resolve failed. If all instances are resolved successfully,
+     * it will return true, otherwise return false. Error messages in this
+     * progress should be reported by {@link JavaCodeGenerator#resolveDependencies(DependencyResolver)}
+     * method.
+     *
+     * @return {@literal true} if all JavaCodeGenerator resolved successfully
+     */
     public boolean resolve() {
         AtomicInteger error = new AtomicInteger(0);
         Stream.of(generators.values())
@@ -75,6 +91,12 @@ public class CodeGeneratorManager implements DependencyResolver {
         return error.get() == 0;
     }
 
+    /**
+     * Generate all files and write them to the disk.
+     * <p>
+     * If write progress exec fail, this method will be interrupted and
+     * throw Exception {@link FileGenerateException}.
+     */
     public void generate() {
         Stream.of(generators.values())
                 .flatMap(Collection::stream)
@@ -88,8 +110,8 @@ public class CodeGeneratorManager implements DependencyResolver {
     }
 
     public void register(String name, CodeGenerator generator) {
-        Conditions.checkArgument(StringTinyUtils.isNotBlank(name), "generator name must no be blank");
-        Conditions.checkArgument(generator != null, "generator must not be null");
+        Conditions.hasText(name, "generator name must no be blank");
+        Conditions.notNull(generator, "generator must not be null");
 
         generators.put(name, generator);
         if (LOG.isDebugEnabled()) {

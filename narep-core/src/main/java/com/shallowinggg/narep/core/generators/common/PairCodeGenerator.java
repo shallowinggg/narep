@@ -35,7 +35,7 @@ public class PairCodeGenerator extends GenericClassCodeGenerator {
         return "    public Pair(T1 object1, T2 object2) {\n" +
                 "        this.object1 = object1;\n" +
                 "        this.object2 = object2;\n" +
-                "    }\n" +
+                "    }\n\n" +
                 CodeGeneratorHelper.buildGetterAndSetterMethods(getFields());
     }
 }

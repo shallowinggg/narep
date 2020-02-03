@@ -30,7 +30,7 @@ public class RequestTaskCodeGenerator extends ClassCodeGenerator {
         List<FieldInfo> fields = new ArrayList<>(5);
         fields.add(new FieldInfo(PRIVATE_FINAL, "Runnable", "runnable"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "long", "createTimestamp", "System.currentTimeMillis()"));
-        fields.add(new FieldInfo(PRIVATE_FINAL, "Channle", "channel"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Channel", "channel"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "RemotingCommand", "request"));
         fields.add(new FieldInfo(PRIVATE, "boolean", "stopRun", "false"));
         setFields(fields);

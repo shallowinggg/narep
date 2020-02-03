@@ -15,8 +15,8 @@ public class InterfaceCodeGenerator extends AbstractJavaCodeGenerator {
         super(name);
     }
 
-    public InterfaceCodeGenerator(String name, List<String> dependenciesName) {
-        super(name, dependenciesName);
+    public InterfaceCodeGenerator(String name, List<String> dependencyNames) {
+        super(name, dependencyNames);
     }
 
     public InterfaceCodeGenerator(String name, String parentName) {

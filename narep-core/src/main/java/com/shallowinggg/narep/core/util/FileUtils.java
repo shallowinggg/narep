@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 /**
  * @author shallowinggg
@@ -19,9 +20,23 @@ public class FileUtils {
             return;
         }
         File file = new File(path);
-        ensureDirOk(file);
+        ensureFileOk(file);
         try (OutputStream out = new FileOutputStream(file)) {
             out.write(content.getBytes(charset));
+        }
+    }
+
+    public static void ensureFileOk(final File file) {
+        if(file != null) {
+            if(!file.exists()) {
+                try {
+                    File parent = file.getParentFile();
+                    ensureDirOk(parent);
+                    Files.createFile(file.toPath());
+                } catch (IOException e) {
+                    LOG.error("create file " + file.getName() + " fail", e);
+                }
+            }
         }
     }
 

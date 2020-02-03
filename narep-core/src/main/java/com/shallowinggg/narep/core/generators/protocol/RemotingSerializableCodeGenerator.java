@@ -25,6 +25,14 @@ public class RemotingSerializableCodeGenerator extends ClassCodeGenerator {
     }
 
     @Override
+    public String buildImports() {
+        return "import com.alibaba.fastjson.JSON;\n" +
+                "\n" +
+                "import java.nio.charset.Charset;\n" +
+                "import java.nio.charset.StandardCharsets;\n\n";
+    }
+
+    @Override
     public String buildMethods() {
         return "    public static byte[] encode(final Object obj) {\n" +
                 "        final String json = toJson(obj, false);\n" +

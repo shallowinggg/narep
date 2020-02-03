@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.lang.ProtocolField;
-import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
@@ -29,7 +28,7 @@ public class SerializableHelper {
     }
 
     public static List<ProtocolField> compositeFields(List<ProtocolField> allFields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(allFields), "allFields must not be empty");
+        Conditions.notEmpty(allFields, "allFields must not be empty");
         int start = 0;
         int end = allFields.size();
         int middle = start + (end - start) >> 1;
@@ -56,7 +55,7 @@ public class SerializableHelper {
     }
 
     public static List<String> buildLocalVarLenNames(List<ProtocolField> compositeFields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(compositeFields), "compositeFields must not be empty");
+        Conditions.notEmpty(compositeFields, "compositeFields must not be empty");
         List<String> names = new ArrayList<>(compositeFields.size());
         for (ProtocolField field : compositeFields) {
             String name = field.getName();
@@ -115,7 +114,7 @@ public class SerializableHelper {
         Conditions.checkArgument(field != null && field.getLen() != -1, "field must be nonnull and primitive");
         StringBuilder builder = new StringBuilder(150);
         String name = field.getName();
-        String setterMethodName = "cmd.set" + StringTinyUtils.firstCharToUpperCase(name) + "(";
+        String setterMethodName = "cmd.set" + StringTinyUtils.firstCharToUpperCase(name);
         builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name).append("\n");
         builder.append(get(field, setterMethodName));
         return builder.toString();
@@ -141,7 +140,7 @@ public class SerializableHelper {
     }
 
     public static String buildCalcTotalLen(List<ProtocolField> fields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be empty");
+        Conditions.notEmpty(fields, "fields must not be empty");
         StringBuilder builder = new StringBuilder(1000);
         builder.append("    private static int calTotalLen(int[] composites) {\n")
                 .append("        return ");
@@ -164,7 +163,7 @@ public class SerializableHelper {
                 builder.append("                + ").append(len)
                         .append(" // ").append(type).append(" ").append(name).append("\n");
             } else {
-                builder.append("                + 4 + composite[").append(i).append("]")
+                builder.append("                + 4 + composites[").append(i).append("]")
                         .append(" // ").append(type).append(" ").append(name).append("\n");
                 i++;
             }
@@ -307,19 +306,19 @@ public class SerializableHelper {
     }
 
     private static String getByte(String setter) {
-        return "        " + setter + "(headBuffer.get());\n";
+        return "        " + setter + "(headerBuffer.get());\n";
     }
 
     private static String getShort(String setter) {
-        return "        " + setter + "(headBuffer.getShort());\n";
+        return "        " + setter + "(headerBuffer.getShort());\n";
     }
 
     private static String getInt(String setter) {
-        return "        " + setter + "(headBuffer.getInt());\n";
+        return "        " + setter + "(headerBuffer.getInt());\n";
     }
 
     private static String getLong(String setter) {
-        return "        " + setter + "(headBuffer.getLong());\n";
+        return "        " + setter + "(headerBuffer.getLong());\n";
     }
 
     private static String setter(String setter, String val) {

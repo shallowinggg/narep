@@ -23,7 +23,7 @@ public class NettyRemotingClientCodeGenerator extends ClassCodeGenerator {
     private static final String[] INTERFACE_NAMES = new String[]{"RemotingClient"};
     private static final String SUB_PACKAGE = "netty";
     private static final List<String> DEPENDENCY_NAMES = Arrays.asList("ChannelEventListener",
-            "InvokeCallback", "RPCHook", "RemotingClient.java", "Pair",
+            "InvokeCallback", "RPCHook", "RemotingClient", "Pair",
             "RemotingHelper", "RemotingUtil", "RemotingCommand",
             "RemotingSendRequestException", "RemotingTimeoutException",
             "RemotingTooMuchRequestException", "RemotingConnectException");
@@ -39,7 +39,7 @@ public class NettyRemotingClientCodeGenerator extends ClassCodeGenerator {
         fields.add(new FieldInfo(PRIVATE_FINAL, "NettyClientConfig", "nettyClientConfig"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "Bootstrap", "bootstrap", "new Bootstrap()"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "EventLoopGroup", "eventLoopGroupWorker"));
-        fields.add(new FieldInfo(PRIVATE_FINAL, "Lock", "lockChannelTables"));
+        fields.add(new FieldInfo(PRIVATE_FINAL, "Lock", "lockChannelTables", "new ReentrantLock()"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "ConcurrentMap<String, ChannelWrapper>", "channelTables", "new ConcurrentHashMap<>()"));
         fields.add(new FieldInfo(PRIVATE_FINAL, "ScheduledExecutorService", "timer",
                 "Executors.newSingleThreadScheduledExecutor(r -> {\n" +
@@ -57,6 +57,38 @@ public class NettyRemotingClientCodeGenerator extends ClassCodeGenerator {
         fields.add(new FieldInfo(PRIVATE_FINAL, "ChannelEventListener", "channelEventListener"));
         fields.add(new FieldInfo(PRIVATE, "DefaultEventExecutorGroup", "defaultEventExecutorGroup"));
         setFields(fields);
+    }
+
+    @Override
+    public String buildImports() {
+        StringBuilder builder = new StringBuilder(1800);
+        CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
+        builder.append("import io.netty.bootstrap.Bootstrap;\n" +
+                "import io.netty.channel.*;\n" +
+                "import io.netty.channel.nio.NioEventLoopGroup;\n" +
+                "import io.netty.channel.socket.SocketChannel;\n" +
+                "import io.netty.channel.socket.nio.NioSocketChannel;\n" +
+                "import io.netty.handler.timeout.IdleState;\n" +
+                "import io.netty.handler.timeout.IdleStateEvent;\n" +
+                "import io.netty.handler.timeout.IdleStateHandler;\n" +
+                "import io.netty.util.concurrent.DefaultEventExecutorGroup;\n" +
+                "import org.apache.logging.log4j.LogManager;\n" +
+                "import org.apache.logging.log4j.Logger;\n" +
+                "\n" +
+                "import java.io.IOException;\n" +
+                "import java.net.SocketAddress;\n" +
+                "import java.security.cert.CertificateException;\n" +
+                "import java.util.Collections;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Map;\n" +
+                "import java.util.Random;\n" +
+                "import java.util.concurrent.*;\n" +
+                "import java.util.concurrent.atomic.AtomicInteger;\n" +
+                "import java.util.concurrent.atomic.AtomicReference;\n" +
+                "import java.util.concurrent.locks.Lock;\n" +
+                "import java.util.concurrent.locks.ReentrantLock;\n\n");
+
+        return builder.toString();
     }
 
     @Override

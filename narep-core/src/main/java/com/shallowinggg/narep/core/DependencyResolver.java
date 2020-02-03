@@ -22,8 +22,8 @@ public interface DependencyResolver {
      * 表现形式表明解析是否成功。因此，传入的参数要求必须不能
      * 是一个空列表，否则返回结果将存在二义性。
      *
-     * @param dependenciesName 依赖类或接口的生成器名称集合
+     * @param dependencyNames 依赖类或接口的生成器名称集合
      * @return 解析出的生成器列表。如果解析失败，那么将会返回一个空列表表示失败。
      */
-    List<JavaCodeGenerator> resolve(List<String> dependenciesName);
+    List<JavaCodeGenerator> resolve(List<String> dependencyNames);
 }

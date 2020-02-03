@@ -15,9 +15,11 @@ public class GeneratorConfig implements Config {
 
     private static final String DEFAULT_BASE_PACKAGE = "com.example.remoting";
     private static final String DEFAULT_STORE_LOCATION = System.getProperty("user.home") + FILE_SEPARATOR + "generator";
+    private static final String DEFAULT_TLS_CONFIG_LOCATION = "/etc/narep/tls.properties";
 
     private String basePackage;
     private String storeLocation;
+    private String tlsConfigLocation;
 
     @Override
     public void init() {
@@ -45,5 +47,16 @@ public class GeneratorConfig implements Config {
 
     public void setStoreLocation(String storeLocation) {
         this.storeLocation = storeLocation;
+    }
+
+    public String getTlsConfigLocation() {
+        if(this.tlsConfigLocation == null) {
+            this.tlsConfigLocation = DEFAULT_TLS_CONFIG_LOCATION;
+        }
+        return this.tlsConfigLocation;
+    }
+
+    public void setTlsConfigLocation(String tlsConfigLocation) {
+        this.tlsConfigLocation = tlsConfigLocation;
     }
 }

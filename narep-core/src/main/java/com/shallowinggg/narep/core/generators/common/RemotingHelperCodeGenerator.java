@@ -28,10 +28,10 @@ public class RemotingHelperCodeGenerator extends ClassCodeGenerator {
                 "RemotingSendRequestException", "RemotingTimeoutException", "RemotingCommand");
         setDependencyNames(dependencyNames);
 
-        String loggerName = ConfigInfos.getInstance().loggerName();
+        String loggerName = "\"" + ConfigInfos.getInstance().loggerName() + "\"";
         List<FieldInfo> fields = new ArrayList<>(3);
         fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "REMOTING_LOGGER_NAME", loggerName));
-        fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "DEFAULT_CHARSET", "UTF-8"));
+        fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "DEFAULT_CHARSET", "\"UTF-8\""));
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
         setFields(fields);
     }

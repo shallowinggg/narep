@@ -22,6 +22,7 @@ public class ServiceThreadCodeGenerator extends ClassCodeGenerator {
 
     public ServiceThreadCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE, INTERFACES);
+        setModifier(PUBLIC_ABSTRACT);
 
         List<FieldInfo> fields = new ArrayList<>(5);
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "long", "JOIN_TIME", "90 * 1000"));

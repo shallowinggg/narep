@@ -27,4 +27,10 @@ public class NarepStarterTest {
         NarepStarter.main(args);
     }
 
+    @Test
+    public void test() {
+        String[] args = new String[] { "-c", "test.xml"};
+        NarepStarter.main(args);
+    }
+
 }

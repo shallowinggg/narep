@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.generators.protocol;
 
 import com.shallowinggg.narep.core.annotation.Generator;
+import com.shallowinggg.narep.core.annotation.Profile;
 import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.common.SerializableHelper;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author shallowinggg
  */
 @Generator
+@Profile("custom")
 public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "NarepSerializable";
     private static final String SUB_PACKAGE = "protocol";
@@ -24,12 +26,22 @@ public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
 
     public NarepSerializableCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
-        setFields(Collections.singletonList(new FieldInfo(Modifier.PRIVATE_STATIC_FINAL, "CHARSET_UTF8",
-                "StandardCharsets.UTF_8")));
+        setFields(Collections.singletonList(new FieldInfo(Modifier.PRIVATE_STATIC_FINAL, "Charset",
+                "CHARSET_UTF8", "StandardCharsets.UTF_8")));
 
         protocolFields = ConfigInfos.getInstance().protocolFields();
         primitiveFields = SerializableHelper.primitiveFields(protocolFields);
         compositeFields = SerializableHelper.compositeFields(protocolFields);
+    }
+
+    @Override
+    public String buildImports() {
+        return "import java.nio.ByteBuffer;\n" +
+                "import java.nio.charset.Charset;\n" +
+                "import java.nio.charset.StandardCharsets;\n" +
+                "import java.util.HashMap;\n" +
+                "import java.util.Iterator;\n" +
+                "import java.util.Map;\n\n";
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.lang.Modifier;
-import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import static com.shallowinggg.narep.core.lang.JLSConstants.*;
 public class ClassDeclarationHelper {
 
     public static String buildGeneric(List<String> generics) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(generics), "generics must not be null or emprty");
+        Conditions.notEmpty(generics, "generics must not be null or emprty");
         StringBuilder builder = new StringBuilder(2 + generics.size() * 2);
         builder.append('<');
         for(String generic : generics) {
@@ -42,8 +41,7 @@ public class ClassDeclarationHelper {
     }
 
     public static String buildClassDeclaration(Modifier modifier, String className, String... interfaceNames) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
-                "At least one interface should be specified");
+        Conditions.notEmpty(interfaceNames, "At least one interface should be specified");
         StringBuilder builder = new StringBuilder(50);
         builder.append(modifier).append(CLASS_DECL).append(className).append(IMPLEMENTS_DECL);
         for (String interfaceName : interfaceNames) {
@@ -55,8 +53,7 @@ public class ClassDeclarationHelper {
     }
 
     public static String buildClassDeclaration(Modifier modifier, String className, String parent, String... interfaceNames) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(interfaceNames),
-                "At least one interface should be specified");
+        Conditions.notEmpty(interfaceNames, "At least one interface should be specified");
         StringBuilder builder = new StringBuilder(50);
         builder.append(modifier).append(CLASS_DECL).append(className).append(EXTENDS_DECL).append(parent)
                 .append(IMPLEMENTS_DECL);

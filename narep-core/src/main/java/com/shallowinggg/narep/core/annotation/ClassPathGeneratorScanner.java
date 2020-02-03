@@ -46,31 +46,28 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
      * @param basePackages the packages to check for annotated classes
      */
     public void doScan(String... basePackages) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(basePackages), "At least one base package must be specified");
+        Conditions.notEmpty(basePackages, "At least one base package must be specified");
         for (String basePackage : basePackages) {
             Set<GeneratorDefinition> candidates = findCandidateComponents(basePackage);
             for (GeneratorDefinition candidate : candidates) {
                 if (candidate instanceof AnnotatedGeneratorDefinition) {
                     processCommonDefinitionAnnotations((AnnotatedGeneratorDefinition) candidate);
                 }
-                String name = generatorNameGenerator.generateGeneratorName(candidate, registry);
-                if (checkCandidate(name, candidate)) {
+                if (checkCandidate(candidate)) {
                     Class<?> generatorClass = candidate.getClazz();
                     CodeGenerator codeGenerator = (CodeGenerator) ClassUtils.instantiateClass(generatorClass);
+                    String name = generatorNameGenerator.generateGeneratorName(candidate, codeGenerator);
                     registry.register(name, codeGenerator);
                 }
             }
         }
     }
 
-    private boolean checkCandidate(String name, GeneratorDefinition gd) {
-        if (!registry.containsGenerator(name)) {
-            if (StringTinyUtils.isNotBlank(gd.getProfile())) {
-                return profiler.equals(gd.getProfile());
-            }
-            return true;
+    private boolean checkCandidate(GeneratorDefinition gd) {
+        if (StringTinyUtils.isNotBlank(gd.getProfile())) {
+            return profiler.equals(gd.getProfile());
         }
-        return false;
+        return true;
     }
 
     public static void processCommonDefinitionAnnotations(AnnotatedGeneratorDefinition abd) {

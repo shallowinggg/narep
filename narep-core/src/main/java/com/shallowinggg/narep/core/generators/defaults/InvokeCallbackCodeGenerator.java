@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.generators.defaults;
 
 import com.shallowinggg.narep.core.annotation.Generator;
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
 import com.shallowinggg.narep.core.generators.InterfaceCodeGenerator;
 
 import java.util.Collections;
@@ -16,6 +17,14 @@ public class InvokeCallbackCodeGenerator extends InterfaceCodeGenerator {
 
     public InvokeCallbackCodeGenerator() {
         super(INTERFACE_NAME, DEPENDENCY_NAMES);
+    }
+
+    @Override
+    public String buildImports() {
+        StringBuilder builder = new StringBuilder(60);
+        CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
+        builder.append("\n");
+        return builder.toString();
     }
 
     @Override

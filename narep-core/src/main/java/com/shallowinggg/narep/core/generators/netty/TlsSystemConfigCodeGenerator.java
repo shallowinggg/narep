@@ -1,10 +1,13 @@
 package com.shallowinggg.narep.core.generators.netty;
 
 import com.shallowinggg.narep.core.annotation.Generator;
+import com.shallowinggg.narep.core.common.CodeGeneratorHelper;
+import com.shallowinggg.narep.core.common.ConfigInfos;
 import com.shallowinggg.narep.core.generators.ClassCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC;
@@ -18,9 +21,11 @@ import static com.shallowinggg.narep.core.lang.Modifier.PUBLIC_STATIC_FINAL;
 public class TlsSystemConfigCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "TlsSystemConfig";
     private static final String SUB_PACKAGE = "netty";
+    private static final List<String> DEPENDENCY_NAMES = Collections.singletonList("TlsMode");
 
     public TlsSystemConfigCodeGenerator() {
         super(CLASS_NAME, null, SUB_PACKAGE);
+        setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> fields = new ArrayList<>(30);
         fields.add(new FieldInfo(PUBLIC_STATIC_FINAL, "String", "TLS_SERVER_MODE", "\"tls.server.mode\""));
@@ -119,12 +124,24 @@ public class TlsSystemConfigCodeGenerator extends ClassCodeGenerator {
                         "     *     <li><strong>enforcing:</strong> SSL is required, aka, non SSL connection will be rejected.</li>\n" +
                         "     * </ol>\n" +
                         "     */").build());
+
+        String tlsConfigLocation = ConfigInfos.getInstance().tlsConfigLocation();
+        String initVal = "System.getProperty(TLS_CONFIG_FILE, \"" + tlsConfigLocation + "\")";
         fields.add(new FieldInfo.Builder().modifier(PUBLIC_STATIC)
-                .type("String").name("tlsConfigFile").initValue("System.getProperty(TLS_CONFIG_FILE, \"/etc/rocketmq/tls.properties\")")
+                .type("String").name("tlsConfigFile").initValue(initVal)
                 .comment("    /**\n" +
                         "     * A config file to store the above TLS related configurations,\n" +
                         "     * except {@link TlsSystemConfig#tlsMode} and {@link TlsSystemConfig#tlsEnable}\n" +
                         "     */").build());
         setFields(fields);
+    }
+
+    @Override
+    public String buildImports() {
+        StringBuilder builder = new StringBuilder(100);
+        CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
+        builder.append("import io.netty.handler.ssl.SslContext;\n\n");
+
+        return builder.toString();
     }
 }

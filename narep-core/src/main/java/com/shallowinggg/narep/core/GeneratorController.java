@@ -46,10 +46,6 @@ public class GeneratorController {
     }
 
     public void start() {
-        if(!codeGeneratorManager.resolve()) {
-            return;
-        }
-
         ClassPathGeneratorScanner scanner;
         if(configInfos.isUseCustomProtocol()) {
             scanner = new ClassPathGeneratorScanner(ConfigInfos.CUSTOM_PROFILE);
@@ -57,6 +53,10 @@ public class GeneratorController {
             scanner = new ClassPathGeneratorScanner();
         }
         scanner.doScan(ConfigInfos.GENERATOR_PACKAGE);
+        if(!codeGeneratorManager.resolve()) {
+            return;
+        }
+
         codeGeneratorManager.generate();
     }
 

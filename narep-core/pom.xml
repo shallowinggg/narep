@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>narep-core</artifactId>
+    <packaging>jar</packaging>
 
     <name>narep-core</name>
     <!-- FIXME change it to the project's website -->

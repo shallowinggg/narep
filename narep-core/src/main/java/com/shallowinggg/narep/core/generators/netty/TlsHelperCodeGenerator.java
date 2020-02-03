@@ -98,10 +98,10 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
                 "        SslProvider provider;\n" +
                 "        if (OpenSsl.isAvailable()) {\n" +
                 "            provider = SslProvider.OPENSSL;\n" +
-                "            LOGGER.info(\"Using OpenSSL provider\");\n" +
+                "            log.info(\"Using OpenSSL provider\");\n" +
                 "        } else {\n" +
                 "            provider = SslProvider.JDK;\n" +
-                "            LOGGER.info(\"Using JDK SSL provider\");\n" +
+                "            log.info(\"Using JDK SSL provider\");\n" +
                 "        }\n" +
                 "\n" +
                 "        if (forClient) {\n" +
@@ -162,7 +162,7 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
     private String extractTlsConfigFromFile() {
         return "    private static void extractTlsConfigFromFile(final File configFile) {\n" +
                 "        if (!(configFile.exists() && configFile.isFile() && configFile.canRead())) {\n" +
-                "            LOGGER.info(\"Tls config file doesn't exist, skip it\");\n" +
+                "            log.info(\"Tls config file doesn't exist, skip it\");\n" +
                 "            return;\n" +
                 "        }\n" +
                 "\n" +
@@ -200,20 +200,20 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
 
     private String logTheFinalUsedTlsConfig() {
         return "    private static void logTheFinalUsedTlsConfig() {\n" +
-                "        LOGGER.info(\"Log the final used tls related configuration\");\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_TEST_MODE_ENABLE, tlsTestModeEnable);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_NEED_CLIENT_AUTH, tlsServerNeedClientAuth);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_KEYPATH, tlsServerKeyPath);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_KEYPASSWORD, tlsServerKeyPassword);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_CERTPATH, tlsServerCertPath);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_AUTHCLIENT, tlsServerAuthClient);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_SERVER_TRUSTCERTPATH, tlsServerTrustCertPath);\n" +
+                "        log.info(\"Log the final used tls related configuration\");\n" +
+                "        log.info(\"{} = {}\", TLS_TEST_MODE_ENABLE, tlsTestModeEnable);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_NEED_CLIENT_AUTH, tlsServerNeedClientAuth);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_KEYPATH, tlsServerKeyPath);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_KEYPASSWORD, tlsServerKeyPassword);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_CERTPATH, tlsServerCertPath);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_AUTHCLIENT, tlsServerAuthClient);\n" +
+                "        log.info(\"{} = {}\", TLS_SERVER_TRUSTCERTPATH, tlsServerTrustCertPath);\n" +
                 "\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_CLIENT_KEYPATH, tlsClientKeyPath);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_CLIENT_KEYPASSWORD, tlsClientKeyPassword);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_CLIENT_CERTPATH, tlsClientCertPath);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_CLIENT_AUTHSERVER, tlsClientAuthServer);\n" +
-                "        LOGGER.info(\"{} = {}\", TLS_CLIENT_TRUSTCERTPATH, tlsClientTrustCertPath);\n" +
+                "        log.info(\"{} = {}\", TLS_CLIENT_KEYPATH, tlsClientKeyPath);\n" +
+                "        log.info(\"{} = {}\", TLS_CLIENT_KEYPASSWORD, tlsClientKeyPassword);\n" +
+                "        log.info(\"{} = {}\", TLS_CLIENT_CERTPATH, tlsClientCertPath);\n" +
+                "        log.info(\"{} = {}\", TLS_CLIENT_AUTHSERVER, tlsClientAuthServer);\n" +
+                "        log.info(\"{} = {}\", TLS_CLIENT_TRUSTCERTPATH, tlsClientTrustCertPath);\n" +
                 "    }\n\n";
     }
 
@@ -256,7 +256,7 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
                     "     * @return An input stream for a decrypted key file\n" +
                     "     * @throws IOException if an I/O error has occurred\n" +
                     "     */\n" +
-                    "    InputStream decryptPrivateKey(String privateKeyEncryptPath, boolean forClient) throws IOException;";
+                    "    InputStream decryptPrivateKey(String privateKeyEncryptPath, boolean forClient) throws IOException;\n";
         }
     }
 }

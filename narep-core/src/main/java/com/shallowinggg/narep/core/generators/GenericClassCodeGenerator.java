@@ -11,7 +11,7 @@ public class GenericClassCodeGenerator extends ClassCodeGenerator {
     private List<String> generics;
 
     public GenericClassCodeGenerator(String name, String subPackageName, List<String> generics) {
-        super(name, subPackageName);
+        super(name, null, subPackageName);
         this.generics = generics;
     }
 

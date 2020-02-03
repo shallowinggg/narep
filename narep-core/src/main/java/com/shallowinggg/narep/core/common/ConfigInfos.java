@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -88,8 +89,18 @@ public class ConfigInfos {
     private static List<FieldInfo> convertConfig2Fields(List<ProtocolField> protocolFields) {
         List<FieldInfo> fields = new ArrayList<>(protocolFields.size());
         for (ProtocolField protocolField : protocolFields) {
-            fields.add(new FieldInfo(Modifier.PRIVATE, protocolField.getClazz().getSimpleName(), protocolField.getName()));
+            Class<?> clazz = protocolField.getClazz();
+            if(HashMap.class.equals(clazz)) {
+                String type = "HashMap<String, String>";
+                fields.add(new FieldInfo(Modifier.PRIVATE, type, protocolField.getName()));
+            } else {
+                fields.add(new FieldInfo(Modifier.PRIVATE, clazz.getSimpleName(), protocolField.getName()));
+            }
         }
         return fields;
+    }
+
+    public String tlsConfigLocation() {
+        return this.generatorConfig.getTlsConfigLocation();
     }
 }

@@ -1,7 +1,7 @@
 package com.shallowinggg.narep.core.util;
 
 import com.shallowinggg.narep.core.exception.ClassInstantiationException;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.Externalizable;
@@ -47,11 +47,6 @@ public class ClassUtils {
     private static final char INNER_CLASS_SEPARATOR = '$';
 
     /**
-     * The CGLIB class separator: {@code "$$"}.
-     */
-    public static final String CGLIB_CLASS_SEPARATOR = "$$";
-
-    /**
      * The ".class" file suffix.
      */
     public static final String CLASS_FILE_SUFFIX = ".class";
@@ -60,21 +55,21 @@ public class ClassUtils {
      * Map with primitive wrapper type as key and corresponding primitive
      * type as value, for example: Integer.class -> int.class.
      */
-    private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap<>(8);
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP = new IdentityHashMap<>(8);
 
     /**
      * Map with primitive type as key and corresponding wrapper
      * type as value, for example: int.class -> Integer.class.
      */
-    private static final Map<Class<?>, Class<?>> primitiveTypeToWrapperMap = new IdentityHashMap<>(8);
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_TO_WRAPPER_MAP = new IdentityHashMap<>(8);
 
-    private static final Map<String, Class<?>> primitiveTypeNameMap = new HashMap<>(32);
+    private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new HashMap<>(32);
 
     /**
      * Map with common Java language class name as key and corresponding Class as value.
      * Primarily for efficient deserialization of remote invocations.
      */
-    private static final Map<String, Class<?>> commonClassCache = new HashMap<>(64);
+    private static final Map<String, Class<?>> COMMON_CLASS_CACHE = new HashMap<>(64);
 
     private static final Map<Class<?>, Object> DEFAULT_TYPE_VALUES;
 
@@ -87,29 +82,29 @@ public class ClassUtils {
         values.put(long.class, (long) 0);
         DEFAULT_TYPE_VALUES = Collections.unmodifiableMap(values);
 
-        primitiveWrapperTypeMap.put(Boolean.class, boolean.class);
-        primitiveWrapperTypeMap.put(Byte.class, byte.class);
-        primitiveWrapperTypeMap.put(Character.class, char.class);
-        primitiveWrapperTypeMap.put(Double.class, double.class);
-        primitiveWrapperTypeMap.put(Float.class, float.class);
-        primitiveWrapperTypeMap.put(Integer.class, int.class);
-        primitiveWrapperTypeMap.put(Long.class, long.class);
-        primitiveWrapperTypeMap.put(Short.class, short.class);
-        primitiveWrapperTypeMap.put(Void.class, void.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Boolean.class, boolean.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Byte.class, byte.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Character.class, char.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Double.class, double.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Float.class, float.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Integer.class, int.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Long.class, long.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Short.class, short.class);
+        PRIMITIVE_WRAPPER_TYPE_MAP.put(Void.class, void.class);
 
         // Map entry iteration is less expensive to initialize than forEach with lambdas
-        for (Map.Entry<Class<?>, Class<?>> entry : primitiveWrapperTypeMap.entrySet()) {
-            primitiveTypeToWrapperMap.put(entry.getValue(), entry.getKey());
+        for (Map.Entry<Class<?>, Class<?>> entry : PRIMITIVE_WRAPPER_TYPE_MAP.entrySet()) {
+            PRIMITIVE_TYPE_TO_WRAPPER_MAP.put(entry.getValue(), entry.getKey());
             registerCommonClasses(entry.getKey());
         }
 
         Set<Class<?>> primitiveTypes = new HashSet<>(32);
-        primitiveTypes.addAll(primitiveWrapperTypeMap.values());
+        primitiveTypes.addAll(PRIMITIVE_WRAPPER_TYPE_MAP.values());
         Collections.addAll(primitiveTypes, boolean[].class, byte[].class, char[].class,
                 double[].class, float[].class, int[].class, long[].class, short[].class);
         primitiveTypes.add(void.class);
         for (Class<?> primitiveType : primitiveTypes) {
-            primitiveTypeNameMap.put(primitiveType.getName(), primitiveType);
+            PRIMITIVE_TYPE_NAME_MAP.put(primitiveType.getName(), primitiveType);
         }
 
         registerCommonClasses(Boolean[].class, Byte[].class, Character[].class, Double[].class,
@@ -132,7 +127,7 @@ public class ClassUtils {
      */
     private static void registerCommonClasses(Class<?>... commonClasses) {
         for (Class<?> clazz : commonClasses) {
-            commonClassCache.put(clazz.getName(), clazz);
+            COMMON_CLASS_CACHE.put(clazz.getName(), clazz);
         }
     }
 
@@ -173,10 +168,10 @@ public class ClassUtils {
             return true;
         }
         if (lhsType.isPrimitive()) {
-            Class<?> resolvedPrimitive = primitiveWrapperTypeMap.get(rhsType);
+            Class<?> resolvedPrimitive = PRIMITIVE_WRAPPER_TYPE_MAP.get(rhsType);
             return lhsType == resolvedPrimitive;
         } else {
-            Class<?> resolvedWrapper = primitiveTypeToWrapperMap.get(rhsType);
+            Class<?> resolvedWrapper = PRIMITIVE_TYPE_TO_WRAPPER_MAP.get(rhsType);
             return resolvedWrapper != null && lhsType.isAssignableFrom(resolvedWrapper);
         }
     }
@@ -239,7 +234,7 @@ public class ClassUtils {
     }
 
     public static String convertClassNameToResourcePath(String className) {
-        Conditions.checkArgument(StringTinyUtils.isNotEmpty(className), "Class name must not be null");
+        Conditions.notEmpty(className, "Class name must not be null");
         return className.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
     }
 
@@ -250,7 +245,7 @@ public class ClassUtils {
      * @return the corresponding fully qualified class name
      */
     public static String convertResourcePathToClassName(String resourcePath) {
-        Conditions.checkArgument(StringTinyUtils.isNotEmpty(resourcePath), "Resource path must not be null");
+        Conditions.notEmpty(resourcePath, "Resource path must not be null");
         return resourcePath.replace(PATH_SEPARATOR, PACKAGE_SEPARATOR);
     }
 
@@ -309,7 +304,7 @@ public class ClassUtils {
 
         Class<?> clazz = resolvePrimitiveClassName(name);
         if (clazz == null) {
-            clazz = commonClassCache.get(name);
+            clazz = COMMON_CLASS_CACHE.get(name);
         }
         if (clazz != null) {
             return clazz;
@@ -375,7 +370,7 @@ public class ClassUtils {
         // SHOULD sit in a package, so a length check is worthwhile.
         if (name != null && name.length() <= 8) {
             // Could be a primitive - likely.
-            result = primitiveTypeNameMap.get(name);
+            result = PRIMITIVE_TYPE_NAME_MAP.get(name);
         }
         return result;
     }
@@ -404,7 +399,7 @@ public class ClassUtils {
 
     public static Class<?> resolvePrimitiveIfNecessary(Class<?> clazz) {
         Conditions.notNull(clazz, "Class must not be null");
-        return (clazz.isPrimitive() && clazz != void.class ? primitiveTypeToWrapperMap.get(clazz) : clazz);
+        return (clazz.isPrimitive() && clazz != void.class ? PRIMITIVE_TYPE_TO_WRAPPER_MAP.get(clazz) : clazz);
     }
 
     public static <T> T instantiateClass(Class<T> clazz) throws ClassInstantiationException {

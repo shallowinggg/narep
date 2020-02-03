@@ -1,7 +1,8 @@
 package com.shallowinggg.narep.core.util;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -40,21 +41,55 @@ public class Conditions {
     }
 
     /**
-     * 检查给定的条件是否为{@literal true}。这个方法主要是用来进行构造方法和
-     * 普通方法的参数验证，如果参数不符合条件那么将抛出一个
-     * {@link IllegalArgumentException}异常。
+     * Assert that a CharSequence is not empty.
      *
      * <blockquote><pre>
-     *      public add(Object o) {
-     *          Conditions.checkArgument(o != null);
-     *      }
+     *     String s = ...;
+     *     Conditions.notEmpty(s, "s must not be empty");
      * </pre></blockquote>
      *
-     * @param expr 参数检验表达式
+     * @param s the CharSequence to check
+     * @param msg the exception message to use if the assertion fails
+     * @see StringTinyUtils#isEmpty(CharSequence)
      */
-    public static void checkArgument(boolean expr) {
-        if (!expr) {
-            throw new IllegalArgumentException();
+    public static void notEmpty(CharSequence s, String msg) {
+        if(StringTinyUtils.isEmpty(s)) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Assert that a collection is not empty.
+     *
+     * <blockqupte><pre>
+     *     List<Object> l = ...;
+     *     Conditions.notEmpty(l, "l must not be empty");
+     * </pre></blockqupte>
+     *
+     * @param collection the collection to check
+     * @param msg the exception message to use if the assertion fails
+     * @param <T> the collection element type
+     */
+    public static <T> void notEmpty(Collection<T> collection, String msg) {
+        if(CollectionUtils.isEmpty(collection)) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Assert that an array is not empty.
+     *
+     * <blockqupte><pre>
+     *     int[] l = ...;
+     *     Conditions.notEmpty(l, "l must not be empty");
+     * </pre></blockqupte>
+     *
+     * @param array the array to check
+     * @param msg the exception message to use if the assertion fails
+     */
+    public static void notEmpty(Object[] array, String msg) {
+        if(CollectionUtils.isEmpty(array)) {
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -88,14 +123,14 @@ public class Conditions {
     /**
      * Assert that the given String contains valid text content; that is, it must not
      * be {@code null} and must contain at least one non-whitespace character.
-     * <pre class="code">Assert.hasText(name, "'name' must not be empty");</pre>
+     * <pre class="code">Conditions.hasText(name, "'name' must not be empty");</pre>
      * @param text the String to check
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the text does not contain valid text content
      * @see StringTinyUtils#isNotBlank(CharSequence)
      */
     public static void hasText(@Nullable String text, String message) {
-        if (!StringTinyUtils.isNotBlank(text)) {
+        if (StringTinyUtils.isBlank(text)) {
             throw new IllegalArgumentException(message);
         }
     }

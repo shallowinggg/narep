@@ -2,14 +2,12 @@ package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.lang.FieldInfo;
-import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.FileUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 import static com.shallowinggg.narep.core.lang.JLSConstants.*;
 
@@ -36,7 +34,7 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
+        Conditions.notEmpty(dependencies, "dependencies must not be empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
             builder.append(IMPORT).append(" ").append(codeGenerator.fullQualifiedName()).append(";")
                     .append(LINE_SEPARATOR);
@@ -44,7 +42,7 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildStaticImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(dependencies), "dependencies must not be null or empty");
+        Conditions.notEmpty(dependencies, "dependencies must not be empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
             builder.append(IMPORT_STATIC).append(codeGenerator.fullQualifiedName()).append(".*;")
                     .append(LINE_SEPARATOR);
@@ -52,12 +50,12 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildDefaultPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + LINE_SEPARATOR;
+        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
     public static String buildSubPackage(String basePackageName, String subPackageName) {
         return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
-                subPackageName + END_OF_STATEMENT + LINE_SEPARATOR;
+                subPackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
     public static String buildNecessaryFolders(String basePath) {
@@ -74,7 +72,7 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildFieldsByFieldInfos(List<FieldInfo> fields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
+        Conditions.notEmpty(fields, "fields must not be empty");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
         for (FieldInfo field : fields) {
             if (field.getComment() != null) {
@@ -85,14 +83,13 @@ public class CodeGeneratorHelper {
             if (field.getInitValue() != null) {
                 builder.append(" = ").append(field.getInitValue());
             }
-            builder.append(";\n");
+            builder.append(";\n\n");
         }
-        builder.append("\n");
         return builder.toString();
     }
 
     public static String buildGetterAndSetterMethods(List<FieldInfo> fields) {
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null");
+        Conditions.notEmpty(fields, "fields must not be empty");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_METHOD_LEN);
         for (FieldInfo field : fields) {
             String name = field.getName();
@@ -109,8 +106,8 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildGetterAndSetterMethods(StringBuilder builder, List<FieldInfo> fields) {
-        Conditions.checkArgument(builder != null, "builder must not be null");
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
+        Conditions.notNull(builder, "builder must not be null");
+        Conditions.notEmpty(fields, "fields must not be empty");
         for (FieldInfo field : fields) {
             String name = field.getName();
             String type = field.getType();
@@ -125,7 +122,7 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildGetterMethod(FieldInfo field) {
-        Objects.requireNonNull(field, "field must not be null");
+        Conditions.notNull(field, "field must not be null");
         String name = field.getName();
         String type = field.getType();
 
@@ -135,7 +132,7 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildSetterMethod(FieldInfo field) {
-        Objects.requireNonNull(field, "field must not be null");
+        Conditions.notNull(field, "field must not be null");
         String name = field.getName();
         String type = field.getType();
 
@@ -145,8 +142,8 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildGetterMethod(StringBuilder builder, FieldInfo field) {
-        Objects.requireNonNull(builder, "builder must not be null");
-        Objects.requireNonNull(field, "field must not be null");
+        Conditions.notNull(builder, "builder must not be null");
+        Conditions.notNull(field, "field must not be null");
 
         String name = field.getName();
         String type = field.getType();
@@ -156,8 +153,8 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildSetterMethod(StringBuilder builder, FieldInfo field) {
-        Objects.requireNonNull(builder, "builder must not be null");
-        Objects.requireNonNull(field, "field must not be null");
+        Conditions.notNull(builder, "builder must not be null");
+        Conditions.notNull(field, "field must not be null");
 
         String name = field.getName();
         String type = field.getType();
@@ -167,16 +164,16 @@ public class CodeGeneratorHelper {
     }
 
     public static void buildGetterMethods(StringBuilder builder, List<FieldInfo> fields) {
-        Objects.requireNonNull(builder, "builder must not be null");
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
+        Conditions.notNull(builder, "builder must not be null");
+        Conditions.notEmpty(fields, "fields must be null or empty");
         for (FieldInfo field : fields) {
             buildGetterMethod(builder, field);
         }
     }
 
     public static void buildSetterMethods(StringBuilder builder, List<FieldInfo> fields) {
-        Objects.requireNonNull(builder, "builder must not be null");
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must be null or empty");
+        Conditions.notNull(builder, "builder must not be null");
+        Conditions.notEmpty(fields, "fields must be null or empty");
         for (FieldInfo field : fields) {
             buildSetterMethod(builder, field);
         }
@@ -193,8 +190,8 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildToStringMethod(String className, List<FieldInfo> fields) {
-        Conditions.checkArgument(StringTinyUtils.isNotEmpty(className), "className must not be empty");
-        Conditions.checkArgument(CollectionUtils.isNotEmpty(fields), "fields must not be null or empty");
+        Conditions.notEmpty(className, "className must not be empty");
+        Conditions.notEmpty(fields, "fields must not be null or empty");
         StringBuilder builder = new StringBuilder(fields.size() * ASSUMED_FIELD_LEN);
         builder.append("    @Override\n" +
                 "    public String toString() {\n" +

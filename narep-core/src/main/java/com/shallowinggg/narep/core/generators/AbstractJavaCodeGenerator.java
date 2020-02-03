@@ -266,6 +266,10 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
 
     @Override
     public boolean resolveDependencies(DependencyResolver resolver) {
+        if(CollectionUtils.isEmpty(dependencyNames)) {
+            return true;
+        }
+
         List<JavaCodeGenerator> result = resolver.resolve(dependencyNames);
         if (CollectionUtils.isNotEmpty(result)) {
             this.dependencies = result;
