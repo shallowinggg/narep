@@ -33,11 +33,11 @@ public class FileRegionEncoderCodeGenerator extends ClassCodeGenerator {
     public String buildClassComment() {
         return "/**\n" +
                 " * <p>\n" +
-                " *     By default, file region are directly transferred to socket channel which is known as zero copy. In case we need\n" +
-                " *     to encrypt transmission, data being sent should go through the {@link SslHandler}. This encoder ensures this\n" +
-                " *     process.\n" +
+                " * By default, file region are directly transferred to socket channel which is known as zero copy. In case we need\n" +
+                " * to encrypt transmission, data being sent should go through the {@link SslHandler}. This encoder ensures this\n" +
+                " * process.\n" +
                 " * </p>\n" +
-                " */";
+                " */\n";
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FileRegionEncoderCodeGenerator extends ClassCodeGenerator {
                 "     * can be handled by this encoder.\n" +
                 "     *\n" +
                 "     * @param ctx the {@link io.netty.channel.ChannelHandlerContext} which this {@link\n" +
-                "     * io.netty.handler.codec.MessageToByteEncoder} belongs to\n" +
+                "     *            io.netty.handler.codec.MessageToByteEncoder} belongs to\n" +
                 "     * @param msg the message to encode\n" +
                 "     * @param out the {@link io.netty.buffer.ByteBuf} into which the encoded message will be written\n" +
                 "     * @throws Exception is thrown if an error occurs\n" +

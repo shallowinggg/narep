@@ -23,7 +23,7 @@ public class GeneratorConfig implements Config {
 
     @Override
     public void init() {
-        FileUtils.ensureDirOk(new File(this.storeLocation));
+        FileUtils.ensureDirOk(new File(getStoreLocation()));
         this.storeLocation = CodeGeneratorHelper.buildNecessaryFolders(this.storeLocation);
     }
 

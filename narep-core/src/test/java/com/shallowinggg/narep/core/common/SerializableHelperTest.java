@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,18 @@ public class SerializableHelperTest {
         List<ProtocolField> val = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
         Assert.assertEquals("[ProtocolField[name='remark', clazz=class java.lang.String, len=-1], " +
                 "ProtocolField[name='ext', clazz=class java.util.HashMap, len=-1]]", val.toString());
+
+        List<ProtocolField> origin = new ArrayList<>(3);
+        origin.add(new ProtocolField("a", int.class, 4));
+        origin.add(new ProtocolField("b", int.class, 4));
+        origin.add(new ProtocolField("c", int.class, 4));
+        Assert.assertEquals(0, SerializableHelper.compositeFields(origin).size());
+
+        origin = new ArrayList<>(3);
+        origin.add(new ProtocolField("a", String.class, -1));
+        origin.add(new ProtocolField("b", String.class, -1));
+        origin.add(new ProtocolField("c", String.class, -1));
+        Assert.assertEquals(3, SerializableHelper.compositeFields(origin).size());
     }
 
     @Test
@@ -38,7 +51,7 @@ public class SerializableHelperTest {
         List<ProtocolField> compositeFields = SerializableHelper.compositeFields(ConfigInfos.getInstance().protocolFields());
         StringBuilder builder = new StringBuilder(600);
         for(ProtocolField field : compositeFields) {
-            builder.append(SerializableHelper.buildCompositeField(field));
+            builder.append(SerializableHelper.buildCompositeFieldEncodeData(field));
         }
         Assert.assertEquals("        // String remark\n" +
                 "        byte[] remarkBytes = null;\n" +
@@ -65,14 +78,14 @@ public class SerializableHelperTest {
             builder.append(SerializableHelper.buildPutCompositeField(field));
         }
         Assert.assertEquals("        // String remark\n" +
-                "        if (remarkBytes != null ) {\n" +
+                "        if (remarkBytes != null) {\n" +
                 "            headerBuffer.putInt(remarkBytes.length);\n" +
                 "            headerBuffer.put(remarkBytes);\n" +
                 "        } else {\n" +
                 "            headerBuffer.putInt(0);\n" +
                 "        }\n" +
                 "        // HashMap ext\n" +
-                "        if (extBytes != null ) {\n" +
+                "        if (extBytes != null) {\n" +
                 "            headerBuffer.putInt(extBytes.length);\n" +
                 "            headerBuffer.put(extBytes);\n" +
                 "        } else {\n" +
@@ -87,11 +100,11 @@ public class SerializableHelperTest {
         for(ProtocolField field : primitiveFields) {
             builder.append(SerializableHelper.buildPutPrimitiveField(field));
         }
-        Assert.assertEquals("        // int code\n" +
+        Assert.assertEquals("        // int code [2 bytes]\n" +
                 "        headerBuffer.putShort((short) cmd.getCode());\n" +
-                "        // int flag\n" +
+                "        // int flag [1 bytes]\n" +
                 "        headerBuffer.put((byte) cmd.getFlag());\n" +
-                "        // int opaque\n" +
+                "        // int opaque [4 bytes]\n" +
                 "        headerBuffer.putInt(cmd.getOpaque());\n", builder.toString());
     }
 
@@ -102,12 +115,12 @@ public class SerializableHelperTest {
         for(ProtocolField field : primitiveFields) {
             builder.append(SerializableHelper.buildGetPrimitiveField(field));
         }
-        Assert.assertEquals("        // int code\n" +
-                "        cmd.setCode((headBuffer.getShort());\n" +
-                "        // int flag\n" +
-                "        cmd.setFlag((headBuffer.get());\n" +
-                "        // int opaque\n" +
-                "        cmd.setOpaque((headBuffer.getInt());\n", builder.toString());
+        Assert.assertEquals("        // int code [2 bytes]\n" +
+                "        cmd.setCode(headerBuffer.getShort());\n" +
+                "        // int flag [1 bytes]\n" +
+                "        cmd.setFlag(headerBuffer.get());\n" +
+                "        // int opaque [4 bytes]\n" +
+                "        cmd.setOpaque(headerBuffer.getInt());\n", builder.toString());
     }
 
     @Test
@@ -140,8 +153,8 @@ public class SerializableHelperTest {
                 "        return 2 // int code\n" +
                 "                + 1 // int flag\n" +
                 "                + 4 // int opaque\n" +
-                "                + 4 + composite[0] // String remark\n" +
-                "                + 4 + composite[1] // HashMap ext\n" +
+                "                + 4 + composites[0] // String remark\n" +
+                "                + 4 + composites[1] // HashMap ext\n" +
                 "                ;\n" +
                 "    }\n\n", SerializableHelper.buildCalcTotalLen(fields));
     }

@@ -28,8 +28,14 @@ public class NarepStarterTest {
     }
 
     @Test
-    public void test() {
+    public void testDefaultProtocol() {
         String[] args = new String[] { "-c", "test.xml"};
+        NarepStarter.main(args);
+    }
+
+    @Test
+    public void testCustomProtocol() {
+        String[] args = new String[] { "-c", "test-custom.xml"};
         NarepStarter.main(args);
     }
 

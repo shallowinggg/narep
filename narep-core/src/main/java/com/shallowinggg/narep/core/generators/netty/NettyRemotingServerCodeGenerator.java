@@ -402,7 +402,7 @@ public class NettyRemotingServerCodeGenerator extends ClassCodeGenerator {
             setModifier(PACKAGE);
 
             List<FieldInfo> fields = new ArrayList<>(2);
-            fields.add(new FieldInfo(PRIVATE_FINAL, "TlsMode", " tlsMode"));
+            fields.add(new FieldInfo(PRIVATE_FINAL, "TlsMode", "tlsMode"));
             fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "byte", "HANDSHAKE_MAGIC_CODE", "0x16"));
             setFields(fields);
         }

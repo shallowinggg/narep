@@ -4,6 +4,8 @@ import com.shallowinggg.narep.core.CodeGenerator;
 import com.shallowinggg.narep.core.common.*;
 import com.shallowinggg.narep.core.type.AnnotatedTypeMetadata;
 import com.shallowinggg.narep.core.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -11,9 +13,10 @@ import java.util.Set;
  * @author shallowinggg
  */
 public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGeneratorProvider {
+    private static final Logger LOG = LoggerFactory.getLogger(ClassPathGeneratorScanner.class);
     private static final String DEFAULT_PROFILER = "default";
 
-    private String profiler = DEFAULT_PROFILER;
+    private String profile = DEFAULT_PROFILER;
     private CodeGeneratorManager registry = CodeGeneratorManager.getInstance();
     private GeneratorNameGenerator generatorNameGenerator = AnnotationGeneratorNameGenerator.getInstance();
 
@@ -22,13 +25,13 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
         super(true);
     }
 
-    public ClassPathGeneratorScanner(String profiler) {
-        this(profiler, true);
+    public ClassPathGeneratorScanner(String profile) {
+        this(profile, true);
     }
 
-    public ClassPathGeneratorScanner(String profiler, boolean useDefaultFilters) {
-        Conditions.hasText(profiler, "profiler must not be null");
-        this.profiler = profiler;
+    public ClassPathGeneratorScanner(String profile, boolean useDefaultFilters) {
+        Conditions.hasText(profile, "profiler must not be null");
+        this.profile = profile;
 
         if (useDefaultFilters) {
             registerDefaultFilters();
@@ -47,6 +50,10 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
      */
     public void doScan(String... basePackages) {
         Conditions.notEmpty(basePackages, "At least one base package must be specified");
+
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("use profile: " + profile);
+        }
         for (String basePackage : basePackages) {
             Set<GeneratorDefinition> candidates = findCandidateComponents(basePackage);
             for (GeneratorDefinition candidate : candidates) {
@@ -65,7 +72,7 @@ public class ClassPathGeneratorScanner extends ClassPathScanningCandidateGenerat
 
     private boolean checkCandidate(GeneratorDefinition gd) {
         if (StringTinyUtils.isNotBlank(gd.getProfile())) {
-            return profiler.equals(gd.getProfile());
+            return profile.equals(gd.getProfile());
         }
         return true;
     }

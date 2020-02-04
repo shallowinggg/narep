@@ -1,5 +1,7 @@
 package com.shallowinggg.narep.core.lang;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -40,8 +42,16 @@ public class ProtocolField implements Comparable<ProtocolField> {
     }
 
     @Override
-    public int compareTo(ProtocolField o) {
-        return len - o.getLen();
+    public int compareTo(@NotNull ProtocolField o) {
+        if(getLen() == -1 && o.getLen() == -1) {
+            return 0;
+        } else if (getLen() != -1 && o.getLen() != -1) {
+            return 0;
+        } else if(getLen() != -1) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     public String getName() {

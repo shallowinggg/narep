@@ -57,7 +57,7 @@ public class NarepSerializableCodeGenerator extends ClassCodeGenerator {
         StringBuilder builder = new StringBuilder(3000);
         builder.append("    public static byte[] narepProtocolEncode(RemotingCommand cmd) {\n");
         for (ProtocolField compositeField : compositeFields) {
-            builder.append(SerializableHelper.buildCompositeField(compositeField));
+            builder.append(SerializableHelper.buildCompositeFieldEncodeData(compositeField));
         }
         List<String> lens = SerializableHelper.buildLocalVarLenNames(compositeFields);
         String values = lens.toString();

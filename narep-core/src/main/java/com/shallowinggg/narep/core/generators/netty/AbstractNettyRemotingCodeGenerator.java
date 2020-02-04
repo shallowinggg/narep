@@ -143,7 +143,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
                 "     * Constructor, specifying capacity of one-way and asynchronous semaphores.\n" +
                 "     *\n" +
                 "     * @param permitsOneway Number of permits for one-way requests.\n" +
-                "     * @param permitsAsync Number of permits for asynchronous requests.\n" +
+                "     * @param permitsAsync  Number of permits for asynchronous requests.\n" +
                 "     */\n" +
                 "    public AbstractNettyRemoting(final int permitsOneway, final int permitsAsync) {\n" +
                 "        this.semaphoreOneway = new Semaphore(permitsOneway, true);\n" +
@@ -208,7 +208,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
     private String doBeforeRpcHooks() {
         return "    protected void doBeforeRpcHooks(String addr, RemotingCommand request) {\n" +
                 "        if (rpcHooks.size() > 0) {\n" +
-                "            for (RPCHook rpcHook: rpcHooks) {\n" +
+                "            for (RPCHook rpcHook : rpcHooks) {\n" +
                 "                rpcHook.doBeforeRequest(addr, request);\n" +
                 "            }\n" +
                 "        }\n" +
@@ -218,7 +218,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
     private String doAfterRpcHooks() {
         return "    protected void doAfterRpcHooks(String addr, RemotingCommand request, RemotingCommand response) {\n" +
                 "        if (rpcHooks.size() > 0) {\n" +
-                "            for (RPCHook rpcHook: rpcHooks) {\n" +
+                "            for (RPCHook rpcHook : rpcHooks) {\n" +
                 "                rpcHook.doAfterResponse(addr, request, response);\n" +
                 "            }\n" +
                 "        }\n" +
@@ -538,6 +538,7 @@ public class AbstractNettyRemotingCodeGenerator extends ClassCodeGenerator {
     private String failFast() {
         return "    /**\n" +
                 "     * mark the request of the specified channel as fail and to invoke fail callback immediately\n" +
+                "     *\n" +
                 "     * @param channel the channel which is close already\n" +
                 "     */\n" +
                 "    protected void failFast(final Channel channel) {\n" +

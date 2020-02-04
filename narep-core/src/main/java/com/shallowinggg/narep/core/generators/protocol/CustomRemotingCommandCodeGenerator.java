@@ -21,7 +21,7 @@ import static com.shallowinggg.narep.core.lang.Modifier.*;
 public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
     private static final String CLASS_NAME = "RemotingCommand";
     private static final String SUB_PACKAGE = "protocol";
-    private static final List<String> DEPENDENCY_NAMES = Arrays.asList("RemotingHelper",
+    private static final List<String> DEPENDENCY_NAMES = Arrays.asList(
             "RemotingCommandException", "RemotingCommandType",
             "RemotingSerializable", "RemotingSysResponseCode", "SerializeType");
 
@@ -30,11 +30,9 @@ public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
         setDependencyNames(DEPENDENCY_NAMES);
 
         List<FieldInfo> commandFields = ConfigInfos.getInstance().commandFields();
-        List<FieldInfo> fields = new ArrayList<>(10 + commandFields.size());
+        List<FieldInfo> fields = new ArrayList<>(8 + commandFields.size());
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "String", "SERIALIZE_TYPE_PROPERTY", "\"remoting.serialize.type\""));
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "String", "SERIALIZE_TYPE_ENV", "\"REMOTING_SERIALIZE_TYPE\""));
-        fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "String", "REMOTING_VERSION_KEY", "\"remoting.remoting.version\""));
-        fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "Logger", "log", CodeGeneratorHelper.buildLoggerField(CLASS_NAME)));
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "int", "RPC_TYPE", "0"));
         fields.add(new FieldInfo(PRIVATE_STATIC_FINAL, "int", "RPC_ONEWAY", "1"));
         fields.add(new FieldInfo(PRIVATE_STATIC, "AtomicInteger", "requestId", "new AtomicInteger(0)"));
@@ -51,12 +49,9 @@ public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
         StringBuilder builder = new StringBuilder(1000);
         CodeGeneratorHelper.buildDependencyImports(builder, getDependencies());
         builder.append("import com.alibaba.fastjson.annotation.JSONField;\n" +
-                "import org.apache.logging.log4j.LogManager;\n" +
-                "import org.apache.logging.log4j.Logger;\n" +
                 "\n" +
                 "import java.nio.ByteBuffer;\n" +
                 "import java.util.HashMap;\n" +
-                "import java.util.Map;\n" +
                 "import java.util.concurrent.atomic.AtomicInteger;\n\n");
         return builder.toString();
     }
@@ -142,14 +137,12 @@ public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
                 "                resultJson.setSerializeTypeCurrentRPC(type);\n" +
                 "                return resultJson;\n" +
                 "            case NAREP:\n" +
-                "                RemotingCommand resultRMQ = NarepSerializable.narepProtocolDecode(headerData);\n" +
-                "                resultRMQ.setSerializeTypeCurrentRPC(type);\n" +
-                "                return resultRMQ;\n" +
+                "                RemotingCommand resultNarep = NarepSerializable.narepProtocolDecode(headerData);\n" +
+                "                resultNarep.setSerializeTypeCurrentRPC(type);\n" +
+                "                return resultNarep;\n" +
                 "            default:\n" +
-                "                break;\n" +
+                "                throw new UnsupportedOperationException(\"unsupported serializeType: \" + type);\n" +
                 "        }\n" +
-                "\n" +
-                "        return null;\n" +
                 "    }\n\n";
     }
 
@@ -233,7 +226,6 @@ public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
 
     private String headerEncode() {
         return "    private byte[] headerEncode() {\n" +
-                "        this.makeCustomHeaderToNet();\n" +
                 "        if (SerializeType.NAREP == serializeTypeCurrentRPC) {\n" +
                 "            return NarepSerializable.narepProtocolEncode(this);\n" +
                 "        } else {\n" +
@@ -288,7 +280,7 @@ public class CustomRemotingCommandCodeGenerator extends ClassCodeGenerator {
                 "        int bits = 1 << RPC_ONEWAY;\n" +
                 "        return (this.flag & bits) == bits;\n" +
                 "    }\n" +
-                "    \n" +
+                "\n" +
                 "    @JSONField(serialize = false)\n" +
                 "    public RemotingCommandType getType() {\n" +
                 "        if (this.isResponseType()) {\n" +

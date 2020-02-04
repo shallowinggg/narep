@@ -75,9 +75,9 @@ public class NettyLoggerCodeGenerator extends ClassCodeGenerator {
         @Override
         public String buildMethods() {
             return "    @Override\n" +
-                    "        protected io.netty.util.internal.logging.InternalLogger newInstance(String s) {\n" +
-                    "            return new NettyBridgeLogger(s);\n" +
-                    "        }\n";
+                    "    protected io.netty.util.internal.logging.InternalLogger newInstance(String s) {\n" +
+                    "        return new NettyBridgeLogger(s);\n" +
+                    "    }\n";
         }
     }
 
@@ -94,263 +94,263 @@ public class NettyLoggerCodeGenerator extends ClassCodeGenerator {
         @Override
         public String buildMethods() {
             return "    public NettyBridgeLogger(String name) {\n" +
-                    "            logger = LogManager.getLogger(name);\n" +
-                    "        }\n" +
+                    "        logger = LogManager.getLogger(name);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public String name() {\n" +
-                    "            return logger.getName();\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public String name() {\n" +
+                    "        return logger.getName();\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public boolean isEnabled(InternalLogLevel internalLogLevel) {\n" +
-                    "            return nettyLogLevel.ordinal() <= internalLogLevel.ordinal();\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public boolean isEnabled(InternalLogLevel internalLogLevel) {\n" +
+                    "        return nettyLogLevel.ordinal() <= internalLogLevel.ordinal();\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void log(InternalLogLevel internalLogLevel, String s) {\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
-                    "                logger.debug(s);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
-                    "                logger.info(s);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
-                    "                logger.info(s);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
-                    "                logger.warn(s);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
-                    "                logger.error(s);\n" +
-                    "            }\n" +
+                    "    @Override\n" +
+                    "    public void log(InternalLogLevel internalLogLevel, String s) {\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
+                    "            logger.debug(s);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void log(InternalLogLevel internalLogLevel, String s, Object o) {\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
-                    "                logger.debug(s, o);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
-                    "                logger.info(s, o);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
-                    "                logger.info(s, o);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
-                    "                logger.warn(s, o);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
-                    "                logger.error(s, o);\n" +
-                    "            }\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
+                    "            logger.info(s);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void log(InternalLogLevel internalLogLevel, String s, Object o, Object o1) {\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
-                    "                logger.debug(s, o, o1);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
-                    "                logger.info(s, o, o1);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
-                    "                logger.info(s, o, o1);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
-                    "                logger.warn(s, o, o1);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
-                    "                logger.error(s, o, o1);\n" +
-                    "            }\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
+                    "            logger.info(s);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void log(InternalLogLevel internalLogLevel, String s, Object... objects) {\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
-                    "                logger.debug(s, objects);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
-                    "                logger.info(s, objects);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
-                    "                logger.info(s, objects);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
-                    "                logger.warn(s, objects);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
-                    "                logger.error(s, objects);\n" +
-                    "            }\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
+                    "            logger.warn(s);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void log(InternalLogLevel internalLogLevel, String s, Throwable throwable) {\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
-                    "                logger.debug(s, throwable);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
-                    "                logger.info(s, throwable);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
-                    "                logger.info(s, throwable);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
-                    "                logger.warn(s, throwable);\n" +
-                    "            }\n" +
-                    "            if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
-                    "                logger.error(s, throwable);\n" +
-                    "            }\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
+                    "            logger.error(s);\n" +
                     "        }\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public boolean isTraceEnabled() {\n" +
-                    "            return isEnabled(InternalLogLevel.TRACE);\n" +
+                    "    @Override\n" +
+                    "    public void log(InternalLogLevel internalLogLevel, String s, Object o) {\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
+                    "            logger.debug(s, o);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void trace(String var1) {\n" +
-                    "            logger.info(var1);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
+                    "            logger.info(s, o);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void trace(String var1, Object var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
+                    "            logger.info(s, o);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void trace(String var1, Object var2, Object var3) {\n" +
-                    "            logger.info(var1, var2, var3);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
+                    "            logger.warn(s, o);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void trace(String var1, Object... var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
+                    "            logger.error(s, o);\n" +
                     "        }\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void trace(String var1, Throwable var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "    @Override\n" +
+                    "    public void log(InternalLogLevel internalLogLevel, String s, Object o, Object o1) {\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
+                    "            logger.debug(s, o, o1);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public boolean isDebugEnabled() {\n" +
-                    "            return isEnabled(InternalLogLevel.DEBUG);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
+                    "            logger.info(s, o, o1);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void debug(String var1) {\n" +
-                    "            logger.debug(var1);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
+                    "            logger.info(s, o, o1);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void debug(String var1, Object var2) {\n" +
-                    "            logger.debug(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
+                    "            logger.warn(s, o, o1);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void debug(String var1, Object var2, Object var3) {\n" +
-                    "            logger.debug(var1, var2, var3);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
+                    "            logger.error(s, o, o1);\n" +
                     "        }\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void debug(String var1, Object... var2) {\n" +
-                    "            logger.debug(var1, var2);\n" +
+                    "    @Override\n" +
+                    "    public void log(InternalLogLevel internalLogLevel, String s, Object... objects) {\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
+                    "            logger.debug(s, objects);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void debug(String var1, Throwable var2) {\n" +
-                    "            logger.debug(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
+                    "            logger.info(s, objects);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public boolean isInfoEnabled() {\n" +
-                    "            return isEnabled(InternalLogLevel.INFO);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
+                    "            logger.info(s, objects);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void info(String var1) {\n" +
-                    "            logger.info(var1);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
+                    "            logger.warn(s, objects);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void info(String var1, Object var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
+                    "            logger.error(s, objects);\n" +
                     "        }\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void info(String var1, Object var2, Object var3) {\n" +
-                    "            logger.info(var1, var2, var3);\n" +
+                    "    @Override\n" +
+                    "    public void log(InternalLogLevel internalLogLevel, String s, Throwable throwable) {\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.DEBUG)) {\n" +
+                    "            logger.debug(s, throwable);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void info(String var1, Object... var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.TRACE)) {\n" +
+                    "            logger.info(s, throwable);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void info(String var1, Throwable var2) {\n" +
-                    "            logger.info(var1, var2);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.INFO)) {\n" +
+                    "            logger.info(s, throwable);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public boolean isWarnEnabled() {\n" +
-                    "            return isEnabled(InternalLogLevel.WARN);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.WARN)) {\n" +
+                    "            logger.warn(s, throwable);\n" +
                     "        }\n" +
-                    "\n" +
-                    "        @Override\n" +
-                    "        public void warn(String var1) {\n" +
-                    "            logger.warn(var1);\n" +
+                    "        if (internalLogLevel.equals(InternalLogLevel.ERROR)) {\n" +
+                    "            logger.error(s, throwable);\n" +
                     "        }\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void warn(String var1, Object var2) {\n" +
-                    "            logger.warn(var1, var2);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public boolean isTraceEnabled() {\n" +
+                    "        return isEnabled(InternalLogLevel.TRACE);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void warn(String var1, Object... var2) {\n" +
-                    "            logger.warn(var1, var2);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void trace(String var1) {\n" +
+                    "        logger.info(var1);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void warn(String var1, Object var2, Object var3) {\n" +
-                    "            logger.warn(var1, var2, var3);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void trace(String var1, Object var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void warn(String var1, Throwable var2) {\n" +
-                    "            logger.warn(var1, var2);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void trace(String var1, Object var2, Object var3) {\n" +
+                    "        logger.info(var1, var2, var3);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public boolean isErrorEnabled() {\n" +
-                    "            return isEnabled(InternalLogLevel.ERROR);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void trace(String var1, Object... var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void error(String var1) {\n" +
-                    "            logger.error(var1);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void trace(String var1, Throwable var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void error(String var1, Object var2) {\n" +
-                    "            logger.error(var1, var2);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public boolean isDebugEnabled() {\n" +
+                    "        return isEnabled(InternalLogLevel.DEBUG);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void error(String var1, Object var2, Object var3) {\n" +
-                    "            logger.error(var1, var2, var3);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void debug(String var1) {\n" +
+                    "        logger.debug(var1);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void error(String var1, Object... var2) {\n" +
-                    "            logger.error(var1, var2);\n" +
-                    "        }\n" +
+                    "    @Override\n" +
+                    "    public void debug(String var1, Object var2) {\n" +
+                    "        logger.debug(var1, var2);\n" +
+                    "    }\n" +
                     "\n" +
-                    "        @Override\n" +
-                    "        public void error(String var1, Throwable var2) {\n" +
-                    "            logger.error(var1, var2);\n" +
-                    "        }\n\n";
+                    "    @Override\n" +
+                    "    public void debug(String var1, Object var2, Object var3) {\n" +
+                    "        logger.debug(var1, var2, var3);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void debug(String var1, Object... var2) {\n" +
+                    "        logger.debug(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void debug(String var1, Throwable var2) {\n" +
+                    "        logger.debug(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public boolean isInfoEnabled() {\n" +
+                    "        return isEnabled(InternalLogLevel.INFO);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void info(String var1) {\n" +
+                    "        logger.info(var1);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void info(String var1, Object var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void info(String var1, Object var2, Object var3) {\n" +
+                    "        logger.info(var1, var2, var3);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void info(String var1, Object... var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void info(String var1, Throwable var2) {\n" +
+                    "        logger.info(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public boolean isWarnEnabled() {\n" +
+                    "        return isEnabled(InternalLogLevel.WARN);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void warn(String var1) {\n" +
+                    "        logger.warn(var1);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void warn(String var1, Object var2) {\n" +
+                    "        logger.warn(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void warn(String var1, Object... var2) {\n" +
+                    "        logger.warn(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void warn(String var1, Object var2, Object var3) {\n" +
+                    "        logger.warn(var1, var2, var3);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void warn(String var1, Throwable var2) {\n" +
+                    "        logger.warn(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public boolean isErrorEnabled() {\n" +
+                    "        return isEnabled(InternalLogLevel.ERROR);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void error(String var1) {\n" +
+                    "        logger.error(var1);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void error(String var1, Object var2) {\n" +
+                    "        logger.error(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void error(String var1, Object var2, Object var3) {\n" +
+                    "        logger.error(var1, var2, var3);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void error(String var1, Object... var2) {\n" +
+                    "        logger.error(var1, var2);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @Override\n" +
+                    "    public void error(String var1, Throwable var2) {\n" +
+                    "        logger.error(var1, var2);\n" +
+                    "    }\n\n";
         }
     }
 }

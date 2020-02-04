@@ -58,6 +58,7 @@ public class TlsHelperCodeGenerator extends ClassCodeGenerator {
                 "import java.security.cert.CertificateException;\n" +
                 "import java.util.Properties;\n\n");
         CodeGeneratorHelper.buildStaticImports(builder, getDependencies().subList(1, 2));
+        builder.append("\n");
 
         return builder.toString();
     }

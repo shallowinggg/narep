@@ -4,6 +4,7 @@ import com.shallowinggg.narep.core.lang.ProtocolField;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -22,38 +23,76 @@ public class SerializableHelper {
     private static final int INT_2 = 2;
 
 
+    /**
+     * Search primitive fields from given fields and return an
+     * unmodified copy.
+     * <p>
+     * note: the given fields should have been sorted by its
+     * natural comparison method or {@link ConfigInfos#DEFAULT_PROTOCOL_SORT}.
+     *
+     * @param allFields field list
+     * @return primitive fields
+     */
     public static List<ProtocolField> primitiveFields(List<ProtocolField> allFields) {
         List<ProtocolField> compositeFields = compositeFields(allFields);
-        return allFields.subList(0, allFields.size() - compositeFields.size());
+        return Collections.unmodifiableList(allFields.subList(0, allFields.size() - compositeFields.size()));
     }
 
+    /**
+     * Search composite fields from given fields and return an
+     * unmodified copy.
+     * <p>
+     * note: the given fields should have been sorted by its
+     * natural comparison method or {@link ConfigInfos#DEFAULT_PROTOCOL_SORT}.
+     *
+     * @param allFields field list
+     * @return composite fields
+     */
     public static List<ProtocolField> compositeFields(List<ProtocolField> allFields) {
         Conditions.notEmpty(allFields, "allFields must not be empty");
+
         int start = 0;
-        int end = allFields.size();
-        int middle = start + (end - start) >> 1;
+        int end = allFields.size() - 1;
+        if (allFields.get(start).getLen() == -1) {
+            return allFields;
+        }
+        if (allFields.get(end).getLen() != -1) {
+            return Collections.emptyList();
+        }
+
+        int middle;
         int pos = 0;
-        while (start < end) {
-            if (allFields.get(middle).getLen() == -1) {
-                end = middle;
-                middle = start + (end - start) >> 1;
-            } else {
-                if (middle + 1 < end && allFields.get(middle + 1).getLen() == -1) {
+        while (start <= end) {
+            middle = start + ((end - start) >> 1);
+            // primitive fields range
+            if (allFields.get(middle).getLen() != -1) {
+                if (middle < end && allFields.get(middle + 1).getLen() == -1) {
                     pos = middle + 1;
                     break;
-                } else {
-                    start = middle;
-                    middle = start + (end - start) >> 1;
                 }
+                start = middle + 1;
+            } else {
+                if (middle > 0 && allFields.get(middle - 1).getLen() != -1) {
+                    pos = middle;
+                    break;
+                }
+                end = middle - 1;
             }
         }
 
         if (pos != 0) {
-            return allFields.subList(pos, allFields.size());
+            return Collections.unmodifiableList(allFields.subList(pos, allFields.size()));
         }
         return Collections.emptyList();
     }
 
+    /**
+     * Build local variables name used by serializable encode method with composite
+     * field's name, and default format is #name + "Len".
+     *
+     * @param compositeFields composite field list
+     * @return local variables name
+     */
     public static List<String> buildLocalVarLenNames(List<ProtocolField> compositeFields) {
         Conditions.notEmpty(compositeFields, "compositeFields must not be empty");
         List<String> names = new ArrayList<>(compositeFields.size());
@@ -64,7 +103,42 @@ public class SerializableHelper {
         return names;
     }
 
-    public static String buildCompositeField(ProtocolField field) {
+    /**
+     * Build composite field encoding data and construct it
+     * into java code.
+     * <p>
+     * In this method, field with type {@link String} will
+     * build bytes stream with {@link String#getBytes(Charset)},
+     * type {@link java.util.HashMap} will use {@literal mapSerialize}
+     * method in class NarepSerializable.
+     * e.g.
+     * <blockquote><pre>
+     *     // String remark
+     *     byte[] remarkBytes = null;
+     *     int remarkLen = 0;
+     *     if (cmd.getRemark() != null && cmd.getRemark().length() > 0) {
+     *         remarkBytes = cmd.getRemark().getBytes(CHARSET_UTF8);
+     *         remarkLen = remarkBytes.length;
+     *     }
+     *
+     *     // HashMap ext;
+     *     byte[] extBytes = null;
+     *     int extLen = 0;
+     *     if (cmd.getExt() != null && !cmd.getExt().isEmpty()) {
+     *         extBytes = mapSerialize(cmd.getExt());
+     *         extLen = extBytes.length;
+     *     }
+     * </pre></blockquote>
+     * <p>
+     * <p>
+     * Also, some local variables name are consistent with names
+     * built by {@link #buildLocalVarLenNames(List)}.
+     *
+     * @param field composite field
+     * @return java code
+     * @see #buildLocalVarLenNames(List)
+     */
+    public static String buildCompositeFieldEncodeData(ProtocolField field) {
         Conditions.checkArgument(field != null && field.getLen() == -1, "field must be nonnull and composite");
         StringBuilder builder = new StringBuilder(500);
         String name = field.getName();
@@ -85,13 +159,36 @@ public class SerializableHelper {
         return builder.toString();
     }
 
+    /**
+     * Build java code block for putting composite field's encoding data into
+     * ByteBuffer and return for method NarepSerializable#narepProtocolEncode()
+     * use.
+     * <p>
+     * e.g.
+     * <blockquote><pre>
+     *     // String remark
+     *     if (remarkBytes != null) {
+     *         headerBuffer.putInt(remarkBytes.length);
+     *         headerBuffer.put(remarkBytes);
+     *     } else {
+     *         headerBuffer.putInt(0);
+     *     }
+     * </pre></blockquote>
+     * <p>
+     * Local variables used by this code block are consistent with names
+     * used by {@link #buildCompositeFieldEncodeData(ProtocolField)}.
+     *
+     * @param field composite field
+     * @return java code
+     * @see #buildCompositeFieldEncodeData(ProtocolField)
+     */
     public static String buildPutCompositeField(ProtocolField field) {
         Conditions.checkArgument(field != null && field.getLen() == -1, "field must be nonnull and composite");
         StringBuilder builder = new StringBuilder(300);
         String name = field.getName();
         String bytesName = name + "Bytes";
         builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name).append("\n");
-        builder.append("        if (").append(bytesName).append(" != null ) {\n");
+        builder.append("        if (").append(bytesName).append(" != null) {\n");
         builder.append("            headerBuffer.putInt(").append(bytesName).append(".length);\n");
         builder.append("            headerBuffer.put(").append(bytesName).append(");\n");
         builder.append("        } else {\n");
@@ -100,26 +197,83 @@ public class SerializableHelper {
         return builder.toString();
     }
 
+    /**
+     * Build java code block for putting primitive field's encoding data into
+     * ByteBuffer and return for method NarepSerializable#narepProtocolEncode()
+     * use.
+     * <p>
+     * e.g.
+     * <blockquote><pre>
+     *     // int code [2 bytes]
+     *     headerBuffer.putShort((short) cmd.getCode());
+     * </pre></blockquote>
+     * <p>
+     * Among the above example, "headerBuffer" is local variable and "cmd"
+     * is method parameter.
+     *
+     * @param field primitive byte
+     * @return java code
+     */
     public static String buildPutPrimitiveField(ProtocolField field) {
         Conditions.checkArgument(field != null && field.getLen() != -1, "field must be nonnull and primitive");
         StringBuilder builder = new StringBuilder(150);
         String name = field.getName();
         String getterMethodName = "cmd.get" + StringTinyUtils.firstCharToUpperCase(name) + "()";
-        builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name).append("\n");
+        builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name)
+                .append(" [").append(field.getLen()).append(" bytes]").append("\n");
         builder.append(put(field, getterMethodName));
         return builder.toString();
     }
 
+    /**
+     * Build java code block for getting primitive field's encoding data from
+     * ByteBuffer and return for method NarepSerializable#narepProtocolDecode()
+     * use.
+     * <p>
+     * e.g.
+     * <blockquote><pre>
+     *     // int code [2 bytes]
+     *     cmd.setCode(headerBuffer.getShort());
+     * </pre></blockquote>
+     * <p>
+     * Among the above example, "headerBuffer" and "cmd" all are local variables.
+     *
+     * @param field primitive byte
+     * @return java code
+     */
     public static String buildGetPrimitiveField(ProtocolField field) {
         Conditions.checkArgument(field != null && field.getLen() != -1, "field must be nonnull and primitive");
         StringBuilder builder = new StringBuilder(150);
         String name = field.getName();
         String setterMethodName = "cmd.set" + StringTinyUtils.firstCharToUpperCase(name);
-        builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name).append("\n");
+        builder.append("        // ").append(field.getClazz().getSimpleName()).append(" ").append(name)
+                .append(" [").append(field.getLen()).append(" bytes]").append("\n");
         builder.append(get(field, setterMethodName));
         return builder.toString();
     }
 
+    /**
+     * Build java code block for getting composite field's encoding data from
+     * ByteBuffer and return for method NarepSerializable#narepProtocolDecode()
+     * use.
+     * <p>
+     * e.g.
+     * <blockquote><pre>
+     *     // String remark
+     *     int remarkLength = headerBuffer.getInt();
+     *     if (remarkLength > 0) {
+     *         byte[] remarkContent = new byte[remarkLength];
+     *         headerBuffer.get(remarkContent);
+     *         cmd.setRemark(new String(remarkContent, CHARSET_UTF8));
+     *     }
+     * </pre></blockquote>
+     * <p>
+     * Among the above example, "headerBuffer" and "cmd" all are local variables.
+     *
+     * @param field composite field
+     * @return java code
+     * @see #buildCompositeFieldEncodeData(ProtocolField)
+     */
     public static String buildGetCompositeField(ProtocolField field) {
         Conditions.checkArgument(field != null && field.getLen() == -1, "field must be nonnull and composite");
         StringBuilder builder = new StringBuilder(150);
@@ -139,6 +293,22 @@ public class SerializableHelper {
         return builder.toString();
     }
 
+    /**
+     * Build java method calTotalLen(int[]) and return for method
+     * NarepSerializable#narepProtocolEncode() use.
+     * <p>
+     * This method is used to calculate the length of the header frame
+     * sent by Netty. Primitive field occupy {@link ProtocolField#getLen()}
+     * bytes, and composite field occupy "4 + composites[i]" bytes.
+     * 4 is used to store data length, and composites[i] is actual length.
+     * <p>
+     * e.g.
+     * a string field s, store 10 bytes data. The frame length it occupies
+     * is 14.
+     *
+     * @param fields all protocol fields
+     * @return java method code block
+     */
     public static String buildCalcTotalLen(List<ProtocolField> fields) {
         Conditions.notEmpty(fields, "fields must not be empty");
         StringBuilder builder = new StringBuilder(1000);

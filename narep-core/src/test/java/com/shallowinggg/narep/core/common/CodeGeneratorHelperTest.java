@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.shallowinggg.narep.core.lang.JLSConstants.LINE_SEPARATOR;
+import static com.shallowinggg.narep.core.lang.JLSConstants.DOUBLE_LINE_SEPARATOR;
 
 public class CodeGeneratorHelperTest {
 
@@ -34,10 +34,10 @@ public class CodeGeneratorHelperTest {
     @Test
     public void testBuildPackage() {
         String val = CodeGeneratorHelper.buildDefaultPackage("com.example");
-        Assert.assertEquals("package com.example;" + LINE_SEPARATOR, val);
+        Assert.assertEquals("package com.example;" + DOUBLE_LINE_SEPARATOR, val);
 
         val = CodeGeneratorHelper.buildSubPackage("com.example", "common");
-        Assert.assertEquals("package com.example.common;" + LINE_SEPARATOR, val);
+        Assert.assertEquals("package com.example.common;" + DOUBLE_LINE_SEPARATOR, val);
     }
 
     @Test

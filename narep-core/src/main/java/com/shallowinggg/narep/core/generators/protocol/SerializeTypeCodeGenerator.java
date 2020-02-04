@@ -20,7 +20,7 @@ public class SerializeTypeCodeGenerator extends EnumCodeGenerator {
         return "    JSON((byte) 0),\n" +
                 "    NAREP((byte) 1);\n" +
                 "\n" +
-                "    private byte code;\n";
+                "    private byte code;\n\n";
     }
 
     @Override

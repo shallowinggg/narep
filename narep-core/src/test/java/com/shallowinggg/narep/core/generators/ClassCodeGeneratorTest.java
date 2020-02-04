@@ -74,6 +74,7 @@ public class ClassCodeGeneratorTest {
                 " */\n" +
                 "public class App {\n" +
                 "    private String name;\n" +
+                "\n" +
                 "    private final String constant = \"\";\n" +
                 "\n" +
                 "    public void setName(String name) {\n" +
@@ -152,6 +153,7 @@ public class ClassCodeGeneratorTest {
                 JavaCodeGenerator.END_OF_CLASS;
         Assert.assertEquals("package com.example.remoting.common;\n" +
                 "\n" +
+                "\n" +
                 "/**\n" +
                 " * For server, three SSL modes are supported: disabled, permissive and enforcing.\n" +
                 " * <ol>\n" +
@@ -224,6 +226,7 @@ public class ClassCodeGeneratorTest {
                 JavaCodeGenerator.END_OF_CLASS;
 
         Assert.assertEquals("package com.example.remoting;\n" +
+                "\n" +
                 "\n" +
                 "/**\n" +
                 " * @author auto generate\n" +

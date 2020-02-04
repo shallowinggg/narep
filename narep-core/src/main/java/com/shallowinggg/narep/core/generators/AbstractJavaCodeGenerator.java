@@ -243,6 +243,7 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
                         inner.buildInnerClass() +
                         JavaCodeGenerator.END_OF_CLASS;
                 Stream.of(content.split("\n")).forEach(s -> builder.append(indent).append(s).append("\n"));
+                builder.append("\n");
             }
             return builder.toString();
         }
