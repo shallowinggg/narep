@@ -1,15 +1,10 @@
 package com.shallowinggg.narep.core.io;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Strategy interface for loading resources (e.. class path or file system
- * resources). An {@link org.springframework.context.ApplicationContext}
- * is required to provide this functionality, plus extended
- * {@link org.springframework.core.io.support.ResourcePatternResolver} support.
- *
- * <p>{@link DefaultResourceLoader} is a standalone implementation that is
- * usable outside an ApplicationContext, also used by {@link ResourceEditor}.
+ * resources).
  *
  * <p>Bean properties of type Resource and Resource array can be populated
  * from Strings when running in an ApplicationContext, using the particular

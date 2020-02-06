@@ -16,7 +16,7 @@
 
 package com.shallowinggg.narep.core.annotation;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;

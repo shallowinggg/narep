@@ -4,7 +4,7 @@ import com.shallowinggg.narep.core.annotation.MergedAnnotations;
 import com.shallowinggg.narep.core.asm.Opcodes;
 import com.shallowinggg.narep.core.type.AnnotationMetadata;
 import com.shallowinggg.narep.core.type.MethodMetadata;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -121,12 +121,12 @@ final class SimpleAnnotationMetadata implements AnnotationMetadata {
     @Override
     public Set<MethodMetadata> getAnnotatedMethods(String annotationName) {
         Set<MethodMetadata> annotatedMethods = null;
-        for (int i = 0; i < this.annotatedMethods.length; i++) {
-            if (this.annotatedMethods[i].isAnnotated(annotationName)) {
+        for (MethodMetadata annotatedMethod : this.annotatedMethods) {
+            if (annotatedMethod.isAnnotated(annotationName)) {
                 if (annotatedMethods == null) {
                     annotatedMethods = new LinkedHashSet<>(4);
                 }
-                annotatedMethods.add(this.annotatedMethods[i]);
+                annotatedMethods.add(annotatedMethod);
             }
         }
         return annotatedMethods != null ? annotatedMethods : Collections.emptySet();

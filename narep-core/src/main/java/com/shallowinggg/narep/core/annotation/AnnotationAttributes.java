@@ -19,7 +19,7 @@ package com.shallowinggg.narep.core.annotation;
 import com.shallowinggg.narep.core.type.AnnotationMetadata;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -110,7 +110,7 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	 * {@code AnnotationAttributes} instance; never {@code null}
 	 * @since 4.2
 	 */
-	public AnnotationAttributes(Class<? extends Annotation> annotationType) {
+	public AnnotationAttributes(@Nullable Class<? extends Annotation> annotationType) {
 		Conditions.notNull(annotationType, "'annotationType' must not be null");
 		this.annotationType = annotationType;
 		this.displayName = annotationType.getName();
@@ -125,7 +125,7 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	 * @param validated if the attributes are considered already validated
 	 * @since 5.2
 	 */
-	AnnotationAttributes(Class<? extends Annotation> annotationType, boolean validated) {
+	AnnotationAttributes(@Nullable Class<? extends Annotation> annotationType, boolean validated) {
 		Conditions.notNull(annotationType, "'annotationType' must not be null");
 		this.annotationType = annotationType;
 		this.displayName = annotationType.getName();

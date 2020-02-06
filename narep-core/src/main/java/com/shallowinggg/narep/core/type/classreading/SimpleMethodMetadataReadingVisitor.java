@@ -6,7 +6,7 @@ import com.shallowinggg.narep.core.asm.AnnotationVisitor;
 import com.shallowinggg.narep.core.asm.MethodVisitor;
 import com.shallowinggg.narep.core.asm.SpringAsmInfo;
 import com.shallowinggg.narep.core.asm.Type;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

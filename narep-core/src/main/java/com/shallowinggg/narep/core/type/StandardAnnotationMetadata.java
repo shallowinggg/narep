@@ -4,7 +4,7 @@ import com.shallowinggg.narep.core.annotation.*;
 import com.shallowinggg.narep.core.annotation.MergedAnnotations.SearchStrategy;
 import com.shallowinggg.narep.core.util.MultiValueMap;
 import com.shallowinggg.narep.core.util.ReflectionUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

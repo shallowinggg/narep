@@ -1,7 +1,7 @@
 package com.shallowinggg.narep.core.type;
 
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;

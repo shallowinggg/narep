@@ -3,7 +3,7 @@ package com.shallowinggg.narep.core.type;
 import com.shallowinggg.narep.core.annotation.*;
 import com.shallowinggg.narep.core.annotation.MergedAnnotation.Adapt;
 import com.shallowinggg.narep.core.util.MultiValueMap;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;

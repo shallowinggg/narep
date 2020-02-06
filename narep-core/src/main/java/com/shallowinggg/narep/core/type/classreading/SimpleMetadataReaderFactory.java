@@ -5,7 +5,7 @@ import com.shallowinggg.narep.core.io.DefaultResourceLoader;
 import com.shallowinggg.narep.core.io.Resource;
 import com.shallowinggg.narep.core.io.ResourceLoader;
 import com.shallowinggg.narep.core.util.ClassUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

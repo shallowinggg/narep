@@ -4,7 +4,7 @@ import com.shallowinggg.narep.core.util.ClassUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.ResourceUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
