@@ -195,9 +195,9 @@ public abstract class AbstractJavaCodeGenerator implements JavaCodeGenerator {
     public String buildPackage() {
         String basePackage = ConfigInfos.getInstance().basePackage();
         if (StringTinyUtils.isEmpty(subPackageName)) {
-            return CodeGeneratorHelper.buildDefaultPackage(basePackage);
+            return CodeGeneratorHelper.buildPackageStatement(basePackage);
         } else {
-            return CodeGeneratorHelper.buildSubPackage(basePackage, subPackageName);
+            return CodeGeneratorHelper.buildPackageStatement(basePackage, subPackageName);
         }
     }
 

@@ -33,10 +33,10 @@ public class CodeGeneratorHelperTest {
 
     @Test
     public void testBuildPackage() {
-        String val = CodeGeneratorHelper.buildDefaultPackage("com.example");
+        String val = CodeGeneratorHelper.buildPackageStatement("com.example");
         Assert.assertEquals("package com.example;" + DOUBLE_LINE_SEPARATOR, val);
 
-        val = CodeGeneratorHelper.buildSubPackage("com.example", "common");
+        val = CodeGeneratorHelper.buildPackageStatement("com.example", "common");
         Assert.assertEquals("package com.example.common;" + DOUBLE_LINE_SEPARATOR, val);
     }
 

@@ -20,20 +20,60 @@ public class CodeGeneratorHelper {
     private static final int ASSUMED_FIELD_LEN = 50;
     private static final int ASSUMED_METHOD_LEN = 300;
 
+    /**
+     * Return full qualified java class name.
+     *
+     * @param basePackageName package name
+     * @param className       class name
+     * @return full qualified class name
+     * @see #buildFullQualifiedName(String, String, String)
+     */
     public static String buildFullQualifiedName(String basePackageName, String className) {
+        Conditions.hasText(basePackageName, "basePackageName must has text");
+        Conditions.hasText(className, "className must has text");
         return basePackageName + PACKAGE_DELIMITER + className;
     }
 
+    /**
+     * Return full qualified java class name.
+     *
+     * @param basePackageName base package name
+     * @param subPackageName  sub package name
+     * @param className       class name
+     * @return full qualified class name
+     */
     public static String buildFullQualifiedName(String basePackageName, String subPackageName, String className) {
+        Conditions.hasText(basePackageName, "basePackageName must has text");
+        Conditions.hasText(subPackageName, "subPackageName must has text");
+        Conditions.hasText(className, "className must has text");
         return basePackageName + PACKAGE_DELIMITER + subPackageName +
                 PACKAGE_DELIMITER + className;
     }
 
+    /**
+     * Return full qualified java inner class name.
+     *
+     * @param outer outer class name
+     * @param name  inner class name
+     * @return full qualified java inner class name
+     */
     public static String buildInnerClassFullQualifiedName(String outer, String name) {
+        Conditions.hasText(outer, "outer must has text");
+        Conditions.hasText(name, "name must has text");
         return outer + INNER_CLASS_SEPARATOR + name;
     }
 
+    /**
+     * Concat import statements for inner dependencies with StringBuilder.
+     * <p>
+     * As the base package name is dynamic, inner dependency classes's full
+     * qualified name is dynamic too.
+     *
+     * @param builder      StringBuilder to concat
+     * @param dependencies inner dependencies
+     */
     public static void buildDependencyImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
+        Conditions.notNull(builder, "builder must not be null");
         Conditions.notEmpty(dependencies, "dependencies must not be empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
             builder.append(IMPORT).append(" ").append(codeGenerator.fullQualifiedName()).append(";")
@@ -41,7 +81,14 @@ public class CodeGeneratorHelper {
         }
     }
 
+    /**
+     * Concat static import statements for inner dependencies with StringBuilder.
+     *
+     * @param builder      StringBuilder to concat
+     * @param dependencies inner dependencies
+     */
     public static void buildStaticImports(StringBuilder builder, List<JavaCodeGenerator> dependencies) {
+        Conditions.notNull(builder, "builder must not be null");
         Conditions.notEmpty(dependencies, "dependencies must not be empty");
         for (JavaCodeGenerator codeGenerator : dependencies) {
             builder.append(IMPORT_STATIC).append(codeGenerator.fullQualifiedName()).append(".*;")
@@ -49,16 +96,48 @@ public class CodeGeneratorHelper {
         }
     }
 
-    public static String buildDefaultPackage(String basePackageName) {
-        return PACKAGE + " " + basePackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
+    /**
+     * Return package statement for class.
+     * e.g. <code>package com.example.remoting;</code>
+     *
+     * @param packageName package to build
+     * @return package statement
+     * @see #buildPackageStatement(String, String)
+     */
+    public static String buildPackageStatement(String packageName) {
+        Conditions.hasText(packageName, "packageName must has text");
+        return PACKAGE + " " + packageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
-    public static String buildSubPackage(String basePackageName, String subPackageName) {
+    /**
+     * Return package statement for class.
+     * <p>
+     * Different from {@link #buildPackageStatement(String)}, this
+     * method combines sub package(base package is dynamic).
+     * e.g. <code>package com.example.remoting.netty;</code>
+     *
+     * @param basePackageName base package
+     * @return package statement
+     */
+    public static String buildPackageStatement(String basePackageName, String subPackageName) {
+        Conditions.hasText(basePackageName, "basePackageName must has text");
+        Conditions.hasText(subPackageName, "subPackageName must has text");
         return PACKAGE + " " + basePackageName + PACKAGE_DELIMITER +
                 subPackageName + END_OF_STATEMENT + DOUBLE_LINE_SEPARATOR;
     }
 
+    /**
+     * Create module directory and basic java source directory,
+     * and return its path.
+     * <p>
+     * The param "basePath" should be consistent with the value
+     * method {@link GeneratorConfig#getStoreLocation()} returns.
+     *
+     * @param basePath parent path
+     * @return java source directory path
+     */
     public static String buildNecessaryFolders(String basePath) {
+        Conditions.hasText(basePath, "basePath must has text");
         // src/main/java
         String source = basePath + FILE_SEPARATOR + MODULE_NAME + FILE_SEPARATOR + JAVA_FOLDER;
         FileUtils.ensureDirOk(new File(source));
@@ -66,6 +145,7 @@ public class CodeGeneratorHelper {
     }
 
     public static String buildLoggerField(String className) {
+        Conditions.hasText(className, "className must has text");
         boolean useCustomLoggerName = ConfigInfos.getInstance().useCustomLoggerName();
         return "LogManager.getLogger(" +
                 (useCustomLoggerName ? "RemotingHelper.REMOTING_LOGGER_NAME" : className + ".class") + ")";

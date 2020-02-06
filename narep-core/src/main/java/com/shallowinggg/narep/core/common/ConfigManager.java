@@ -26,6 +26,7 @@ public class ConfigManager {
     private static final ConfigManager INSTANCE = new ConfigManager();
 
     private Map<String, Config> configMap = new HashMap<>(8);
+    private volatile boolean init = false;
 
     public static ConfigManager getInstance() {
         return INSTANCE;
@@ -45,17 +46,24 @@ public class ConfigManager {
         Conditions.notNull(config, "config must not be null");
         configMap.put(name, config);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("register config: <{}>", name);
+            LOG.debug("register config <{}>", name);
         }
     }
 
     public void init() {
-        for (Config config : configMap.values()) {
-            config.init();
+        if (!init) {
+            for (Config config : configMap.values()) {
+                config.init();
+            }
+            init = true;
         }
     }
 
     public Config getConfig(String name) {
         return configMap.get(name);
+    }
+
+    public boolean hasInit() {
+        return init;
     }
 }

@@ -10,9 +10,15 @@ import java.util.*;
 
 
 /**
- *
+ * This class provides all config information what extract from
+ * various {@link com.shallowinggg.narep.core.Config} Implementations.
+ * <p>
+ * Before using this class, user must invokes {@link #init()} method first,
+ * and method {@link ConfigManager#init()} must be invoked earlier.
+ * Otherwise, it will throw {@link AssertionError}.
  *
  * @author shallowinggg
+ * @see ConfigManager
  */
 public class ConfigInfos {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigInfos.class);
@@ -27,11 +33,11 @@ public class ConfigInfos {
      * be sorted after all primitive fields.
      */
     public static final Comparator<ProtocolField> DEFAULT_PROTOCOL_SORT = (f1, f2) -> {
-        if(f1.getLen() == -1 && f2.getLen() == -1) {
+        if (f1.getLen() == -1 && f2.getLen() == -1) {
             return 0;
         } else if (f1.getLen() != -1 && f2.getLen() != -1) {
             return 0;
-        } else if(f1.getLen() != -1) {
+        } else if (f1.getLen() != -1) {
             return -1;
         } else {
             return 1;
@@ -56,13 +62,14 @@ public class ConfigInfos {
 
     public void init() {
         if (!init) {
+            assert ConfigManager.getInstance().hasInit();
             generatorConfig = (GeneratorConfig) ConfigManager.getInstance().getConfig(GeneratorConfig.CONFIG_NAME);
             protocolConfig = (ProtocolConfig) ConfigManager.getInstance().getConfig(ProtocolConfig.CONFIG_NAME);
             logConfig = (LogConfig) ConfigManager.getInstance().getConfig(LogConfig.CONFIG_NAME);
 
             this.protocolFields = protocolConfig.getProtocolFields();
             protocolFields.sort(DEFAULT_PROTOCOL_SORT);
-            if(protocolFields.size() > ProtocolConfig.DEFAULT_FIELDS_SIZE) {
+            if (protocolFields.size() > ProtocolConfig.DEFAULT_FIELDS_SIZE) {
                 this.commandFields = convertConfig2Fields(this.protocolConfig.getProtocolFields());
             } else {
                 this.commandFields = Collections.emptyList();
@@ -114,7 +121,7 @@ public class ConfigInfos {
         List<FieldInfo> fields = new ArrayList<>(protocolFields.size());
         for (ProtocolField protocolField : protocolFields) {
             Class<?> clazz = protocolField.getClazz();
-            if(HashMap.class.equals(clazz)) {
+            if (HashMap.class.equals(clazz)) {
                 String type = "HashMap<String, String>";
                 fields.add(new FieldInfo(Modifier.PRIVATE, type, protocolField.getName()));
             } else {
