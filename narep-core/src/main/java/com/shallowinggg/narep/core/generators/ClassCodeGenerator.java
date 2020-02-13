@@ -49,8 +49,7 @@ public class ClassCodeGenerator extends AbstractJavaCodeGenerator {
 
     @Override
     public String buildDeclaration() {
-        return ClassDeclarations.buildStrategy(getModifier(), getName(), getParentName(), interfaceNames, null,
-                false, false, false, false).buildDeclaration();
+        return ClassDeclarations.buildClassDecl(getModifier(), getName(), getParentName(), getInterfaceNames());
     }
 
     @Override

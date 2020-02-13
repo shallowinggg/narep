@@ -1,261 +1,226 @@
 package com.shallowinggg.narep.core.common;
 
+import com.shallowinggg.narep.core.JavaCodeGenerator;
 import com.shallowinggg.narep.core.lang.Modifier;
 import com.shallowinggg.narep.core.util.CollectionUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 /**
- * 生成类声明语句的工具类，其中定义了所有可能的声明形式。
+ * Utility class used to build class declaration statement.
+ * <p>
+ * All public methods provided in this class are anti-pattern,
+ * they don't follow the principle of strategy pattern. Because
+ * all usages of them are gathered in high layer of
+ * {@link com.shallowinggg.narep.core.generators.AbstractJavaCodeGenerator},
+ * e.g. {@link com.shallowinggg.narep.core.generators.ClassCodeGenerator}.
+ * All sub class are not need to implement method {@link
+ * JavaCodeGenerator#buildDeclaration()} respectively.
+ *
+ * <p>
+ * <pre>
+ *     - 接口
+ *       - 常规接口     public interface Inter {
+ *       - 子接口      public interface Sub extends Parent {
+ *     - 枚举
+ *       public enum Test {
+ *     - 注解
+ *       public @interface Test {
+ *     - 类
+ *       - 常规类      public class Car {
+ *       - 子类        public class Bus extends Car {
+ *       - 实现接口的类 public class ProtocolConfig implements Config {
+ *       - 完整声明的类 public class Bus extends Car implements Big {
+ *
+ *     - 范型类
+ *       - 接口
+ *         - 常规接口     public interface Inter<T> {
+ *         - 子接口      public interface Sub<T> extends Parent {
+ *         - 类
+ *           - 常规类      public class Car<T> {
+ *           - 子类        public class Bus<T> extends Car {
+ *           - 实现接口的类 public class ProtocolConfig<T> implements Config {
+ *           - 完整声明的类 public class Bus<T> extends Car implements Big {
+ * </pre>
+ * <p>
  *
  * @author shallowinggg
  */
 public class ClassDeclarations {
-
     /**
-     * 构造类声明策略。
-     * <p>
-     * <pre>
-     *     - 接口
-     *       - 常规接口     public interface Inter {
-     *       - 子接口      public interface Sub extends Parent {
-     *     - 枚举
-     *       public enum Test {
-     *     - 注解
-     *       public @interface Test {
-     *     - 类
-     *       - 常规类      public class Car {
-     *       - 子类        public class Bus extends Car {
-     *       - 实现接口的类 public class ProtocolConfig implements Config {
-     *       - 完整声明的类 public class Bus extends Car implements Big {
-     *
-     *     - 范型类
-     *       - 接口
-     *         - 常规接口     public interface Inter<T> {
-     *         - 子接口      public interface Sub<T> extends Parent {
-     *         - 类
-     *           - 常规类      public class Car<T> {
-     *           - 子类        public class Bus<T> extends Car {
-     *           - 实现接口的类 public class ProtocolConfig<T> implements Config {
-     *           - 完整声明的类 public class Bus<T> extends Car implements Big {
-     * </pre>
-     * <p>
-     * <p>
-     * 注意：此方法不会判定给定的参数是否符合规范，因此只会
-     * 忽略多余的参数，不要依赖此方法进行参数检查。
-     *
-     * @param modifier       访问限定符
-     * @param className      类名称
-     * @param parentName     父类名称
-     * @param interfaceNames 接口列表
-     * @param generics       范型列表
-     * @param isInterface    是否为接口
-     * @param isEnum         是否为枚举
-     * @param isAnnotation   是否为注解
-     * @param isGeneric      是否为范型
-     * @return 类声明策略
+     * Cache for use, this classes are all stateless.
      */
-    public static ClassDeclarationBuildStrategy buildStrategy(Modifier modifier, String className, String parentName,
-                                                              String[] interfaceNames, List<String> generics,
-                                                              boolean isInterface, boolean isEnum,
-                                                              boolean isAnnotation, boolean isGeneric) {
-        if (isGeneric) {
-            if (isEnum || isAnnotation) {
-                throw new IllegalArgumentException("enum or annotation type can't use generic");
-            }
-            ClassDeclarationBuildStrategy strategy = buildStrategy(modifier, className, parentName, interfaceNames,
-                    generics, isInterface, false, false, false);
-            return new GenericDeclarationStrategyDecorator(strategy, className, generics);
-        }
-        if (isInterface) {
-            if (StringTinyUtils.isNotEmpty(parentName)) {
-                return new SubInterface(modifier, className, parentName);
-            } else {
-                return new PlainInterface(modifier, className);
-            }
-        } else if (isEnum) {
-            return new EnumClass(modifier, className);
-        } else if (isAnnotation) {
-            return new AnnotationClass(modifier, className);
+    private static final PlainInterface PLAIN_INTERFACE = new PlainInterface();
+    private static final SubInterface SUB_INTERFACE = new SubInterface();
+    private static final EnumClass ENUM_CLASS = new EnumClass();
+    private static final AnnotationClass ANNOTATION_CLASS = new AnnotationClass();
+    private static final PlainClass PLAIN_CLASS = new PlainClass();
+    private static final SubClass SUB_CLASS = new SubClass();
+    private static final ImplementorClass IMPLEMENTOR_CLASS = new ImplementorClass();
+    private static final CompleteClass COMPLETE_CLASS = new CompleteClass();
+
+    public static String buildInterfaceDecl(Modifier modifier, String interfaceName, @Nullable String parentName) {
+        return determineInterfaceStrategy(parentName)
+                .buildDeclaration(modifier, interfaceName, parentName, null, null);
+    }
+
+    public static String buildEnumDecl(Modifier modifier, String enumName) {
+        return ENUM_CLASS.buildDeclaration(modifier, enumName, null, null, null);
+    }
+
+    public static String buildAnnotationDecl(Modifier modifier, String annotationName) {
+        return ANNOTATION_CLASS.buildDeclaration(modifier, annotationName, null, null, null);
+    }
+
+    public static String buildClassDecl(Modifier modifier, String className, @Nullable String parentName,
+                                        @Nullable String[] interfaceNames) {
+        return determineClassStrategy(parentName, interfaceNames)
+                .buildDeclaration(modifier, className, parentName, interfaceNames, null);
+    }
+
+    public static String buildGenericClassDecl(Modifier modifier, String className, @Nullable String parentName,
+                                               @Nullable String[] interfaceNames, List<String> generics,
+                                               boolean isClass, boolean isInterface) {
+        if (isClass) {
+            return new GenericClass(determineClassStrategy(parentName, interfaceNames))
+                    .buildDeclaration(modifier, className, parentName, interfaceNames, generics);
+        } else if (isInterface) {
+            return new GenericClass(determineInterfaceStrategy(parentName))
+                    .buildDeclaration(modifier, className, parentName, interfaceNames, generics);
         } else {
-            if (StringTinyUtils.isNotEmpty(parentName) && CollectionUtils.isNotEmpty(interfaceNames)) {
-                return new CompleteClass(modifier, className, parentName, interfaceNames);
-            } else if (StringTinyUtils.isNotEmpty(parentName)) {
-                return new SubClass(modifier, className, parentName);
-            } else if (CollectionUtils.isNotEmpty(interfaceNames)) {
-                return new ImplementorClass(modifier, className, interfaceNames);
-            } else {
-                return new PlainClass(modifier, className);
-            }
+            throw new IllegalArgumentException("generic must be class or interface");
         }
     }
 
-    static class DeclarationStrategyDecorator implements ClassDeclarationBuildStrategy {
-        ClassDeclarationBuildStrategy strategy;
-
-        DeclarationStrategyDecorator(ClassDeclarationBuildStrategy strategy) {
-            this.strategy = strategy;
+    private static ClassDeclarationBuildStrategy determineClassStrategy(@Nullable String parentName,
+                                                                        @Nullable String[] interfaceNames) {
+        if (StringTinyUtils.isNotEmpty(parentName) && CollectionUtils.isNotEmpty(interfaceNames)) {
+            return COMPLETE_CLASS;
+        } else if (StringTinyUtils.isNotEmpty(parentName)) {
+            return SUB_CLASS;
+        } else if (CollectionUtils.isNotEmpty(interfaceNames)) {
+            return IMPLEMENTOR_CLASS;
+        } else {
+            return PLAIN_CLASS;
         }
-
-        @Override
-        public String buildDeclaration() {
-            return strategy.buildDeclaration();
-        }
-
     }
 
-    static class GenericDeclarationStrategyDecorator extends DeclarationStrategyDecorator {
+    private static ClassDeclarationBuildStrategy determineInterfaceStrategy(@Nullable String parentName) {
+        if (StringTinyUtils.isNotEmpty(parentName)) {
+            return SUB_INTERFACE;
+        } else {
+            return PLAIN_INTERFACE;
+        }
+    }
+
+    // generic class
+
+    static class GenericClass implements ClassDeclarationBuildStrategy {
         /**
          * "class ".length()
          */
         private static final int MAX_SEARCH_START_POS = 6;
-        private String name;
-        private List<String> generics;
 
-        GenericDeclarationStrategyDecorator(ClassDeclarationBuildStrategy strategy,
-                                          String name, List<String> generics) {
-            super(strategy);
-            this.name = name;
-            this.generics = generics;
+        private final ClassDeclarationBuildStrategy strategy;
+
+        public GenericClass(ClassDeclarationBuildStrategy strategy) {
+            this.strategy = strategy;
         }
 
         @Override
-        public String buildDeclaration() {
-            String declaration = super.buildDeclaration();
-            int pos = declaration.indexOf(name, MAX_SEARCH_START_POS);
-            int insertPos = pos + name.length();
+        public String buildDeclaration(Modifier modifier, String className, String parentName,
+                                       String[] interfaceNames, List<String> generics) {
+            String declaration = strategy.buildDeclaration(modifier, className, parentName, interfaceNames, null);
+            int pos = declaration.indexOf(className, MAX_SEARCH_START_POS);
+            int insertPos = pos + className.length();
             StringBuilder builder = new StringBuilder(declaration);
             builder.insert(insertPos, ClassDeclarationHelper.buildGeneric(generics));
             return builder.toString();
         }
     }
 
-    static abstract class AbstractDeclarationBuildStrategy implements ClassDeclarationBuildStrategy {
-        protected Modifier modifier;
-        protected String name;
-        protected String parentName;
+    // Interface
 
-        AbstractDeclarationBuildStrategy(Modifier modifier, String name, String parentName) {
-            this.modifier = modifier;
-            this.name = name;
-            this.parentName = parentName;
-        }
-
-    }
-
-    // 接口
-
-    static abstract class InterfaceDeclaration extends AbstractDeclarationBuildStrategy {
-        InterfaceDeclaration(Modifier modifier, String name, String parentName) {
-            super(modifier, name, parentName);
-        }
-    }
-
-    static class PlainInterface extends InterfaceDeclaration {
-        PlainInterface(Modifier modifier, String name) {
-            super(modifier, name, null);
-        }
+    static class PlainInterface implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildInterfaceDeclaration(modifier, name);
+        public String buildDeclaration(Modifier modifier, String className, String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildInterfaceDeclaration(modifier, className);
         }
+
     }
 
-    static class SubInterface extends InterfaceDeclaration {
-        SubInterface(Modifier modifier, String name, String parentName) {
-            super(modifier, name, parentName);
-        }
+    static class SubInterface implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildInterfaceDeclaration(modifier, name, parentName);
+        public String buildDeclaration(Modifier modifier, String className, String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildInterfaceDeclaration(modifier, className, parentName);
         }
     }
 
-    // 类
+    // Class
 
-    static abstract class AbstractClassDeclarationBuildStrategy extends AbstractDeclarationBuildStrategy {
-        protected String[] interfaceNames;
-
-        AbstractClassDeclarationBuildStrategy(Modifier modifier, String name, String parentName,
-                                              String[] interfaceNames) {
-            super(modifier, name, parentName);
-            this.interfaceNames = interfaceNames;
-        }
-    }
-
-    static class PlainClass extends AbstractClassDeclarationBuildStrategy {
-        PlainClass(Modifier modifier, String name) {
-            super(modifier, name, null, null);
-        }
+    static class PlainClass implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildClassDeclaration(modifier, name);
+        public String buildDeclaration(Modifier modifier, String className, @Nullable String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildClassDeclaration(modifier, className);
         }
     }
 
-    static class SubClass extends AbstractClassDeclarationBuildStrategy {
-        SubClass(Modifier modifier, String name, String parentName) {
-            super(modifier, name, parentName, null);
-        }
+    static class SubClass implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildClassDeclaration(modifier, name, parentName);
+        public String buildDeclaration(Modifier modifier, String className, String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildClassDeclaration(modifier, className, parentName);
         }
     }
 
-    static class ImplementorClass extends AbstractClassDeclarationBuildStrategy {
-        ImplementorClass(Modifier modifier, String name, String[] interfaceNames) {
-            super(modifier, name, null, interfaceNames);
-        }
+    static class ImplementorClass implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildClassDeclaration(modifier, name, interfaceNames);
+        public String buildDeclaration(Modifier modifier, String className, @Nullable String parentName,
+                                       String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildClassDeclaration(modifier, className, interfaceNames);
         }
     }
 
-    static class CompleteClass extends AbstractClassDeclarationBuildStrategy {
-        CompleteClass(Modifier modifier, String name, String parentName, String[] interfaceNames) {
-            super(modifier, name, parentName, interfaceNames);
-        }
+    static class CompleteClass implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildClassDeclaration(modifier, name, parentName, interfaceNames);
-        }
-    }
-
-    // 枚举
-
-    static class EnumClass extends AbstractDeclarationBuildStrategy {
-        EnumClass(Modifier modifier, String name) {
-            super(modifier, name, null);
-        }
-
-        @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildEnumDeclaration(modifier, name);
+        public String buildDeclaration(Modifier modifier, String className, String parentName,
+                                       String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildClassDeclaration(modifier, className, parentName, interfaceNames);
         }
 
     }
 
-    // 注解
+    // Enum
 
-    static class AnnotationClass extends AbstractDeclarationBuildStrategy {
-        AnnotationClass(Modifier modifier, String name) {
-            super(modifier, name, null);
-        }
+    static class EnumClass implements ClassDeclarationBuildStrategy {
 
         @Override
-        public String buildDeclaration() {
-            return ClassDeclarationHelper.buildAnnotationDeclaration(modifier, name);
+        public String buildDeclaration(Modifier modifier, String className, @Nullable String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildEnumDeclaration(modifier, className);
         }
+    }
 
+    // Annotation
+
+    static class AnnotationClass implements ClassDeclarationBuildStrategy {
+
+        @Override
+        public String buildDeclaration(Modifier modifier, String className, @Nullable String parentName,
+                                       @Nullable String[] interfaceNames, @Nullable List<String> generics) {
+            return ClassDeclarationHelper.buildAnnotationDeclaration(modifier, className);
+        }
     }
 
 

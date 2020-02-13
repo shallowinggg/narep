@@ -8,7 +8,7 @@ import java.util.List;
  * @author shallowinggg
  */
 public class GenericClassCodeGenerator extends ClassCodeGenerator {
-    private List<String> generics;
+    private final List<String> generics;
 
     public GenericClassCodeGenerator(String name, String subPackageName, List<String> generics) {
         super(name, null, subPackageName);
@@ -23,7 +23,7 @@ public class GenericClassCodeGenerator extends ClassCodeGenerator {
 
     @Override
     public String buildDeclaration() {
-        return ClassDeclarations.buildStrategy(getModifier(), getName(), getParentName(), getInterfaceNames(),
-                generics,false, false, false, true).buildDeclaration();
+        return ClassDeclarations.buildGenericClassDecl(getModifier(), getName(), getParentName(), getInterfaceNames(),
+                generics, true, false);
     }
 }

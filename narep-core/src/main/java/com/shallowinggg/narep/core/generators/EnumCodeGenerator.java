@@ -27,7 +27,6 @@ public class EnumCodeGenerator extends AbstractJavaCodeGenerator {
 
     @Override
     public String buildDeclaration() {
-        return ClassDeclarations.buildStrategy(getModifier(), getName(), null, null,
-                null, false, true, false, false).buildDeclaration();
+        return ClassDeclarations.buildEnumDecl(getModifier(), getName());
     }
 }

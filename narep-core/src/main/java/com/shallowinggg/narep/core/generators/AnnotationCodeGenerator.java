@@ -27,7 +27,6 @@ public class AnnotationCodeGenerator extends AbstractJavaCodeGenerator {
 
     @Override
     public String buildDeclaration() {
-        return ClassDeclarations.buildStrategy(getModifier(), getName(), null, null,
-                null, false, false, true, false).buildDeclaration();
+        return ClassDeclarations.buildAnnotationDecl(getModifier(), getName());
     }
 }
