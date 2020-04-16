@@ -20,7 +20,7 @@ import com.shallowinggg.narep.core.util.ConcurrentReferenceHashMap;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.ObjectUtils;
 import com.shallowinggg.narep.core.util.ReflectionUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;

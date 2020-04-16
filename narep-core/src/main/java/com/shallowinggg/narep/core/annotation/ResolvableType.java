@@ -21,7 +21,7 @@ import com.shallowinggg.narep.core.annotation.SerializableTypeWrapper.FieldTypeP
 import com.shallowinggg.narep.core.annotation.SerializableTypeWrapper.MethodParameterTypeProvider;
 import com.shallowinggg.narep.core.annotation.SerializableTypeWrapper.TypeProvider;
 import com.shallowinggg.narep.core.util.*;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.lang.reflect.*;

@@ -1,9 +1,9 @@
 package com.shallowinggg.narep.core.io;
 
 import com.shallowinggg.narep.core.util.ResourceUtils;
-import com.sun.istack.internal.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;

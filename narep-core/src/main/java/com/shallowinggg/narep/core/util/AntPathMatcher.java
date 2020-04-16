@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.util;
 
-import com.sun.istack.internal.Nullable;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
 package com.shallowinggg.narep.core.annotation;
 
 import com.shallowinggg.narep.core.util.Conditions;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

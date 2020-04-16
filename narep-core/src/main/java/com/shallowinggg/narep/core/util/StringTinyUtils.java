@@ -449,6 +449,54 @@ public class StringTinyUtils {
         return true;
     }
 
+    /**
+     * Capitalize a {@code String}, changing the first letter to
+     * upper case as per {@link Character#toUpperCase(char)}.
+     * No other letters are changed.
+     * @param str the {@code String} to capitalize
+     * @return the capitalized {@code String}
+     */
+    public static String capitalize(String str) {
+        return changeFirstCharacterCase(str, true);
+    }
+
+    /**
+     * Uncapitalize a {@code String}, changing the first letter to
+     * lower case as per {@link Character#toLowerCase(char)}.
+     * No other letters are changed.
+     * @param str the {@code String} to uncapitalize
+     * @return the uncapitalized {@code String}
+     */
+    public static String uncapitalize(String str) {
+        return changeFirstCharacterCase(str, false);
+    }
+
+    private static String changeFirstCharacterCase(String str, boolean capitalize) {
+        if (!hasLength(str)) {
+            return str;
+        }
+
+        char baseChar = str.charAt(0);
+        char updatedChar;
+        if (capitalize) {
+            updatedChar = Character.toUpperCase(baseChar);
+        }
+        else {
+            updatedChar = Character.toLowerCase(baseChar);
+        }
+        if (baseChar == updatedChar) {
+            return str;
+        }
+
+        char[] chars = str.toCharArray();
+        chars[0] = updatedChar;
+        return new String(chars, 0, chars.length);
+    }
+
+    public static boolean hasLength(@Nullable String str) {
+        return (str != null && !str.isEmpty());
+    }
+
 
     private StringTinyUtils() {
     }

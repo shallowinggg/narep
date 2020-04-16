@@ -11,6 +11,7 @@
     <modules>
         <module>narep-core</module>
         <module>narep-admin</module>
+        <module>narep-tools</module>
     </modules>
 
     <name>narep</name>

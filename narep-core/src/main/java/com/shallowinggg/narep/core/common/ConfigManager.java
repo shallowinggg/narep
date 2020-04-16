@@ -25,7 +25,7 @@ public class ConfigManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigManager.class);
     private static final ConfigManager INSTANCE = new ConfigManager();
 
-    private Map<String, Config> configMap = new HashMap<>(8);
+    private final Map<String, Config> configMap = new HashMap<>(8);
     private volatile boolean init = false;
 
     public static ConfigManager getInstance() {

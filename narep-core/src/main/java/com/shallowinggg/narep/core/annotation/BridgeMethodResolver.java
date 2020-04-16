@@ -4,7 +4,7 @@ import com.shallowinggg.narep.core.util.ClassUtils;
 import com.shallowinggg.narep.core.util.ConcurrentReferenceHashMap;
 import com.shallowinggg.narep.core.util.ReflectionUtils;
 import com.shallowinggg.narep.core.util.ReflectionUtils.MethodFilter;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

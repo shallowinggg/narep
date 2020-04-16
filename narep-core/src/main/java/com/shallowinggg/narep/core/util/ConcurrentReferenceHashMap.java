@@ -16,7 +16,8 @@ package com.shallowinggg.narep.core.util;
  * limitations under the License.
  */
 
-import com.sun.istack.internal.Nullable;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;

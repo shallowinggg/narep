@@ -3,7 +3,7 @@ package com.shallowinggg.narep.core.type.classreading;
 import com.shallowinggg.narep.core.io.DefaultResourceLoader;
 import com.shallowinggg.narep.core.io.Resource;
 import com.shallowinggg.narep.core.io.ResourceLoader;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;

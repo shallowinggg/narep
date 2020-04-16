@@ -2,7 +2,7 @@ package com.shallowinggg.narep.core.common;
 
 import com.shallowinggg.narep.core.type.AnnotationMetadata;
 import com.shallowinggg.narep.core.type.MethodMetadata;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author shallowinggg

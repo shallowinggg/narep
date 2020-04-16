@@ -21,8 +21,7 @@ import com.shallowinggg.narep.core.annotation.AnnotationTypeMapping.MirrorSets.M
 import com.shallowinggg.narep.core.util.ObjectUtils;
 import com.shallowinggg.narep.core.util.ReflectionUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
-import com.sun.xml.internal.ws.util.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -154,7 +153,7 @@ final class AnnotationTypeMapping {
 			}
 			throw new AnnotationConfigurationException(String.format(
 					"%s is declared as an @AliasFor nonexistent %s.",
-					StringUtils.capitalize(AttributeMethods.describe(attribute)),
+					StringTinyUtils.capitalize(AttributeMethods.describe(attribute)),
 					AttributeMethods.describe(targetAnnotation, targetAttributeName)));
 		}
 		if (target.equals(attribute)) {
@@ -176,7 +175,7 @@ final class AnnotationTypeMapping {
 				if (!mirror.equals(attribute)) {
 					throw new AnnotationConfigurationException(String.format(
 							"%s must be declared as an @AliasFor '%s', not '%s'.",
-							StringUtils.capitalize(AttributeMethods.describe(target)),
+							StringTinyUtils.capitalize(AttributeMethods.describe(target)),
 							attribute.getName(), mirror.getName()));
 				}
 			}

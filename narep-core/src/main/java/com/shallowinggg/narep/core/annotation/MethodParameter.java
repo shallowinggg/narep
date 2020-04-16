@@ -3,11 +3,11 @@ package com.shallowinggg.narep.core.annotation;
 import com.shallowinggg.narep.core.util.ClassUtils;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.ObjectUtils;
-import com.sun.istack.internal.Nullable;
 import kotlin.Unit;
 import kotlin.reflect.KFunction;
 import kotlin.reflect.KParameter;
 import kotlin.reflect.jvm.ReflectJvmMapping;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;

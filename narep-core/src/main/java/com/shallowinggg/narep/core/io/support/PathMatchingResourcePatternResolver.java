@@ -2,10 +2,9 @@ package com.shallowinggg.narep.core.io.support;
 
 import com.shallowinggg.narep.core.io.*;
 import com.shallowinggg.narep.core.util.*;
-import com.sun.istack.internal.Nullable;
-import com.sun.xml.internal.ws.util.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -375,7 +374,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
                     int prefixIndex = filePath.indexOf(':');
                     if (prefixIndex == 1) {
                         // Possibly "c:" drive prefix on Windows, to be upper-cased for proper duplicate detection
-                        filePath = StringUtils.capitalize(filePath);
+                        filePath = StringTinyUtils.capitalize(filePath);
                     }
                     UrlResource jarResource = new UrlResource(ResourceUtils.JAR_URL_PREFIX +
                             ResourceUtils.FILE_URL_PREFIX + filePath + ResourceUtils.JAR_URL_SEPARATOR);

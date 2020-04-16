@@ -3,7 +3,7 @@ package com.shallowinggg.narep.core.annotation;
 import com.shallowinggg.narep.core.util.ConcurrentReferenceHashMap;
 import com.shallowinggg.narep.core.util.ObjectUtils;
 import com.shallowinggg.narep.core.util.ReflectionUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

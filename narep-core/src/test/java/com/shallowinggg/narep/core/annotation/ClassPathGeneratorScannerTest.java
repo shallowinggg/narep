@@ -14,6 +14,6 @@ public class ClassPathGeneratorScannerTest {
         ClassPathGeneratorScanner scanner = new ClassPathGeneratorScanner();
         scanner.doScan("com.shallowinggg.narep.core.generators");
         CodeGeneratorManager manager = CodeGeneratorManager.getInstance();
-        Assert.assertEquals(45, manager.size());
+        Assert.assertEquals(46, manager.size());
     }
 }

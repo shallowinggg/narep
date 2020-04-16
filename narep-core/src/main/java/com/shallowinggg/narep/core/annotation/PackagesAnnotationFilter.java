@@ -19,7 +19,7 @@ package com.shallowinggg.narep.core.annotation;
 
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 

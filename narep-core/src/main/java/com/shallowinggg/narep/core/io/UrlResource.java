@@ -3,7 +3,7 @@ package com.shallowinggg.narep.core.io;
 import com.shallowinggg.narep.core.util.Conditions;
 import com.shallowinggg.narep.core.util.ResourceUtils;
 import com.shallowinggg.narep.core.util.StringTinyUtils;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;

@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 public class GeneratorController {
     private static final Logger LOG = LoggerFactory.getLogger(GeneratorController.class);
 
-    private ConfigManager configManager = ConfigManager.getInstance();
-    private CodeGeneratorManager codeGeneratorManager = CodeGeneratorManager.getInstance();
-    private ConfigInfos configInfos = ConfigInfos.getInstance();
+    private final ConfigManager configManager = ConfigManager.getInstance();
+    private final CodeGeneratorManager codeGeneratorManager = CodeGeneratorManager.getInstance();
+    private final ConfigInfos configInfos = ConfigInfos.getInstance();
     private volatile boolean init;
 
     public void init() {

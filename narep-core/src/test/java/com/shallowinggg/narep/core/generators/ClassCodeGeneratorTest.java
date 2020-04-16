@@ -251,7 +251,8 @@ public class ClassCodeGeneratorTest {
                 "        \n" +
                 "        \n" +
                 "        }\n" +
-                "    }\n" +
+                "    \n" +
+                "    }\n\n" +
                 "}", val);
     }
 }

@@ -1,6 +1,7 @@
 package com.shallowinggg.narep.core.util;
 
-import com.sun.istack.internal.Nullable;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
