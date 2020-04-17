@@ -40,7 +40,7 @@ error_exit ()
 export JAVA_HOME
 export JAVA="$JAVA_HOME/bin/java"
 export BASE_DIR=$(dirname $0)/..
-export CLASSPATH=".:${BASE_DIR}/lib/*"
+export CLASSPATH=".:${BASE_DIR}/lib/*:${BASE_DIR}/conf/*"
 
 JAVA_OPT="-Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext:${BASE_DIR}/lib/*"
 JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"

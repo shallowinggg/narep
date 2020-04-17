@@ -28,6 +28,7 @@ import java.util.List;
  */
 public class NarepCommand implements Command {
     private static final String CONFIG_LOCATION_OPTION = "c";
+    private static final String DEFAULT_CONFIG_LOCATION = "classpath:narep-config.xml";
     private static final String HELP_OPTION = "h";
 
     @Override
@@ -44,7 +45,7 @@ public class NarepCommand implements Command {
     public Options buildCommandlineOptions() {
         Options options = new Options();
         Option opt = new Option("c", true, "specify the location of xml config");
-        opt.setRequired(true);
+        opt.setRequired(false);
         options.addOption(opt);
 
         opt = new Option("h", false, "print all options description");
@@ -59,7 +60,12 @@ public class NarepCommand implements Command {
             printHelp();
         } else {
             try {
-                String location = commandLine.getOptionValue(CONFIG_LOCATION_OPTION).trim();
+                String location;
+                if(commandLine.hasOption(CONFIG_LOCATION_OPTION)) {
+                    location = commandLine.getOptionValue(CONFIG_LOCATION_OPTION).trim();
+                } else {
+                    location = DEFAULT_CONFIG_LOCATION;
+                }
                 XmlNarepDefinitionReader reader = new XmlNarepDefinitionReader();
                 NarepDefinition definition = reader.loadNarepDefinition(location);
                 GeneratorController controller = new GeneratorController();
@@ -86,8 +92,12 @@ public class NarepCommand implements Command {
         String packageName = definition.getPackageName();
         if(StringTinyUtils.isNotBlank(location) || StringTinyUtils.isNotBlank(packageName)) {
             GeneratorConfig generatorConfig = new GeneratorConfig();
-            generatorConfig.setStoreLocation(location);
-            generatorConfig.setBasePackage(packageName);
+            if(StringTinyUtils.isNotBlank(location)) {
+                generatorConfig.setStoreLocation(location);
+            }
+            if(StringTinyUtils.isNotBlank(packageName)) {
+                generatorConfig.setBasePackage(packageName);
+            }
             controller.registerConfig(GeneratorConfig.CONFIG_NAME, generatorConfig);
         }
 

@@ -4,14 +4,27 @@
        xsi:schemaLocation="http://www.shallowinggg.com/schema/narep
         http://www.shallowinggg.com/schema/narep.xsd">
 
+    <!-- specify the base package name of the remoting module -->
     <package name="com.example.remoting"/>
+
+    <!-- specify the location that generated code store -->
     <location value="${user.home}/generator"/>
-    <log custom="true" name="Remoting"/>
+
+    <!--
+     Specify the inner logger name, default is its class name.
+     If you want customize this name, set property 'custom' with 'true',
+     and set 'name' with your name.
+     -->
+    <log custom="false" name="Remoting"/>
+
+    <!--
+    Custom protocol content. If not set this, use default protocol.
 
     <protocol>
         <field name="ip" type="int"/>
         <field name="addr" type="int" len="3"/>
         <field name="ext" type="map" />
     </protocol>
+    -->
 
 </narep>
