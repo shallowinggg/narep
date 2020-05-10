@@ -36,13 +36,13 @@ import java.util.List;
  *
  *     - 范型类
  *       - 接口
- *         - 常规接口     public interface Inter<T> {
- *         - 子接口      public interface Sub<T> extends Parent {
- *         - 类
- *           - 常规类      public class Car<T> {
- *           - 子类        public class Bus<T> extends Car {
- *           - 实现接口的类 public class ProtocolConfig<T> implements Config {
- *           - 完整声明的类 public class Bus<T> extends Car implements Big {
+ *         - 常规接口     public interface Inter&lt;T&gt; {
+ *         - 子接口      public interface Sub&lt;T&gt; extends Parent {
+ *       - 类
+ *         - 常规类      public class Car&lt;T&gt; {
+ *         - 子类        public class Bus&lt;T&gt; extends Car {
+ *         - 实现接口的类 public class ProtocolConfig&lt;T&gt; implements Config {
+ *         - 完整声明的类 public class Bus&lt;T&gt; extends Car implements Big {
  * </pre>
  * <p>
  *

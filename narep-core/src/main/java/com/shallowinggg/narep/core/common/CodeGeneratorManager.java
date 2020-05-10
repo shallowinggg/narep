@@ -31,7 +31,7 @@ public class CodeGeneratorManager implements DependencyResolver {
     private static final Logger LOG = LoggerFactory.getLogger(CodeGeneratorManager.class);
     private static final CodeGeneratorManager INSTANCE = new CodeGeneratorManager();
 
-    private Map<String, CodeGenerator> generators = new HashMap<>();
+    private final Map<String, CodeGenerator> generators = new HashMap<>();
 
     /**
      * Get the unique instance of class CodeGeneratorManager
@@ -98,6 +98,9 @@ public class CodeGeneratorManager implements DependencyResolver {
      * throw Exception {@link FileGenerateException}.
      */
     public void generate() {
+        if(LOG.isInfoEnabled()) {
+            LOG.info("Total generate {} files", generators.size());
+        }
         Stream.of(generators.values())
                 .flatMap(Collection::stream)
                 .forEach(generator -> {

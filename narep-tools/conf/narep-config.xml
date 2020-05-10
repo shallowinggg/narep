@@ -13,7 +13,7 @@
     <!--
      Specify the inner logger name, default is its class name.
      If you want customize this name, set property 'custom' with 'true',
-     and set 'name' with your name.
+     and set property 'name' with your logger name.
      -->
     <log custom="false" name="Remoting"/>
 

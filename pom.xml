@@ -7,7 +7,7 @@
   <groupId>com.shallowinggg.narep</groupId>
   <artifactId>narep-all</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>narep-core</module>
         <module>narep-admin</module>

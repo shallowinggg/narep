@@ -19,16 +19,17 @@ import java.util.List;
 
 /**
  * Starter Command.
- *
+ * <p>
  * There are 2 options for use:
- * 1. -c: specify the location of xml config
- * 2. -h: print all options description
+ * <li>1. -c: specify the location of xml config</li>
+ * <li>2. -h: print all options description</li>
  *
  * @author shallowinggg
  */
 public class NarepCommand implements Command {
     private static final String CONFIG_LOCATION_OPTION = "c";
-    private static final String DEFAULT_CONFIG_LOCATION = "classpath:narep-config.xml";
+    private static final String NAREP_HOME = System.getenv("NAREP_HOME");
+    private static final String DEFAULT_CONFIG_LOCATION = "file:" + NAREP_HOME + "/conf/narep-config.xml";
     private static final String HELP_OPTION = "h";
 
     @Override
@@ -56,12 +57,12 @@ public class NarepCommand implements Command {
 
     @Override
     public void execute(CommandLine commandLine) throws CommandException {
-        if(commandLine.hasOption(HELP_OPTION)) {
+        if (commandLine.hasOption(HELP_OPTION)) {
             printHelp();
         } else {
             try {
                 String location;
-                if(commandLine.hasOption(CONFIG_LOCATION_OPTION)) {
+                if (commandLine.hasOption(CONFIG_LOCATION_OPTION)) {
                     location = commandLine.getOptionValue(CONFIG_LOCATION_OPTION).trim();
                 } else {
                     location = DEFAULT_CONFIG_LOCATION;
@@ -90,12 +91,12 @@ public class NarepCommand implements Command {
         // convert to generator config
         String location = definition.getLocation();
         String packageName = definition.getPackageName();
-        if(StringTinyUtils.isNotBlank(location) || StringTinyUtils.isNotBlank(packageName)) {
+        if (StringTinyUtils.isNotBlank(location) || StringTinyUtils.isNotBlank(packageName)) {
             GeneratorConfig generatorConfig = new GeneratorConfig();
-            if(StringTinyUtils.isNotBlank(location)) {
+            if (StringTinyUtils.isNotBlank(location)) {
                 generatorConfig.setStoreLocation(location);
             }
-            if(StringTinyUtils.isNotBlank(packageName)) {
+            if (StringTinyUtils.isNotBlank(packageName)) {
                 generatorConfig.setBasePackage(packageName);
             }
             controller.registerConfig(GeneratorConfig.CONFIG_NAME, generatorConfig);
@@ -103,7 +104,7 @@ public class NarepCommand implements Command {
 
         // convert to log config
         boolean customLog = definition.isUseCustomLogger();
-        if(customLog) {
+        if (customLog) {
             String loggerName = definition.getLoggerName();
             LogConfig logConfig = new LogConfig(loggerName, customLog);
             logConfig.setLoggerName(loggerName);
@@ -112,7 +113,7 @@ public class NarepCommand implements Command {
 
         // convert to protocol config
         List<ProtocolField> protocolFields = definition.getProtocolFields();
-        if(CollectionUtils.isNotEmpty(protocolFields)) {
+        if (CollectionUtils.isNotEmpty(protocolFields)) {
             ProtocolConfig protocolConfig = new ProtocolConfig();
             for (ProtocolField field : protocolFields) {
                 protocolConfig.addProtocolField(field);

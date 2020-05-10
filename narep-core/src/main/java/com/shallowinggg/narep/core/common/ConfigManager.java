@@ -45,8 +45,8 @@ public class ConfigManager {
         Conditions.hasText(name, "config name must not be blank");
         Conditions.notNull(config, "config must not be null");
         configMap.put(name, config);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("register config <{}>", name);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("register config {}, content: {}", name, config);
         }
     }
 

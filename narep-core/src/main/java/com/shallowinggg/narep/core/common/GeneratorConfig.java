@@ -91,4 +91,13 @@ public class GeneratorConfig implements Config {
     public void setTlsConfigLocation(@Nullable String tlsConfigLocation) {
         this.tlsConfigLocation = tlsConfigLocation;
     }
+
+    @Override
+    public String toString() {
+        return "GeneratorConfig{" +
+                "basePackage='" + basePackage + '\'' +
+                ", storeLocation='" + storeLocation + '\'' +
+                ", tlsConfigLocation='" + tlsConfigLocation + '\'' +
+                '}';
+    }
 }

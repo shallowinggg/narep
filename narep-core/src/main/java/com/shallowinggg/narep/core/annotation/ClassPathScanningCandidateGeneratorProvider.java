@@ -4,7 +4,6 @@ import com.shallowinggg.narep.core.common.AnnotatedGeneratorDefinition;
 import com.shallowinggg.narep.core.common.GeneratorDefinition;
 import com.shallowinggg.narep.core.common.ScannedGenericGeneratorDefinition;
 import com.shallowinggg.narep.core.exception.GeneratorDefinitionStoreException;
-import com.shallowinggg.narep.core.io.Resource;
 import com.shallowinggg.narep.core.io.support.PathMatchingResourcePatternResolver;
 import com.shallowinggg.narep.core.io.support.ResourcePatternResolver;
 import com.shallowinggg.narep.core.type.AnnotationMetadata;
@@ -49,8 +48,9 @@ public class ClassPathScanningCandidateGeneratorProvider {
 
     /**
      * Create a ClassPathScanningCandidateComponentProvider.
+     *
      * @param useDefaultFilters whether to register the default filters for the
-     * {@link Generator @Generator}  stereotype annotations
+     *                          {@link Generator @Generator}  stereotype annotations
      * @see #registerDefaultFilters()
      */
     public ClassPathScanningCandidateGeneratorProvider(boolean useDefaultFilters) {
@@ -117,44 +117,40 @@ public class ClassPathScanningCandidateGeneratorProvider {
     private Set<GeneratorDefinition> scanCandidateComponents(String basePackage) {
         Set<GeneratorDefinition> candidates = new LinkedHashSet<>();
         try {
+            String resolvedBasePackage = resolveBasePackage(basePackage);
             String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
-                    resolveBasePackage(basePackage) + '/' + this.resourcePattern;
-            Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
+                    resolvedBasePackage + '/' + this.resourcePattern;
+            PathMatchingResourcePatternResolver resolver = (PathMatchingResourcePatternResolver) getResourcePatternResolver();
+            String[] classes = resolver.findPathMatchingClassInputStream(packageSearchPath, resolvedBasePackage);
             boolean traceEnabled = logger.isTraceEnabled();
             boolean debugEnabled = logger.isDebugEnabled();
-            for (Resource resource : resources) {
+            for (String className : classes) {
                 if (traceEnabled) {
-                    logger.trace("Scanning " + resource);
+                    logger.trace("Scanning " + className);
                 }
-                if (resource.isReadable()) {
-                    try {
-                        MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
-                        if (isCandidateComponent(metadataReader)) {
-                            ScannedGenericGeneratorDefinition sbd = new ScannedGenericGeneratorDefinition(metadataReader);
-                            sbd.setResource(resource);
-                            if (isCandidateComponent(sbd)) {
-                                if (debugEnabled) {
-                                    logger.debug("Identified candidate component class: " + resource);
-                                }
-                                candidates.add(sbd);
-                            } else {
-                                if (debugEnabled) {
-                                    logger.debug("Ignored because not a concrete top-level class: " + resource);
-                                }
+
+                try {
+                    MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(className);
+                    if (isCandidateComponent(metadataReader)) {
+                        ScannedGenericGeneratorDefinition sbd = new ScannedGenericGeneratorDefinition(metadataReader);
+                        if (isCandidateComponent(sbd)) {
+                            if (debugEnabled) {
+                                logger.debug("Identified candidate component class: " + className);
                             }
+                            candidates.add(sbd);
                         } else {
-                            if (traceEnabled) {
-                                logger.trace("Ignored because not matching any filter: " + resource);
+                            if (debugEnabled) {
+                                logger.debug("Ignored because not a concrete top-level class: " + className);
                             }
                         }
-                    } catch (Throwable ex) {
-                        throw new GeneratorDefinitionStoreException(
-                                "Failed to read candidate component class: " + resource, ex);
+                    } else {
+                        if (traceEnabled) {
+                            logger.trace("Ignored because not matching any filter: " + className);
+                        }
                     }
-                } else {
-                    if (traceEnabled) {
-                        logger.trace("Ignored because not readable: " + resource);
-                    }
+                } catch (Throwable ex) {
+                    throw new GeneratorDefinitionStoreException(
+                            "Failed to read candidate component class: " + className, ex);
                 }
             }
         } catch (IOException ex) {
@@ -179,6 +175,7 @@ public class ClassPathScanningCandidateGeneratorProvider {
     /**
      * Determine whether the given class does not match any exclude filter
      * and does match at least one include filter.
+     *
      * @param metadataReader the ASM ClassReader for the class
      * @return whether the class qualifies as a candidate component
      */
@@ -196,6 +193,7 @@ public class ClassPathScanningCandidateGeneratorProvider {
      * <p>The default implementation checks whether the class is not an interface
      * and not dependent on an enclosing class.
      * <p>Can be overridden in subclasses.
+     *
      * @param beanDefinition the bean definition to check
      * @return whether the bean definition qualifies as a candidate component
      */

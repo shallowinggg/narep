@@ -34,4 +34,10 @@ public class ProtocolConfig implements Config {
         return protocolFields;
     }
 
+    @Override
+    public String toString() {
+        return "ProtocolConfig{" +
+                "protocolFields=" + protocolFields +
+                '}';
+    }
 }

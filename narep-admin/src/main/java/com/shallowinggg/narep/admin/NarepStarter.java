@@ -10,27 +10,18 @@ import org.apache.commons.cli.*;
 public class NarepStarter {
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            printHelp();
-        } else {
-            Command root = new NarepCommand();
-            Options options = root.buildCommandlineOptions();
-            CommandLine cl = parseCmdLine(args, options, new PosixParser());
-            if (cl == null) {
-                return;
-            }
-
-            root.execute(cl);
+        Command root = new NarepCommand();
+        Options options = root.buildCommandlineOptions();
+        CommandLine cl = parseCmdLine(args, options, new PosixParser());
+        if (cl == null) {
+            return;
         }
-    }
 
-    private static void printHelp() {
-        NarepCommand command = new NarepCommand();
-        command.printHelp();
+        root.execute(cl);
     }
 
     private static CommandLine parseCmdLine(String[] args, Options options,
-                                           CommandLineParser parser) {
+                                            CommandLineParser parser) {
         CommandLine commandLine = null;
         try {
             commandLine = parser.parse(options, args);

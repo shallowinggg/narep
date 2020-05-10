@@ -13,6 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * A {@link ResourcePatternResolver} implementation that is able to resolve a
@@ -444,6 +446,32 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
         return result.toArray(new Resource[0]);
     }
 
+    public String[] findPathMatchingClassInputStream(String locationPattern, String packageName) throws IOException {
+        String rootDirPath = determineRootDir(locationPattern);
+        Resource[] rootDirResources = getResources(rootDirPath);
+        Set<String> classes = new LinkedHashSet<>(32);
+
+        for (Resource rootDirResource : rootDirResources) {
+            String url = rootDirResource.getURL().toString();
+            int begin = url.indexOf('/');
+            int end = url.indexOf('!');
+            String jarPath = url.substring(begin, end);
+            JarFile jarFile = new JarFile(jarPath);
+
+            Enumeration<JarEntry> jarEntries = jarFile.entries();
+            while (jarEntries.hasMoreElements()) {
+                JarEntry entry = jarEntries.nextElement();
+                String entryName = entry.getName();
+                if (!entry.isDirectory() && entryName.startsWith(packageName)) {
+                    entryName = entryName.substring(0, entryName.length() - 6);
+                    String name = ClassUtils.convertResourcePathToClassName(entryName);
+                    classes.add(name);
+                }
+            }
+        }
+        return classes.toArray(new String[0]);
+    }
+
     /**
      * Determine the root directory for the given location.
      * <p>Used for determining the starting point for file matching,
@@ -494,7 +522,6 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
      *
      * @param resource the resource handle to check
      *                 (usually the root directory to start path matching from)
-     * @see #doFindPathMatchingJarResources
      * @see ResourceUtils#isJarURL
      */
     protected boolean isJarResource(Resource resource) throws IOException {

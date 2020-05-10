@@ -65,4 +65,12 @@ public class LogConfig implements Config {
     public void setLoggerName(@Nullable String loggerName) {
         this.loggerName = loggerName;
     }
+
+    @Override
+    public String toString() {
+        return "LogConfig{" +
+                "loggerName='" + loggerName + '\'' +
+                ", useCustomLoggerName=" + useCustomLoggerName +
+                '}';
+    }
 }
